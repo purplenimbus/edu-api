@@ -9,7 +9,6 @@ use App\Lesson as Lesson;
 use App\Registration as Registration;
 use App\Tenant as Tenant;
 use App\Subject as Subject;
-//use GuzzleHttp\Client as Guzzle;
 
 
 class CourseController extends Controller
@@ -22,11 +21,7 @@ class CourseController extends Controller
      */
     public function __construct()
     {
-        /*$this->client	= 	new Guzzle([
-								'defaults' => [
-									'headers'  => ['content-type' => 'application/json', 'Accept' => 'application/json'],
-								]
-							]);*/
+
     }
 	
 	/**
@@ -75,7 +70,7 @@ class CourseController extends Controller
 					['tenant_id', '=', $tenant_id]
 				];
 				
-		$relationships = ['course'];
+		$relationships = ['course','user'];
 		
 		if($request->has('user_id')){
 			array_push($query,['user_id', '=', $request->user_id]);
@@ -87,28 +82,21 @@ class CourseController extends Controller
 			//array_push($relationships,'course');
 		}			
 				
-		$registrations = $request->has('paginate') ? Registration::with($relationships)->where($query)->paginate($request->paginate) : Registration::with($relationships)->where($query)->get();
+		$registrations = $request->has('paginate') ? 
+							Registration::with($relationships)->where($query)->paginate($request->paginate) : 
+							Registration::with($relationships)->where($query)->get();
+				
 		
-		/*if(sizeof($registrations)){
-			//To Do Move to MiddleWare
-			if($request->has('user_list')){
-				//post to graph api
-				//var_dump($registrations->toArray());
-				
-				$response = $this->client->request('PUT', 'http://graph.nimbus.com:8000/v1/'.$tenant_id.'/userList',['json' =>  $registrations->toArray()]);
-				
-				var_dump($response->getBody()->getContents());
-				//return response()->json(json_decode($response->getBody()->getContents(),true),200);
-			}else{
-				return response()->json($registrations,200)->setCallback($request->input('callback'));
-			}
+		if(sizeof($registrations)){
+
+			return response()->json($registrations,200)->setCallback($request->input('callback'));
 		
 		}else{
 			
 			$message = 'no registrations found for tenant id : '.$tenant_id;
 			
 			return response()->json(['message' => $message],204)->setCallback($request->input('callback'));
-		}*/
+		}
     }
 	
 	/**

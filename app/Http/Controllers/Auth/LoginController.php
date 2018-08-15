@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Facades\JWTFactory;
 use App\Tenant as Tenant;
 use App\User as User;
 
@@ -61,7 +62,6 @@ class LoginController extends Controller
 		
 		$user = Auth::user()->load('tenant');
 		
-		// if no errors are encountered we can return a JWT
 		return response()->json(compact(['token','user']));
 
     }
