@@ -95,10 +95,10 @@ class UserController extends Controller
 		}
 	}
 
-	public function batch($tenant_id,Request $request){
+	public function batch($tenant_id,StoreBatch $request){
 		//validate 
 		//var_dump($request->all());
-		ProcessBatch::dispatch($request->all(),$request->type);
+		ProcessBatch::dispatch($tenant_id,$request->all(),$request->type);
 
 		return response()->json(['message' => 'your request is being processed','req'=>$request->all()],200);
 	}

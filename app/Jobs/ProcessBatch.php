@@ -14,15 +14,17 @@ class ProcessBatch implements ShouldQueue
 
     var $data;
     var $type;
+    var $tenant_id;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($data,$type)
+    public function __construct($tenant_id,$data,$type)
     {
         $this->data = $data;
         $this->type = $type;
+        $this->tenant_id = $tenant_id;
     }
 
     /**
@@ -32,6 +34,6 @@ class ProcessBatch implements ShouldQueue
      */
     public function handle()
     {
-        //
+        \Log::info('ProcessBatch '.$this->data.', tenant_id: '+$this->tenant_id.', type:'.$this->type);
     }
 }
