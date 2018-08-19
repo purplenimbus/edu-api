@@ -55,45 +55,6 @@ class TenantController extends BaseController
 		return response()->json(['data' => $tenant],200);
 	}
 	
-	public function users($tenant_id , Request $request){
-		
-		$query = [
-			['tenant_id', '=', $tenant_id]
-		];
-		
-		if($request->has('user_type')){
-			array_push($query,['meta->user_type', '=', $request->user_type]);
-		}
-		
-		if($request->has('ids')){
-			
-			//array_push($query,['id', '=', explode(",",$request->ids)]);
-			
-			$users = 	$request->has('paginate') ? 
-				User::where($query)->whereIn('id',explode(",",$request->ids))
-					->paginate($request->paginate)
-					->only(['id','fname','lname','image_url'])
-			: 	User::where($query)->whereIn('id',explode(",",$request->ids))
-					->get(['id','fname','lname','image_url']);
-		}else{
-			$users = 	$request->has('paginate') ? 
-				User::with('tenant')->where($query)
-					->paginate($request->paginate)							
-			: 	User::with('tenant')->where($query)
-					->get();
-		}
-				
-		if(sizeof($users)){
-			return response()->json($users,200);
-		}else{
-			
-			$message = 'no users found for tenant : '.$tenant_id;
-			
-			return response()->json(['message' => $message],401);
-		}
-		
-	}
-	
 	
 	public function getTenant($tenant){
 		try{

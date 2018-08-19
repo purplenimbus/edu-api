@@ -37,7 +37,8 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 
 	Route::post('/coureStudentList', 'CourseController@coureStudentList'); //Add registrations for a user in a certain tenant
 	
-	Route::get('/users', 'TenantController@users'); //List all users for a certain tenant
-	//Route::post('/users', 'TenantController@users'); //Update users for a certain tenant
+	Route::get('/users', 'UserController@index'); //List all users for a certain tenant
 	Route::get('/users/{user_id}', 'UserController@get'); //List all details for a certain user
+	Route::post('/users/{user_id}', 'UserController@save'); //Update user for a certain tenant
+	Route::post('/users/batch', 'UserController@batch'); //Update user for a certain tenant
 });
