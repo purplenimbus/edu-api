@@ -13,11 +13,12 @@ use Illuminate\Http\Request;
 |
 */
 
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/v'.env('API_VERSION',1).'/login','Auth\LoginController@authenticate');
+Route::post('/v'.env('API_VERSION',1).'/login','Auth\LoginController@authenticate')->middleware('cors');
 
 /* Subjects */
 Route::get('/v'.env('API_VERSION',1).'/subjects', 'CourseController@subjects'); //List all Subjects
@@ -38,7 +39,8 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::post('/coureStudentList', 'CourseController@coureStudentList'); //Add registrations for a user in a certain tenant
 	
 	Route::get('/users', 'UserController@index'); //List all users for a certain tenant
-	Route::get('/users/{user_id}', 'UserController@get'); //List all details for a certain user
-	Route::post('/users/{user_id}', 'UserController@save'); //Update user for a certain tenant
-	Route::post('/users/batch', 'UserController@batch'); //Update user for a certain tenant
+	Route::get('/users/{user_id}', 'UserController@userList'); //List all details for a certain user
+
+	//Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
+	Route::post('/users/batch', 'UserController@batchUpdate');//Update user for a certain tenant
 });

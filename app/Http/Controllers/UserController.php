@@ -10,7 +10,7 @@ use App\Jobs\ProcessBatch;
 
 class UserController extends Controller
 {
-    public function index($tenant_id , Request $request){
+    public function userList($tenant_id , Request $request){
 		
 		$query = [
 			['tenant_id', '=', $tenant_id]
@@ -49,7 +49,7 @@ class UserController extends Controller
 		
 	}
 
-    public function get($tenant_id,$user_id,Request $request){
+    public function getUsers($tenant_id,$user_id,Request $request){
 		
 		//validate tenant id ?
 		try {
@@ -68,7 +68,7 @@ class UserController extends Controller
 		}
 	}
 	
-	public function save($tenant_id,$user_id,StoreUser $request){
+	public function saveUser($tenant_id,$user_id,Request $request){
 			
 		try {
 			$user = User::with('tenant')->where([
@@ -95,11 +95,10 @@ class UserController extends Controller
 		}
 	}
 
-	public function batch($tenant_id,StoreBatch $request){
-		//validate 
-		//var_dump($request->all());
-		ProcessBatch::dispatch($tenant_id,$request->all(),$request->type);
+	public function batchUpdate($tenant_id,StoreBatch $request){
 
-		return response()->json(['message' => 'your request is being processed','req'=>$request->all()],200);
+		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
+
+		return response()->json(['message' => 'your request is being processed'],200);
 	}
 }

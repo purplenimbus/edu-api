@@ -8,7 +8,7 @@ use Webpatser\Uuid\Uuid as Uuid;
 
 class Tenant extends Model
 {
-   // use Notifiable;
+    use Notifiable;
 	/**
      * The attributes that are mass assignable.
      *
