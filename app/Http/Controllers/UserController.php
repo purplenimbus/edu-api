@@ -49,7 +49,7 @@ class UserController extends Controller
 		
 	}
 
-    public function getUsers($tenant_id,$user_id,Request $request){
+    public function getUser($tenant_id,$user_id,Request $request){
 		
 		//validate tenant id ?
 		try {

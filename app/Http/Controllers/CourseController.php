@@ -10,6 +10,8 @@ use App\Registration as Registration;
 use App\Tenant as Tenant;
 use App\Subject as Subject;
 
+use App\Http\Requests\StoreCourse as StoreCourse;
+
 
 class CourseController extends Controller
 {
@@ -165,19 +167,17 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function createCourse($tenant_id,Request $request){
+	public function createCourse($tenant_id,StoreCourse $request){
 		dd($request->all());
 		
-		$this->validate($request, [
-			'name' => 'required',
-		]);
+		//$data = $request->all();
 		
-		$data = $request->all();
-		
-		$data['tenant_id'] = $tenant_id;
+		/*$data['tenant_id'] = $tenant_id;
+
+		$data['code'] = $data['class']['name']
 		
 		$course = Course::create($data);
 		
-		return response()->json($course,200)->setCallback($request->input('callback'));
+		return response()->json($course,200)->setCallback($request->input('callback'));*/
 	}
 }
