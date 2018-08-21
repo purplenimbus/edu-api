@@ -26,7 +26,8 @@ class StoreUser extends FormRequest
         return [
             'firstname' 	=> 'required|max:255',
             'lastname' 	=> 'required|max:255',
-			'email' => 'required|max:255'
+			//'email' => 'required|email|unique:users,email|max:255',
+            'tenant_id' => 'exists:tenants,id'
         ];
     }
 }

@@ -41,6 +41,7 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::get('/users', 'UserController@index'); //List all users for a certain tenant
 	Route::get('/users/{user_id}', 'UserController@userList'); //List all details for a certain user
 
-	//Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
 	Route::post('/users/batch', 'UserController@batchUpdate');//Update user for a certain tenant
+
+	Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
 });

@@ -68,25 +68,26 @@ class UserController extends Controller
 		}
 	}
 	
-	public function saveUser($tenant_id,$user_id,Request $request){
+	public function saveUser($tenant_id,$user_id,StoreUser $request){
 			
 		try {
-			$user = User::with('tenant')->where([
-					['tenant_id', '=', $tenant_id],
-					['id', '=', $user_id],
-				])->first();
+			$user = User::find($user_id);
 		  
-			//$user->meta = $request->meta;
+		  	//var_dump($user->firstname);
+			$data =$request->all();
 
-			var_dump($user);
+			//var_dump($request->all());
 
-			var_dump($request->all());
+			unset($data['tenant']);
+			unset($data['email']);
 			
-			/*$user->update($request);
-			
-			$user->save();
-		  
-			return response()->json($user,200)->setCallback($request->input('callback'));*/
+			$user->fill($data);
+
+			$user->save($data);
+
+			$user->load('tenant');
+					  
+			return response()->json($user,200);
 
 		} catch (ModelNotFoundException $ex) {
 		  	$message = 'no user id: '.$user_id.' found for tenant : '.$tenant;
