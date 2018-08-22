@@ -14,24 +14,24 @@ class CoursesSeeder extends Seeder
         $subjects = [
 			[
 				'name' => 'mathematics',
-				'code' => 'MATH100',
+				'code' => 'MATH',
 			],[
 				'name' => 'english',
-				'code' => 'ENG050',
+				'code' => 'ENG',
 			],[
 				'name' => 'physics',
-				'code' => 'PHY150',
+				'code' => 'PHY',
 			],[
 				'name' => 'chemistry',
-				'code' => 'CHEM100',
+				'code' => 'CHEM',
 			],[
 				'name' => 'biology',
-				'code' => 'BIO100',
+				'code' => 'BIO',
 			]
 		];
 		
 		foreach($subjects as $subject){
-			App\Subject::create(['name' => $subject['name']]);
+			App\Subject::create($subject);
 		}
 		
 		foreach($subjects as $course){

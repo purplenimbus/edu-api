@@ -12,6 +12,9 @@ use App\Notifications\BatchProcessed;
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant as Tenant;
+use App\User as User;
+use App\Subject as Subject;
+use App\Course as Course;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -47,32 +50,20 @@ class ProcessBatch implements ShouldQueue
     {
         $self = $this;
 
-        foreach ($this->data as $user){
+        foreach ($this->data as $data){
 
             // validate user here;
-            $user['tenant_id'] = $self->tenant_id;
+            $data['tenant_id'] = $self->tenant_id;
 
-            //$user['access_level'] = 1; //All imported users will have level 1 access
+            //$data['access_level'] = 1; //All imported users will have level 1 access
 
-            //$user['password'] = $this->createDefaultPassword($user['email']);
-
-            $resource = '\App'::make('App\\'.ucfirst($this->type))
-                            ->firstOrNew(array_only($user, ['firstname','lastname','email','tenant_id']));
-
-            if($resource->id){
-                $self->payload['updated'][] = $resource;
-            }else{
-                $user['access_level'] = 1;
-
-                $user['password'] = $this->createDefaultPassword($user['email']);
-
-                $self->payload['created'][] = $resource;
+            //$data['password'] = $this->createDefaultPassword($data['email']);
+            switch($this->type){
+                case 'user' : $this->payload = $self->processUser($data,$this->payload); break;
+                case 'subject' : $this->payload = $self->processSubject($data,$this->payload); break;
+                default : break;
             }
-
-            $resource->fill($user);
-
-            $resource->save();
-
+            
             \Log::info('ProcessBatch Resource Created , id : {$resource->id} , tenant_id: {$this->tenant_id} type:{$this->type}');
         }
 
@@ -81,6 +72,45 @@ class ProcessBatch implements ShouldQueue
         $tenant->notify(new BatchProcessed($this->payload));
         
     }
+
+    private function processUser($data,$payload){
+        //'\App'::make('App\\'.ucfirst($this->type))
+        $user = User::firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
+
+        if($user->id){
+            $payload['updated'][] = $user;
+        }else{
+            $data['access_level'] = 1;
+
+            $data['password'] = $this->createDefaultPassword($data['email']);
+
+            $payload['created'][] = $user;
+        }
+
+        $user->fill($data);
+
+        $user->save();
+
+        return $payload;
+    }  
+
+    private function processSubject($data,$payload){
+        //'\App'::make('App\\'.ucfirst($this->type))
+        $subject = Subject::firstOrNew(array_only($data, ['name']));
+
+        if($subject->id){
+            $payload['updated'][] = $subject;
+        }else{
+            
+            $payload['created'][] = $subject;
+        }
+
+        $subject->fill($data);
+
+        $subject->save();
+
+        return $payload;
+    }   
 
     private function createDefaultPassword($str = false){
         return app('hash')->make($str);

@@ -43,5 +43,7 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 
 	Route::post('/users/batch', 'UserController@batchUpdate');//Update user for a certain tenant
 
+	Route::post('/subjects/batch', 'CourseController@batchUpdate');//Update user for a certain tenant
+
 	Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
 });

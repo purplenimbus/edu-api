@@ -11,6 +11,9 @@ use App\Tenant as Tenant;
 use App\Subject as Subject;
 
 use App\Http\Requests\StoreCourse as StoreCourse;
+use App\Http\Requests\StoreBatch as StoreBatch;
+
+use App\Jobs\ProcessBatch;
 
 
 class CourseController extends Controller
@@ -179,5 +182,16 @@ class CourseController extends Controller
 		$course = Course::create($data);
 		
 		return response()->json($course,200)->setCallback($request->input('callback'));*/
+	}
+
+	/**
+     * Batch create subjects
+     *
+     * @return void
+     */
+	public function batchUpdate($tenant_id,StoreBatch $request){
+		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
+
+		return response()->json(['message' => 'your request is being processed'],200);
 	}
 }
