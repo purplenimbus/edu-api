@@ -118,7 +118,7 @@ class CurriculumController extends Controller
 				foreach ($section as $subject_id) {
 					$subject = Subject::find($subject_id);
 
-					$course_load[$key][] = $subject->only(['name','code','id']);
+					$course_load[$key][] = $subject->only(['name','code','id','group']);
 				}
 			}
 		}

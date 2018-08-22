@@ -14,18 +14,19 @@ class Course extends Model
      * @var array
      */
     protected $fillable = [
-        'name','description', 'meta','tenant_id','instructor_id','subject_id','code'
+        'name','description', 'meta','tenant_id','instructor_id','subject_id','code','course_grade_id'
     ];
-
+	
     /**
-     * The attributes excluded from the model's JSON form.
+     * Get course registrations
      *
      * @var array
      */
-    protected $hidden = [
+    public function grade()
+    {
+        return $this->belongsTo('App\CourseGrade','course_grade_id');
+    }
 
-    ];
-	
 	/**
      * Cast meta property to array
      *

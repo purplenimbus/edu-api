@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Course as Course;
+use App\Curriculum as Curriculum;
 
 use App\Http\Requests\StoreCourse as StoreCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
@@ -42,11 +43,11 @@ class CourseController extends Controller
 		}	
 				
 		$courses = $request->has('paginate') ? 
-						Course::with('registrations')
+						Course::with(['registrations','grade'])
 								->where($query)
 								->paginate($request->paginate) 
 								
-					: Course::with('registrations')
+					: Course::with('registrations','grade')
 							->where($query)
 							->get();
 						
@@ -98,7 +99,7 @@ class CourseController extends Controller
      * @return void
      */
 	public function generateCourses($tenant_id,Request $request){
-		GenerateCourses::dispatch($tenant_id,Subject::all());
+		GenerateCourses::dispatch($tenant_id,Curriculum::with('grade')->get());
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}
