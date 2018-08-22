@@ -18,8 +18,9 @@ class CreateCoursesTable extends Migration
             $table->uuid('uuid');
             $table->integer('tenant_id');
             $table->integer('instructor_id')->nullable();
-            $table->integer('course_grade_id')->nullable();
-            $table->string('name');
+            //$table->integer('course_grade_id')->nullable();
+            $table->integer('subject_id')->nullable();
+            $table->string('name')->nullable();
 			$table->string('code')->nullable();
             $table->string('description')->nullable();
             $table->json('meta')->nullable();

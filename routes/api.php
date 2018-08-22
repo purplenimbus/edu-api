@@ -25,25 +25,18 @@ Route::get('/v'.env('API_VERSION',1).'/subjects', 'CourseController@subjects'); 
 	
 Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	
-	/* Courses */
+	/* Courses , Registrations & Lessons */
 	Route::get('/courses', 'CourseController@courses'); //List all courses for a certain tenant
-	
 	Route::post('/courses', 'CourseController@createCourse'); //create new course
-
-	/* lessons */
+	Route::post('/courses/generate', 'CourseController@generateCourses'); //Generate new courses for a tenant
+	Route::post('/subjects/batch', 'CourseController@batchUpdate');//Update user for a certain tenant
 	Route::get('/lessons', 'CourseController@lessons'); //List all registrations for a certain tenant
-
-	/* Registrations */
 	Route::get('/registrations','CourseController@registrations'); //List all registrations for a certain tenant
-
-	Route::post('/coureStudentList', 'CourseController@coureStudentList'); //Add registrations for a user in a certain tenant
+	Route::post('/coureStudentList', 'CourseController@courseStudentList'); //Add registrations for a user in a certain 
 	
+	/* Users */
 	Route::get('/users', 'UserController@userList'); //List all users for a certain tenant
 	Route::get('/users/{user_id}', 'UserController@getUser'); //List all details for a certain user
-
 	Route::post('/users/batch', 'UserController@batchUpdate');//Update user for a certain tenant
-
-	Route::post('/subjects/batch', 'CourseController@batchUpdate');//Update user for a certain tenant
-
 	Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
 });

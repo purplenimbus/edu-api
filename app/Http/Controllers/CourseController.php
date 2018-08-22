@@ -14,6 +14,7 @@ use App\Http\Requests\StoreCourse as StoreCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
 
 use App\Jobs\ProcessBatch;
+use App\Jobs\GenerateCourses;
 
 
 class CourseController extends Controller
@@ -191,6 +192,17 @@ class CourseController extends Controller
      */
 	public function batchUpdate($tenant_id,StoreBatch $request){
 		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
+
+		return response()->json(['message' => 'your request is being processed'],200);
+	}
+
+	/**
+     * Generate courses based on subjects
+     *
+     * @return void
+     */
+	public function generateCourses($tenant_id,Request $request){
+		GenerateCourses::dispatch($tenant_id,Subject::all());
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}

@@ -101,7 +101,7 @@ class ProcessBatch implements ShouldQueue
         if($subject->id){
             $payload['updated'][] = $subject;
         }else{
-            
+
             $payload['created'][] = $subject;
         }
 
@@ -110,7 +110,7 @@ class ProcessBatch implements ShouldQueue
         $subject->save();
 
         return $payload;
-    }   
+    }  
 
     private function createDefaultPassword($str = false){
         return app('hash')->make($str);
