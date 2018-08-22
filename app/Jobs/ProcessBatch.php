@@ -130,15 +130,15 @@ class ProcessBatch implements ShouldQueue
         $new = isset($curriculum->id) ? $curriculum->id : false;
 
         if(isset($data['core_subjects_code'])){
-            $course_load['core'][] = $this->parseSubjects($data['core_subjects_code']);
+            $course_load['core'] = $this->parseSubjects($data['core_subjects_code']);
         }
 
         if(isset($data['selective_subjects_code'])){
-            $course_load['selective'][] = $this->parseSubjects($data['selective_subjects_code']);
+            $course_load['selective'] = $this->parseSubjects($data['selective_subjects_code']);
         }
 
         if(isset($data['optional_subjects_code'])){
-            $course_load['optional'][] = $this->parseSubjects($data['optional_subjects_code']);
+            $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code']);
         }
 
         $curriculum->course_load = $course_load;

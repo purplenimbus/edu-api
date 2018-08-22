@@ -8,6 +8,7 @@ use App\Jobs\ProcessBatch;
 
 use App\Lesson as Lesson;
 use App\Subject as Subject;
+use App\Curriculum as Curriculum;
 
 class CurriculumController extends Controller
 {
@@ -98,4 +99,34 @@ class CurriculumController extends Controller
 			return response()->json(['message' => $message],404);
 		}
     }
+
+    /**
+     * Batch create subjects
+     *
+     * @return void
+     */
+	public function getCourseLoad($course_grade_id){
+		$curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
+
+		$course_load = [];
+
+		foreach ($curriculum->course_load as $key => $section) {
+			//var_dump($section);
+			$course_load[$key] = [];
+
+			if(sizeof($section)){
+				foreach ($section as $subject_id) {
+					$subject = Subject::find($subject_id);
+
+					$course_load[$key][] = $subject->only(['name','code','id']);
+				}
+			}
+		}
+
+		$curriculum = $curriculum->toArray();
+
+		$curriculum['course_load'] = $course_load;
+
+		return response()->json($curriculum,200);
+	}
 }

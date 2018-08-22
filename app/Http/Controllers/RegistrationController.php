@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Registration as Registration;
-
 //use App\Http\Requests\StoreBatch as StoreBatch;
 
 use App\Jobs\RegisterStudents;
@@ -61,4 +60,6 @@ class RegistrationController extends Controller
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}
+
+
 }

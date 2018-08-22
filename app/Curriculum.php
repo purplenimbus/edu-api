@@ -29,6 +29,23 @@ class Curriculum extends Model
     ];
 
     /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+    ];
+
+    /**
+     * Get course registrations
+     *
+     * @var array
+     */
+    public function grade()
+    {
+        return $this->belongsTo('App\CourseGrade','course_grade_id');
+    }
+    /**
 	 *  Setup model event hooks
 	 */
 	public static function boot()

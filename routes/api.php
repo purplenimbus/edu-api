@@ -20,9 +20,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::post('/v'.env('API_VERSION',1).'/login','Auth\LoginController@authenticate')->middleware('cors');
 
-/* Subjects */
+/* Curriculum */
 Route::get('/v'.env('API_VERSION',1).'/subjects', 'CurriculumController@subjects'); //List all Subjects
-Route::get('/v'.env('API_VERSION',1).'/grades/list', 'CurriculumController@listClasses'); //List all Classes
+Route::get('/v'.env('API_VERSION',1).'/grades/list', 'CurriculumController@listClasses'); //List all Classe
+Route::get('/v'.env('API_VERSION',1).'/curriculum/{course_grade_id}','CurriculumController@getCourseLoad'); //List all registrations for a certain tenants
 	
 Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	
@@ -42,6 +43,7 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	
 	/*  Registrations */
 	Route::get('/registrations','RegistrationController@registrations'); //List all registrations for a certain tenant
+
 	Route::post('/register','RegistrationController@registerStudents'); //List all registrations for a certain tenant
 
 	/* Users */

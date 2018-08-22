@@ -25,7 +25,7 @@ class CourseGrade extends Model
      * @var array
      */
     protected $fillable = [
-        'name','meta'
+        'name','meta','alias','description'
     ];
 
     /**
