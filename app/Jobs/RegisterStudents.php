@@ -8,6 +8,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
+use App\Notifications\StudentsRegistered;
+
 use App\Tenant as Tenant;
 use App\User as User;
 
@@ -22,9 +24,10 @@ class RegisterStudents implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($tenant_id,$data)
     {
         $this->tenant_id = $tenant_id;
+        $this->data = $data;
         $this->payload = [
             'updated' => [],
             'created' => [],
@@ -41,7 +44,7 @@ class RegisterStudents implements ShouldQueue
     {
         $tenant = Tenant::find($this->tenant_id);
 
-        $tenant->notify(new BatchProcessed($this->payload));
+        $tenant->notify(new StudentsRegistered($this->payload));
 
         var_dump($tenant);
     }

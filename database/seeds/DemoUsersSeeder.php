@@ -13,7 +13,7 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create([
+			->create(/*[
 				'meta'=>  [
 					'settings' => [
 						'classes' => [
@@ -27,7 +27,7 @@ class DemoUsersSeeder extends Seeder
 						]
 					]
 				]
-			])
+			]*/)
 			->each(function($tenant)use($count){
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,
@@ -56,7 +56,8 @@ class DemoUsersSeeder extends Seeder
 							'lastname'		=>	'student',
 							'email'		=>	'student@yopmail.com',
 							'password'	=>	app('hash')->make('demo'),
-							'access_level' => 1
+							'access_level' => 1,
+							'meta' => ['course_grade_id' => 1]
 						])->each(function($teacher)use($count){ $count++; });
 		});
 

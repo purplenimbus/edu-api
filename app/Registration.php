@@ -22,7 +22,7 @@ class Registration extends Model
      * @var array
      */
     protected $hidden = [
-		'course_id',
+		//'course_id',
 		//'user_id'
     ];
 	

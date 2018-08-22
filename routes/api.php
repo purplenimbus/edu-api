@@ -32,7 +32,7 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::get('/courses', 'CourseController@getCourses'); //List all courses for a certain tenant
 	Route::get('/lessons', 'CourseController@lessons'); //List all registrations for a certain tenant
 	Route::post('/courses/new', 'CourseController@createCourse'); //create new course
-	Route::post('/subjects/batch', 'CourseController@batchUpdate');//Update user for a certain tenant
+	Route::post('/courses/batch', 'CourseController@batchUpdate');//Batch import subjects and courses
 	//Route::post('/courses/list', 'CourseController@courseStudentList'); //Get students enrolled in a course
 	Route::post('/courses/generate', 'CourseController@generateCourses'); //Generate new courses for a tenant
 	
@@ -47,6 +47,6 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::post('/users/{user_id}', 'UserController@saveUser');//Update user for a certain tenant
 
 	/* Instructors */
-	Route::post('/instructors/assign', 'InstructorController@assignInstructor'); //Assign instructor to a course
+	Route::post('/instructors', 'InstructorController@assignInstructor'); //Assign instructor to a course
 
 });

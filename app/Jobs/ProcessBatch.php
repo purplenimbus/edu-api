@@ -15,6 +15,8 @@ use App\Tenant as Tenant;
 use App\User as User;
 use App\Subject as Subject;
 use App\Course as Course;
+use App\Curriculum as Curriculum;
+use App\CourseGrade as CourseGrade;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -49,7 +51,6 @@ class ProcessBatch implements ShouldQueue
     public function handle()
     {
         $self = $this;
-
         foreach ($this->data as $data){
 
             // validate user here;
@@ -61,15 +62,17 @@ class ProcessBatch implements ShouldQueue
             switch($this->type){
                 case 'user' : $this->payload = $self->processUser($data,$this->payload); break;
                 case 'subject' : $this->payload = $self->processSubject($data,$this->payload); break;
+                case 'coursegrade' : $this->payload = $self->processCourseGrade($data,$this->payload); break;
+                case 'curriculum' : $this->payload = $self->processCurriculum($data,$this->payload); break;
                 default : break;
             }
-            
-            \Log::info('ProcessBatch Resource Created , id : {$resource->id} , tenant_id: {$this->tenant_id} type:{$this->type}');
         }
 
         $tenant = Tenant::find($this->tenant_id);
 
         $tenant->notify(new BatchProcessed($this->payload));
+
+        \Log::info('ProcessBatch '.ucfirst($this->type).': '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated for tenant_id: '.$this->tenant_id);
         
     }
 
@@ -110,7 +113,43 @@ class ProcessBatch implements ShouldQueue
         $subject->save();
 
         return $payload;
-    }  
+    }
+
+    private function processCurriculum($data,$payload){
+        //'\App'::make('App\\'.ucfirst($this->type))
+        $curriculum = Curriculum::firstOrNew(array_only($data, ['name']));
+
+        if($curriculum->id){
+            $payload['updated'][] = $curriculum;
+        }else{
+
+            $payload['created'][] = $curriculum;
+        }
+
+        $curriculum->fill($data);
+
+        $curriculum->save();
+
+        return $payload;
+    }
+
+    private function processCourseGrade($data,$payload){
+        //'\App'::make('App\\'.ucfirst($this->type))
+        $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
+
+        if($curriculum->id){
+            $payload['updated'][] = $curriculum;
+        }else{
+
+            $payload['created'][] = $curriculum;
+        }
+
+        $curriculum->fill($data);
+
+        $curriculum->save();
+
+        return $payload;
+    }   
 
     private function createDefaultPassword($str = false){
         return app('hash')->make($str);
