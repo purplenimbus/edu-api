@@ -51,16 +51,18 @@ class GenerateCourses implements ShouldQueue
                 'subject_id' => $subject->id,
                 'tenant_id' => $self->tenant_id,
                 'name' => $subject->name,
-                'code' => $subject->code,
+                'code' => $subject->code
             ];
 
-            $course = Course::firstOrNew($data);
+            $course = Course::firstOrNew(array_only($data,['name']));
 
             if($course->id){
                 $self->payload['updated'][] = $course;
             }else{
                 $self->payload['created'][] = $course;
             }
+
+            $course->fill($data);
 
             $course->save();
 

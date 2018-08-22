@@ -35,7 +35,7 @@ class CourseController extends Controller
      *
      * @return void
      */
-    public function courses($tenant_id,Request $request)
+    public function getCourses($tenant_id,Request $request)
     {
         $query = [
 					['tenant_id', '=', $tenant_id]
@@ -55,54 +55,14 @@ class CourseController extends Controller
 							->get();
 						
 		if(sizeof($courses)){
-			return response()->json($courses,200)->setCallback($request->input('callback'));
+			return response()->json($courses,200);
  		}else{
 			
 			$message = 'no courses found for tenant id : '.$tenant_id;
 			
-			return response()->json(['message' => $message],204)->setCallback($request->input('callback'));
+			return response()->json(['message' => $message],204);
 		}
 		
-    }
-	
-	/**
-     * List registrations
-     *
-     * @return void
-     */
-    public function registrations($tenant_id,Request $request)
-    {
-        $query = [
-					['tenant_id', '=', $tenant_id]
-				];
-				
-		$relationships = ['course','user'];
-		
-		if($request->has('user_id')){
-			array_push($query,['user_id', '=', $request->user_id]);
-			//array_push($relationships,'user');
-		}
-
-		if($request->has('course_id')){
-			array_push($query,['course_id', '=', $request->course_id]);
-			//array_push($relationships,'course');
-		}			
-				
-		$registrations = $request->has('paginate') ? 
-							Registration::with($relationships)->where($query)->paginate($request->paginate) : 
-							Registration::with($relationships)->where($query)->get();
-				
-		
-		if(sizeof($registrations)){
-
-			return response()->json($registrations,200)->setCallback($request->input('callback'));
-		
-		}else{
-			
-			$message = 'no registrations found for tenant id : '.$tenant_id;
-			
-			return response()->json(['message' => $message],204)->setCallback($request->input('callback'));
-		}
     }
 	
 	/**
@@ -117,7 +77,7 @@ class CourseController extends Controller
 		if(!$tenant_id){
 			$message = 'tenant id required';
 			
-			return response()->json($message,500)->setCallback($request->input('callback'));;
+			return response()->json($message,500);
 		}else{
 			array_push($query,['tenant_id', '=', $tenant_id]);
 		}
@@ -125,7 +85,7 @@ class CourseController extends Controller
 		if(!$request->has('course_id')){
 			$message = 'course id required';
 			
-			return response()->json($message,500)->setCallback($request->input('callback'));;
+			return response()->json($message,500);
 		}else{
 			array_push($query,['course_id', '=', $request->course_id]);
 			array_push($query,['parent_id', '=', null]);
@@ -138,25 +98,14 @@ class CourseController extends Controller
 		$lessons = $request->has('paginate') ? Lesson::with('sub_lessons','course')->where($query)->paginate($request->paginate) : Lesson::with('sub_lessons','course')->where($query)->get();
 						
 		if(sizeof($lessons)){
-			return response()->json($lessons,200)->setCallback($request->input('callback'));;
+			return response()->json($lessons,200);
 		}else{
 			
 			$message = 'no lessons found for course id : '.$request->course_id;
 			
-			return response()->json(['message' => $message],404)->setCallback($request->input('callback'));;
+			return response()->json(['message' => $message],404);
 		}
     }
-	
-	public function getTenant($tenant){
-		try{
-			$tenant = Tenant::where('username', $tenant)->first();
-			
-			return $tenant;
-			
-		}catch(Exception $e){
-			return false;
-		}
-	}
 	
 	/**
      * List all subjects

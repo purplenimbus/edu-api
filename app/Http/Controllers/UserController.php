@@ -92,7 +92,7 @@ class UserController extends Controller
 		} catch (ModelNotFoundException $ex) {
 		  	$message = 'no user id: '.$user_id.' found for tenant : '.$tenant;
 			
-			return response()->json(['message' => $message],401)->setCallback($request->input('callback'));
+			return response()->json(['message' => $message],401);
 		}
 	}
 

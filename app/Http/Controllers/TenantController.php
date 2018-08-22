@@ -67,4 +67,14 @@ class TenantController extends BaseController
 		}
 	}
 	
+	public function getSettings($tenant_id,Request $request){
+		try{
+			$tenant = Tenant::find($tenant_id);
+			
+			return response()->json($tenant->meta->settings,200);
+			
+		}catch(Exception $e){
+			return false;
+		}
+	}
 }

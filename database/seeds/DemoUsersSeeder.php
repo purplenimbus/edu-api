@@ -13,7 +13,21 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create()
+			->create([
+				'meta'=>  [
+					'settings' => [
+						'classes' => [
+							['id' => 1, 'name' => 'js 1','sections'=>['a','b'],'alias' => ''],
+							['id' => 2, 'name' => 'js 2','sections'=>['a','b'],'alias' => ''],
+							['id' => 3, 'name' => 'js 3','sections'=>['a','b'],'alias' => ''],
+							['id' => 4, 'name' => 'ss 1','sections'=>['a','b'],'alias' => ''],
+							['id' => 5, 'name' => 'ss 2','sections'=>['a','b'],'alias' => ''],
+							['id' => 6, 'name' => 'ss 3','sections'=>['a','b'],'alias' => ''],
+							['id' => 7, 'name' => 'a level','sections'=>['a','b'],'alias' => '']
+						]
+					]
+				]
+			])
 			->each(function($tenant)use($count){
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,
