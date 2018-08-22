@@ -15,6 +15,7 @@ class CreateCourseGradesTable extends Migration
     {
         Schema::create('course_grades', function (Blueprint $table) {
             $table->increments('id');
+            $table->uuid('uuid');
             $table->string('name');
             $table->json('meta')->nullable();
             $table->string('alias')->nullable();

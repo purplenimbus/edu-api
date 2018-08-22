@@ -7,7 +7,7 @@ use Webpatser\Uuid\Uuid as Uuid;
 
 class Curriculum extends Model
 {
-	public $table = "users";
+	public $table = "curricula";
 	/**
      * Cast meta property to array
      *
@@ -16,6 +16,7 @@ class Curriculum extends Model
 	 
 	protected $casts = [
         'meta' => 'array',
+        'course_load' => 'array',
     ];
 
     /**

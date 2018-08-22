@@ -17,7 +17,7 @@ class CreateSubjectsTable extends Migration
             $table->increments('id');
             $table->uuid('uuid');
 			$table->string('name');
-            $table->string('code')->nullable();
+            $table->string('code')->nullable()->unique();
 			$table->mediumText('description')->nullable();
 			$table->json('meta')->nullable();
             $table->timestamps();

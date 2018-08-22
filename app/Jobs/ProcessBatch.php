@@ -68,6 +68,8 @@ class ProcessBatch implements ShouldQueue
             }
         }
 
+        //var_dump($this->payload);
+
         $tenant = Tenant::find($this->tenant_id);
 
         $tenant->notify(new BatchProcessed($this->payload));
@@ -116,21 +118,58 @@ class ProcessBatch implements ShouldQueue
     }
 
     private function processCurriculum($data,$payload){
-        //'\App'::make('App\\'.ucfirst($this->type))
-        $curriculum = Curriculum::firstOrNew(array_only($data, ['name']));
 
-        if($curriculum->id){
-            $payload['updated'][] = $curriculum;
-        }else{
+        $course_load = [
+            'core' => [],
+            'optional' => [],
+            'selective' => [],
+        ];
 
-            $payload['created'][] = $curriculum;
+        $curriculum = Curriculum::firstOrNew(array_only($data, ['course_grade_id']));
+
+        $new = isset($curriculum->id) ? $curriculum->id : false;
+
+        if(isset($data['core_subjects_code'])){
+            $course_load['core'][] = $this->parseSubjects($data['core_subjects_code']);
         }
 
-        $curriculum->fill($data);
+        if(isset($data['selective_subjects_code'])){
+            $course_load['selective'][] = $this->parseSubjects($data['selective_subjects_code']);
+        }
+
+        if(isset($data['optional_subjects_code'])){
+            $course_load['optional'][] = $this->parseSubjects($data['optional_subjects_code']);
+        }
+
+        $curriculum->course_load = $course_load;
 
         $curriculum->save();
 
+        if($new){
+            $payload['updated'][] = $curriculum;
+        }else{
+            $payload['created'][] = $curriculum;
+        }
+
         return $payload;
+    }
+
+    private function parseSubjects($data){
+        $parsed = [];
+
+        $core_subjects_codes = explode(',',$data);
+
+        foreach ($core_subjects_codes as $core_subject_code) {
+
+            $core_subject = Subject::where('code',$core_subject_code)->first();
+
+            $parsed[] = isset($core_subject->id) ? $core_subject->id : $core_subject_code;
+            
+        }
+
+        unset($data);
+
+        return $parsed;
     }
 
     private function processCourseGrade($data,$payload){

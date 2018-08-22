@@ -21,7 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/v'.env('API_VERSION',1).'/login','Auth\LoginController@authenticate')->middleware('cors');
 
 /* Subjects */
-Route::get('/v'.env('API_VERSION',1).'/subjects', 'CourseController@subjects'); //List all Subjects
+Route::get('/v'.env('API_VERSION',1).'/subjects', 'CurriculumController@subjects'); //List all Subjects
+Route::get('/v'.env('API_VERSION',1).'/grades/list', 'CurriculumController@listClasses'); //List all Classes
 	
 Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	
@@ -35,6 +36,9 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::post('/courses/batch', 'CourseController@batchUpdate');//Batch import subjects and courses
 	//Route::post('/courses/list', 'CourseController@courseStudentList'); //Get students enrolled in a course
 	Route::post('/courses/generate', 'CourseController@generateCourses'); //Generate new courses for a tenant
+
+	/*  Curriculum */
+	Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum'); //Generate new courses for a tenant
 	
 	/*  Registrations */
 	Route::get('/registrations','RegistrationController@registrations'); //List all registrations for a certain tenant
