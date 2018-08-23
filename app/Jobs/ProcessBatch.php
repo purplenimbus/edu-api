@@ -120,18 +120,28 @@ class ProcessBatch implements ShouldQueue
                                 } 
 
                                 break;
-                case 'teacher' : break;
+
+                case 'teacher' : if(isset($user->meta->course_codes)){ 
+                                    foreach (explode(',',$user->meta->course_codes) as $course_code){
+                                        $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
+
+                                        if($course->id && sizeof($course->registrations)){ 
+                                            $self->assignInstructor($user,$course->id);
+                                        }
+                                        
+                                    }
+                                }
+
+                                break;
             }
         }
-
-
 
         return $payload;
     }  
 
     private function processSubject($data,$payload){
         //'\App'::make('App\\'.ucfirst($this->type))
-        $subject = Subject::make(array_only($data, ['code']));
+        $subject = Subject::firstOrNew(array_only($data, ['code']));
 
         if($subject->id){
             $payload['updated'][] = $subject;
@@ -160,15 +170,15 @@ class ProcessBatch implements ShouldQueue
         $new = isset($curriculum->id) ? $curriculum->id : false;
 
         if(isset($data['core_subjects_code'])){
-            $course_load['core'] = $this->parseSubjects($data['core_subjects_code']);
+            $course_load['core'] = $this->parseSubjects($data['core_subjects_code'],$curriculum,true);
         }
 
         if(isset($data['selective_subjects_code'])){
-            $course_load['selective'] = $this->parseSubjects($data['selective_subjects_code']);
+            $course_load['selective'] = $this->parseSubjects($data['selective_subjects_code'],$curriculum,true);
         }
 
         if(isset($data['optional_subjects_code'])){
-            $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code']);
+            $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code'],$curriculum,true);
         }
 
         $curriculum->course_load = $course_load;
@@ -184,7 +194,7 @@ class ProcessBatch implements ShouldQueue
         return $payload;
     }
 
-    private function parseSubjects($data){
+    private function parseSubjects($data,Curriculum $curriculum,$create_course = false){
         $parsed = [];
 
         $core_subjects_codes = explode(',',$data);
@@ -193,13 +203,74 @@ class ProcessBatch implements ShouldQueue
 
             $core_subject = Subject::where('code',$core_subject_code)->first();
 
-            $parsed[] = isset($core_subject->id) ? $core_subject->id : $core_subject_code;
+            //$parsed[] = isset($core_subject->id) ? $core_subject->id : $core_subject_code;
+
+            if($create_course && isset($core_subject->id) && is_int($core_subject->id)){ 
+
+                $parsed[] = $core_subject->id;
+
+                $course = $this->createCourse($core_subject,$curriculum); 
+
+            }
             
         }
 
         unset($data);
 
         return $parsed;
+    }
+
+    private function createCourse(Subject $subject,Curriculum $curriculum){
+        //$course_load[$key][] = $subject->only(['name','code','id','group']);
+
+        //var_dump(strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)));
+
+        $data = [
+            'subject_id' => $subject->id,
+            'tenant_id' => $this->tenant_id,
+            'name' => $subject->name,
+            'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
+            'course_grade_id' => $curriculum->course_grade_id,
+            'meta' => [
+                'course_schema' =>  [
+                    'quiz' =>  15,
+                    'midterm' => 30,
+                    'assignment' => 15,
+                    'lab' => 5,
+                    'exam' => 35
+                ]
+            ]
+        ];
+
+        $course = Course::firstOrNew(array_only($data,['code','tenant_id']));
+
+        if($course->id){
+            $this->payload['updated'][] = $course;
+        }else{
+            $this->payload['created'][] = $course;
+        }
+
+        $course->fill($data);
+
+        $course->save();
+
+        return $course;
+    }
+
+    private function assignInstructor(User $user,$course_id){
+        $course = Course::firstOrNew(['instructor_id' => $user->id]);
+
+        if($course->id){
+            //$this->payload['updated'][] = $course;
+        }else{
+            $this->payload['created'][] = $course;
+
+            $course->fill($data);
+
+            $course->save();
+        }
+
+        return $course;
     }
 
     private function processCourseGrade($data,$payload){

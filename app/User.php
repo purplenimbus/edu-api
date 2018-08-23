@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'firstname','lastname','email','tenant_id','meta','password','tenant','image'
+        'firstname','lastname','othernames','email','tenant_id','meta','password','tenant','image'
     ];
 
     /**
@@ -65,6 +65,39 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 	
+    /**
+     * Set the user's first name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setFirstNameAttribute($value)
+    {
+        $this->attributes['firstname'] = strtolower($value);
+    }
+
+    /**
+     * Set the user's last name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setOtherNamesAttribute($value)
+    {
+        $this->attributes['othernames'] = strtolower($value);
+    }
+
+    /**
+     * Set the user's email
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setEmailAttribute($value)
+    {
+        $this->attributes['email'] = strtolower($value);
+    }
+
 	/**
 	 *  Setup model event hooks
 	 */
