@@ -49,7 +49,7 @@ class GenerateCourses implements ShouldQueue
         foreach ($this->curricula as $curriculum) {
 
             foreach ($curriculum->course_load as $key => $section) {
-                
+
                 //var_dump();
                 //$course_load[$key] = [];
                 //var_dump($section);
@@ -68,7 +68,16 @@ class GenerateCourses implements ShouldQueue
                                 'tenant_id' => $self->tenant_id,
                                 'name' => $subject->name,
                                 'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
-                                'course_grade_id' => $curriculum->course_grade_id
+                                'course_grade_id' => $curriculum->course_grade_id,
+                                'meta' => [
+                                    'course_schema' =>  [
+                                        'quiz' =>  15,
+                                        'midterm' => 30,
+                                        'assignment' => 15,
+                                        'lab' => 5,
+                                        'exam' => 35
+                                    ]
+                                ]
                             ];
 
                             $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));
