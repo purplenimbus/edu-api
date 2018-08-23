@@ -110,23 +110,28 @@ class CurriculumController extends Controller
 
 		$course_load = [];
 
-		foreach ($curriculum->course_load as $key => $section) {
-			//var_dump($section);
-			$course_load[$key] = [];
+		if(isset($curriculum->course_load)){
+			foreach ($curriculum->course_load as $key => $section) {
+				//var_dump($section);
+				$course_load[$key] = [];
 
-			if(sizeof($section)){
-				foreach ($section as $subject_id) {
-					$subject = Subject::find($subject_id);
+				if(sizeof($section)){
+					foreach ($section as $subject_id) {
+						if(is_int($subject_id)){
+							$subject = Subject::find($subject_id);
 
-					$course_load[$key][] = $subject->only(['name','code','id','group']);
+							$course_load[$key][] = $subject->only(['name','code','id','group']);
+						}
+					}
 				}
 			}
+
+			$curriculum = $curriculum->toArray();
+
+			$curriculum['course_load'] = $course_load;
 		}
 
-		$curriculum = $curriculum->toArray();
-
-		$curriculum['course_load'] = $course_load;
-
 		return response()->json($curriculum,200);
+
 	}
 }

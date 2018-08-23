@@ -39,15 +39,19 @@ class CourseController extends Controller
 				];
 		
 		if($request->has('course_id')){
-			array_push($query,['course_id', '=', $request->course_id]);
+			$query[] = ['id', '=', $request->course_id];
+		}	
+
+		if($request->has('course_grade_id')){
+			$query[] = ['course_grade_id', '=', $request->course_grade_id];
 		}	
 				
 		$courses = $request->has('paginate') ? 
-						Course::with(['registrations','grade'])
+						Course::with(['registrations','grade:id,name'])
 								->where($query)
 								->paginate($request->paginate) 
 								
-					: Course::with('registrations','grade')
+					: Course::with('registrations','grade:id,name')
 							->where($query)
 							->get();
 						

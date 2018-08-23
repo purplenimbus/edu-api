@@ -49,9 +49,11 @@ class GenerateCourses implements ShouldQueue
         foreach ($this->curricula as $curriculum) {
 
             foreach ($curriculum->course_load as $key => $section) {
+                
                 //var_dump();
                 //$course_load[$key] = [];
                 //var_dump($section);
+
                 if(sizeof($section)){
                     foreach ($section as $subject_id) {
 
@@ -69,7 +71,7 @@ class GenerateCourses implements ShouldQueue
                                 'course_grade_id' => $curriculum->course_grade_id
                             ];
 
-                            $course = Course::firstOrNew(array_only($data,['name','tenant_id','course_grade_id']));
+                            $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));
 
                             if($course->id){
                                 $self->payload['updated'][] = $course;

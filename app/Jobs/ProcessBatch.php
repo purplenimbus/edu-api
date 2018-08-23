@@ -17,6 +17,7 @@ use App\Subject as Subject;
 use App\Course as Course;
 use App\Curriculum as Curriculum;
 use App\CourseGrade as CourseGrade;
+use App\Registration as Registration;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -80,6 +81,8 @@ class ProcessBatch implements ShouldQueue
 
     private function processUser($data,$payload){
         //'\App'::make('App\\'.ucfirst($this->type))
+
+        $self = $this;
         $user = User::firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
 
         if($user->id){
@@ -96,12 +99,39 @@ class ProcessBatch implements ShouldQueue
 
         $user->save();
 
+        if($user->meta->user_type){
+            switch($user->meta->user_type){
+                case 'student' : if($user->meta->course_grade_id){ //TO DO: Move to its own function
+
+                                    $courses = Course::with('grade')->where('course_grade_id',$user->meta->course_grade_id)->get();
+
+                                    if($courses->count()){
+                                        foreach ($courses as $course) {
+
+                                            \Log::info('Course id : '.$course->id);
+                                            
+                                            $registration = Registration::make(['tenant_id' => $self->tenant_id , 'user_id' => $user->id , 'course_id' => $course->id]);
+
+                                            $registration->save();
+
+                                            \Log::info('Student '.$user->id.' Registered ,in '.$course->code.' , Registration UUID'.$registration->uuid);
+                                        }
+                                    }                        
+                                } 
+
+                                break;
+                case 'teacher' : break;
+            }
+        }
+
+
+
         return $payload;
     }  
 
     private function processSubject($data,$payload){
         //'\App'::make('App\\'.ucfirst($this->type))
-        $subject = Subject::firstOrNew(array_only($data, ['name']));
+        $subject = Subject::make(array_only($data, ['code']));
 
         if($subject->id){
             $payload['updated'][] = $subject;

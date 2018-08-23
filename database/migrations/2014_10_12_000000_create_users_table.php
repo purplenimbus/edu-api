@@ -19,6 +19,8 @@ class CreateUsersTable extends Migration
             $table->integer('tenant_id');
             $table->string('firstname');
             $table->string('lastname');
+            $table->string('othernames')->nullable();
+            $table->string('title')->nullable();
             $table->string('password')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('image')->nullable();
