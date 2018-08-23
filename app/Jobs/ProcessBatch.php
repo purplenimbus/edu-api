@@ -101,33 +101,32 @@ class ProcessBatch implements ShouldQueue
 
         if($user->meta->user_type){
             switch($user->meta->user_type){
-                case 'student' : if($user->meta->course_grade_id){ //TO DO: Move to its own function
+                case 'student' :    if($user->meta->course_grade_id){ 
+                                        $self->registerStudent($user); 
+                                    } 
 
-                                    $courses = Course::with('grade')->where('course_grade_id',$user->meta->course_grade_id)->get();
-
-                                    if($courses->count()){
-                                        foreach ($courses as $course) {
-
-                                            \Log::info('Course id : '.$course->id);
-                                            
-                                            $registration = Registration::make(['tenant_id' => $self->tenant_id , 'user_id' => $user->id , 'course_id' => $course->id]);
-
-                                            $registration->save();
-
-                                            \Log::info('Student '.$user->id.' Registered ,in '.$course->code.' , Registration UUID'.$registration->uuid);
-                                        }
-                                    }                        
-                                } 
-
-                                break;
+                                    break;
 
                 case 'teacher' : if(isset($user->meta->course_codes)){ 
                                     foreach (explode(',',$user->meta->course_codes) as $course_code){
+
                                         $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
 
-                                        if($course->id && sizeof($course->registrations)){ 
-                                            $self->assignInstructor($user,$course->id);
+                                        if(isset($course->id)){
+
+                                            if(sizeof($course->registrations)){
+                                                $self->assignInstructor($user,$course);
+                                            }else{
+                                                \Log::info('Cant assign instructor '.$course_code.' , no students registered ');
+                                            } 
+                                            
+                                        }else{
+                                            \Log::info('Cant assign instructor, '.$course_code.' not found ');
                                         }
+
+                                        unset($user->meta->course_codes);
+
+                                        $user->save();
                                         
                                     }
                                 }
@@ -138,6 +137,61 @@ class ProcessBatch implements ShouldQueue
 
         return $payload;
     }  
+
+    private function registerStudent(User $user){
+
+        //var_dump($this->getCourseLoadIds($user->meta->course_grade_id));
+        foreach ($this->getCourseLoadIds($user->meta->course_grade_id)['core'] as $course) {
+            
+            //var_dump($course);
+
+            $registration = Registration::make([
+                'tenant_id' => $this->tenant_id ,
+                'user_id' => $user->id ,
+                'course_id' => $course['id']
+            ]);
+
+            $registration->save();
+
+            \Log::info('Student '.$user->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
+        }
+    }
+
+    private function getCourseLoadIds($course_grade_id){
+
+        try{
+            $curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
+
+            $course_load = [];
+
+            if(isset($curriculum->course_load)){
+                foreach ($curriculum->course_load as $key => $section) {
+                    $course_load[$key] = [];
+
+                    if(sizeof($section)){
+                        foreach ($section as $subject_id) {
+                            if(is_int($subject_id)){
+                                $subject = Subject::find($subject_id);
+
+                                $course = Course::where('code',$this->parseCourseCode($subject->code,$curriculum->grade->name))->first();
+
+                                $course_load[$key][] = $course->only(['id','code']);
+                            }
+                        }
+                    }
+                }
+
+                //var_dump($course_load);
+                return $course_load;
+            }
+        }catch(ModelNotFoundException $ex){      
+           throw new Exception('No Curriculum found with grade id '+$course_grade_id);
+        }
+    }
+
+    private function parseCourseCode($subject_code,$grade_name){
+        return strtoupper($subject_code.'-'.str_replace(' ','-',$grade_name));
+    }
 
     private function processSubject($data,$payload){
         //'\App'::make('App\\'.ucfirst($this->type))
@@ -229,7 +283,7 @@ class ProcessBatch implements ShouldQueue
             'subject_id' => $subject->id,
             'tenant_id' => $this->tenant_id,
             'name' => $subject->name,
-            'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
+            'code' => $this->parseCourseCode($subject->code,$curriculum->grade->name),
             'course_grade_id' => $curriculum->course_grade_id,
             'meta' => [
                 'course_schema' =>  [
@@ -257,18 +311,14 @@ class ProcessBatch implements ShouldQueue
         return $course;
     }
 
-    private function assignInstructor(User $user,$course_id){
-        $course = Course::firstOrNew(['instructor_id' => $user->id]);
+    private function assignInstructor(User $user,Course $course){
+        $course->instructor_id = $user->id;
 
-        if($course->id){
-            //$this->payload['updated'][] = $course;
-        }else{
-            $this->payload['created'][] = $course;
+        $course->save();
 
-            $course->fill($data);
+        $this->payload['created'][] = $course;
 
-            $course->save();
-        }
+        \Log::info('Instructor '.$user->id.' Assigned to '.$course->code);
 
         return $course;
     }

@@ -27,6 +27,15 @@ class Course extends Model
         return $this->belongsTo('App\CourseGrade','course_grade_id');
     }
 
+    /**
+     * Get course registrations
+     *
+     * @var array
+     */
+    public function instructor()
+    {
+        return $this->belongsTo('App\User','instructor_id','id');
+    }
 	/**
      * Cast meta property to array
      *
