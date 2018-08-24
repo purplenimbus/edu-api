@@ -38,6 +38,28 @@ class CourseController extends Controller
 					['tenant_id', '=', $tenant_id]
 				];
 		
+		/*$valid_queries = [
+			[
+				'name' => 'course_id',
+				'query_key' => 'id'
+			],[
+				'name' => 'course_grade_id',
+				'query_key' => 'course_grade_id'
+			],[
+				'name' => 'instructor_id',
+				'query_key' => 'instructor_id'
+			],[
+				'name' => 'name',
+				'query_key' => 'name'
+			]
+		];
+
+		foreach ($valid_queries as $query) {
+			if($request->has($query['name'])){
+				$query[] = [$query['query_key'], '=', $request[$query['name']]];
+			}	
+		}*/
+
 		if($request->has('course_id')){
 			$query[] = ['id', '=', $request->course_id];
 		}	
@@ -49,13 +71,19 @@ class CourseController extends Controller
 		if($request->has('name')){
 			$query[] = ['name', '=', $request->name];
 		}	
+
+		if($request->has('instructor_id')){
+			$query[] = ['instructor_id', '=', $request->instructor_id];
+		}
+
+		$relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
 				
 		$courses = $request->has('paginate') ? 
-						Course::with(['registrations','grade:id,name','instructor:id,firstname,lastname,meta'])
+						Course::with($relationships)
 								->where($query)
 								->paginate($request->paginate) 
 								
-					: Course::with(['registrations','grade:id,name','instructor:id,firstname,lastname,meta'])
+					: Course::with($relationships)
 							->where($query)
 							->get();
 						

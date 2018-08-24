@@ -21,7 +21,7 @@ class RegistrationController extends Controller
 					['tenant_id', '=', $tenant_id]
 				];
 				
-		$relationships = ['course','user'];
+		$relationships = ['course','user','course.grade:name,id,alias','course.instructor:id,firstname,lastname,meta'];
 		
 		if($request->has('user_id')){
 			array_push($query,['user_id', '=', $request->user_id]);

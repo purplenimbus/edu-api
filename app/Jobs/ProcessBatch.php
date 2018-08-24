@@ -12,12 +12,7 @@ use App\Notifications\BatchProcessed;
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant as Tenant;
-use App\User as User;
-use App\Subject as Subject;
-use App\Course as Course;
-use App\Curriculum as Curriculum;
-use App\CourseGrade as CourseGrade;
-use App\Registration as Registration;
+use App\Nimbus\NimbusEdu as NimbusEdu;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -27,6 +22,7 @@ class ProcessBatch implements ShouldQueue
     var $type;
     var $tenant_id;
     var $payload;
+    var $NimbusEdu;
     /**
      * Create a new job instance.
      *
@@ -34,6 +30,7 @@ class ProcessBatch implements ShouldQueue
      */
     public function __construct($tenant_id,$data,$type)
     {
+        $this->NimbusEdu = new NimbusEdu($tenant_id);
         $this->tenant_id = $tenant_id;
         $this->data = $data;
         $this->type = $type; //TO DO : Validate this in StoreBatch
@@ -61,10 +58,10 @@ class ProcessBatch implements ShouldQueue
 
             //$data['password'] = $this->createDefaultPassword($data['email']);
             switch($this->type){
-                case 'user' : $this->payload = $self->processUser($data,$this->payload); break;
-                case 'subject' : $this->payload = $self->processSubject($data,$this->payload); break;
-                case 'coursegrade' : $this->payload = $self->processCourseGrade($data,$this->payload); break;
-                case 'curriculum' : $this->payload = $self->processCurriculum($data,$this->payload); break;
+                case 'user' : $this->payload = $self->NimbusEdu->processUser($data,$this->payload); break;
+                case 'subject' : $this->payload = $self->NimbusEdu->processSubject($data,$this->payload); break;
+                case 'coursegrade' : $this->payload = $self->NimbusEdu->processCourseGrade($data,$this->payload); break;
+                case 'curriculum' : $this->payload = $self->NimbusEdu->processCurriculum($data,$this->payload); break;
                 default : break;
             }
         }
@@ -77,271 +74,5 @@ class ProcessBatch implements ShouldQueue
 
         \Log::info('ProcessBatch '.ucfirst($this->type).': '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated for tenant_id: '.$this->tenant_id);
         
-    }
-
-    private function processUser($data,$payload){
-        //'\App'::make('App\\'.ucfirst($this->type))
-
-        $self = $this;
-        $user = User::firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
-
-        if($user->id){
-            $payload['updated'][] = $user;
-        }else{
-            $data['access_level'] = 1;
-
-            $data['password'] = $this->createDefaultPassword($data['email']);
-
-            $payload['created'][] = $user;
-        }
-
-        $user->fill($data);
-
-        $user->save();
-
-        if($user->meta->user_type){
-            switch($user->meta->user_type){
-                case 'student' :    if($user->meta->course_grade_id){ 
-                                        $self->registerStudent($user); 
-                                    } 
-
-                                    break;
-
-                case 'teacher' : if(isset($user->meta->course_codes)){ 
-                                    foreach (explode(',',$user->meta->course_codes) as $course_code){
-
-                                        $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
-
-                                        if(isset($course->id)){
-
-                                            if(sizeof($course->registrations)){
-                                                $self->assignInstructor($user,$course);
-                                            }else{
-                                                \Log::info('Cant assign instructor '.$course_code.' , no students registered ');
-                                            } 
-                                            
-                                        }else{
-                                            \Log::info('Cant assign instructor, '.$course_code.' not found ');
-                                        }
-
-                                        unset($user->meta->course_codes);
-
-                                        $user->save();
-                                        
-                                    }
-                                }
-
-                                break;
-            }
-        }
-
-        return $payload;
-    }  
-
-    private function registerStudent(User $user){
-
-        //var_dump($this->getCourseLoadIds($user->meta->course_grade_id));
-        foreach ($this->getCourseLoadIds($user->meta->course_grade_id)['core'] as $course) {
-            
-            //var_dump($course);
-
-            $registration = Registration::make([
-                'tenant_id' => $this->tenant_id ,
-                'user_id' => $user->id ,
-                'course_id' => $course['id']
-            ]);
-
-            $registration->save();
-
-            \Log::info('Student '.$user->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
-        }
-    }
-
-    private function getCourseLoadIds($course_grade_id){
-
-        try{
-            $curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
-
-            $course_load = [];
-
-            if(isset($curriculum->course_load)){
-                foreach ($curriculum->course_load as $key => $section) {
-                    $course_load[$key] = [];
-
-                    if(sizeof($section)){
-                        foreach ($section as $subject_id) {
-                            if(is_int($subject_id)){
-                                $subject = Subject::find($subject_id);
-
-                                $course = Course::where('code',$this->parseCourseCode($subject->code,$curriculum->grade->name))->first();
-
-                                $course_load[$key][] = $course->only(['id','code']);
-                            }
-                        }
-                    }
-                }
-
-                //var_dump($course_load);
-                return $course_load;
-            }
-        }catch(ModelNotFoundException $ex){      
-           throw new Exception('No Curriculum found with grade id '+$course_grade_id);
-        }
-    }
-
-    private function parseCourseCode($subject_code,$grade_name){
-        return strtoupper($subject_code.'-'.str_replace(' ','-',$grade_name));
-    }
-
-    private function processSubject($data,$payload){
-        //'\App'::make('App\\'.ucfirst($this->type))
-        $subject = Subject::firstOrNew(array_only($data, ['code']));
-
-        if($subject->id){
-            $payload['updated'][] = $subject;
-        }else{
-
-            $payload['created'][] = $subject;
-        }
-
-        $subject->fill($data);
-
-        $subject->save();
-
-        return $payload;
-    }
-
-    private function processCurriculum($data,$payload){
-
-        $course_load = [
-            'core' => [],
-            'optional' => [],
-            'selective' => [],
-        ];
-
-        $curriculum = Curriculum::firstOrNew(array_only($data, ['course_grade_id']));
-
-        $new = isset($curriculum->id) ? $curriculum->id : false;
-
-        if(isset($data['core_subjects_code'])){
-            $course_load['core'] = $this->parseSubjects($data['core_subjects_code'],$curriculum,true);
-        }
-
-        if(isset($data['selective_subjects_code'])){
-            $course_load['selective'] = $this->parseSubjects($data['selective_subjects_code'],$curriculum,true);
-        }
-
-        if(isset($data['optional_subjects_code'])){
-            $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code'],$curriculum,true);
-        }
-
-        $curriculum->course_load = $course_load;
-
-        $curriculum->save();
-
-        if($new){
-            $payload['updated'][] = $curriculum;
-        }else{
-            $payload['created'][] = $curriculum;
-        }
-
-        return $payload;
-    }
-
-    private function parseSubjects($data,Curriculum $curriculum,$create_course = false){
-        $parsed = [];
-
-        $core_subjects_codes = explode(',',$data);
-
-        foreach ($core_subjects_codes as $core_subject_code) {
-
-            $core_subject = Subject::where('code',$core_subject_code)->first();
-
-            //$parsed[] = isset($core_subject->id) ? $core_subject->id : $core_subject_code;
-
-            if($create_course && isset($core_subject->id) && is_int($core_subject->id)){ 
-
-                $parsed[] = $core_subject->id;
-
-                $course = $this->createCourse($core_subject,$curriculum); 
-
-            }
-            
-        }
-
-        unset($data);
-
-        return $parsed;
-    }
-
-    private function createCourse(Subject $subject,Curriculum $curriculum){
-        //$course_load[$key][] = $subject->only(['name','code','id','group']);
-
-        //var_dump(strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)));
-
-        $data = [
-            'subject_id' => $subject->id,
-            'tenant_id' => $this->tenant_id,
-            'name' => $subject->name,
-            'code' => $this->parseCourseCode($subject->code,$curriculum->grade->name),
-            'course_grade_id' => $curriculum->course_grade_id,
-            'meta' => [
-                'course_schema' =>  [
-                    'quiz' =>  15,
-                    'midterm' => 30,
-                    'assignment' => 15,
-                    'lab' => 5,
-                    'exam' => 35
-                ]
-            ]
-        ];
-
-        $course = Course::firstOrNew(array_only($data,['code','tenant_id']));
-
-        if($course->id){
-            $this->payload['updated'][] = $course;
-        }else{
-            $this->payload['created'][] = $course;
-        }
-
-        $course->fill($data);
-
-        $course->save();
-
-        return $course;
-    }
-
-    private function assignInstructor(User $user,Course $course){
-        $course->instructor_id = $user->id;
-
-        $course->save();
-
-        $this->payload['created'][] = $course;
-
-        \Log::info('Instructor '.$user->id.' Assigned to '.$course->code);
-
-        return $course;
-    }
-
-    private function processCourseGrade($data,$payload){
-        //'\App'::make('App\\'.ucfirst($this->type))
-        $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
-
-        if($curriculum->id){
-            $payload['updated'][] = $curriculum;
-        }else{
-
-            $payload['created'][] = $curriculum;
-        }
-
-        $curriculum->fill($data);
-
-        $curriculum->save();
-
-        return $payload;
-    }   
-
-    private function createDefaultPassword($str = false){
-        return app('hash')->make($str);
     }
 }
