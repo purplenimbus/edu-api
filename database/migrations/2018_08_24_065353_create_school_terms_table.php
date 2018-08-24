@@ -15,6 +15,7 @@ class CreateSchoolTermsTable extends Migration
     {
         Schema::create('school_terms', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('tenant_id');
             $table->string('name');
             $table->year('year');
             $table->json('meta')->nullable();

@@ -18,6 +18,7 @@ class CreateUserRolesTable extends Migration
             $table->string('name');
             $table->string('description')->nullable();
             $table->json('meta')->nullable();
+            $table->integer('tenant_id');
             $table->timestamps();
         });
     }

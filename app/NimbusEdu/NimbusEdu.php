@@ -9,14 +9,25 @@ use App\Course as Course;
 use App\Curriculum as Curriculum;
 use App\CourseGrade as CourseGrade;
 use App\Registration as Registration;
+use App\SchoolTerm as SchoolTerm;
+use App\CurriculumType as CurriculumType;
+use App\UserType as UserType;
 
 class NimbusEdu
 {
- 	var $tenant_id;
+ 	var $tenant;
 
- 	public function __construct($tenant_id)
+ 	public function __construct($tenant_id = false)
     {
-    	$this->tenant_id = $tenant_id;
+    	if(!$tenant_id){
+    		throw new Exception("Tenant id required", 1);	
+    	}
+
+    	$this->tenant = Tenant::find($tenant_id);
+
+    	if(!$this->tenant->id){
+    		throw new ModelNotFoundException("Tenant not found", 1);	
+    	}
     }
 
     public function processUser($data,$payload){
@@ -36,47 +47,55 @@ class NimbusEdu
 	            $payload['created'][] = $user;
 	        }
 
+	        $data['user_type_id'] = $this->getUserType($data['meta']['user_type'])->id;
+
+	        $user_type = $data['meta']['user_type'];
+
+	        if(isset($data['meta']['course_codes'])){
+	        	$course_codes =  $data['meta']['course_codes'];
+	        	unset($data['meta']['course_codes']);
+	        }else{
+	        	$course_codes = false;
+	        }
+
+	        unset($data['meta']['user_type']);
+
+	        //var_dump($data);
+	        
 	        $user->fill($data);
 
 	        $user->save();
 
+            switch($user_type){
+                case 'student' :    if($user->meta->course_grade_id){ 
+                                        $self->registerStudent($user); 
+                                    } 
 
-	        if($user->has('usertype')){
-	            switch($user->usertype->name){
-	                case 'student' :    if($user->meta->course_grade_id){ 
-	                                        $self->registerStudent($user); 
-	                                    } 
+                                    break;
 
-	                                    break;
+                case 'teacher' : if($course_codes){ 
+                                    foreach (explode(',',$course_codes) as $course_code){
 
-	                case 'teacher' : if(isset($user->meta->course_codes)){ 
-	                                    foreach (explode(',',$user->meta->course_codes) as $course_code){
+                                        $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
 
-	                                        $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
+                                        if(isset($course->id)){
 
-	                                        if(isset($course->id)){
+                                            //if(sizeof($course->registrations)){
+                                                $self->assignInstructor($user,$course);
+                                            //}else{
+                                               // \Log::info('Cant assign instructor '.$course_code.' , no students registered ');
+                                            //} 
+                                            
+                                        }else{
+                                            \Log::info('Cant assign instructor, '.$course_code.' not found ');
+                                        }
+                                        
+                                    }
+                                }
 
-	                                            //if(sizeof($course->registrations)){
-	                                                $self->assignInstructor($user,$course);
-	                                            //}else{
-	                                               // \Log::info('Cant assign instructor '.$course_code.' , no students registered ');
-	                                            //} 
-	                                            
-	                                        }else{
-	                                            \Log::info('Cant assign instructor, '.$course_code.' not found ');
-	                                        }
-
-	                                        unset($user->meta->course_codes);
-
-	                                        $user->save();
-	                                        
-	                                    }
-	                                }
-
-	                                break;
-	            }
-	        }
-
+                                break;
+            }
+	        
 	        return $payload;
 
         }catch(Exception $e){
@@ -115,7 +134,13 @@ class NimbusEdu
 	            'elective' => [],
 	        ];
 
-	        $curriculum = Curriculum::firstOrNew(array_only($data, ['course_grade_id']));
+	        $query = array_only($data, ['course_grade_id']);
+
+	        $curriculum_type = $this->getCurriculumType();
+	        
+	        $query['type_id'] = $curriculum_type->id;
+
+			$curriculum = Curriculum::firstOrNew($query);
 
 	        $new = isset($curriculum->id) ? $curriculum->id : false;
 
@@ -148,6 +173,18 @@ class NimbusEdu
         }
     }
 
+    public function getUserType($name){
+    	return UserType::where(['name' => strtolower($name)])->first();
+    }
+
+    public function getCurriculumType(){
+    	return CurriculumType::where(['country' => $this->tenant->meta->country])->first();
+    }
+
+    public function getCurrentTerm(){
+    	return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
+    }
+
     public function processCourseGrade($data,$payload){
         try{
 	        //'\App'::make('App\\'.ucfirst($this->type))
@@ -173,12 +210,15 @@ class NimbusEdu
     public function registerStudent(User $user){
 
         try{
+        	
+        	$school_term = $this->getCurrentTerm();
+        	
         	foreach ($this->getCourseLoadIds($user->meta->course_grade_id)['core'] as $course) {
 	            $registration = Registration::firstOrNew([
-	                'tenant_id' => $this->tenant_id ,
+	                'tenant_id' => $this->tenant->id ,
 	                'user_id' => $user->id ,
 	                'course_id' => $course['id'],
-	                //set term id here
+	                'term_id' => $school_term->id
 	            ]);
 
 	            $registration->save();
@@ -277,7 +317,7 @@ class NimbusEdu
         try{
             $data = [
 	            'subject_id' => $subject->id,
-	            'tenant_id' => $this->tenant_id,
+	            'tenant_id' => $this->tenant->id,
 	            'name' => $subject->name,
 	            'code' => $this->parseCourseCode($subject->code,$curriculum->grade->name),
 	            'course_grade_id' => $curriculum->course_grade_id,

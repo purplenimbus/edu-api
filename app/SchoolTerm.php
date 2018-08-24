@@ -12,7 +12,7 @@ class SchoolTerm extends Model
      * @var array
      */
     protected $fillable = [
-        'name','meta','description','meta'
+        'name','meta','description','meta','year','tenant_id'
     ];
 	
 	/**

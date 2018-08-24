@@ -24,6 +24,6 @@ class CurriculumType extends Model
      * @var array
      */
     protected $fillable = [
-        'description','meta',
+        'description','meta','country'
     ];
 }

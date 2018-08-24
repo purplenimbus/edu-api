@@ -13,7 +13,7 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create(['meta' => [ 'country' => 'nigeria']]
+			->create(['meta' => [ 'country' => 'nigeria','current_term' => 'first']]
 			/*[
 				'meta'=>  [
 					'settings' => [
@@ -30,6 +30,10 @@ class DemoUsersSeeder extends Seeder
 				]
 			]*/)
 			->each(function($tenant)use($count){
+
+				//create a new term
+				$school_term =  App\SchoolTerm::create(['tenant_id' => $tenant->id,'name' => 'first','year' => 2018]);
+
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,
 					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',

@@ -14,6 +14,7 @@ class CreateCurriculaTypesTable extends Migration
     public function up()
     {
         Schema::create('curricula_types', function (Blueprint $table) {
+            $table->increments('id');
             $table->string('country');
             $table->string('description')->nullable();
             $table->json('meta')->nullable();
