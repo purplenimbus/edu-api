@@ -24,7 +24,7 @@ class NimbusEdu
 	        //'\App'::make('App\\'.ucfirst($this->type))
 
 	        $self = $this;
-	        $user = User::firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
+	        $user = User::with('usertype')->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
 
 	        if($user->id){
 	            $payload['updated'][] = $user;
@@ -40,8 +40,9 @@ class NimbusEdu
 
 	        $user->save();
 
-	        if($user->meta->user_type){
-	            switch($user->meta->user_type){
+
+	        if($user->has('usertype')){
+	            switch($user->usertype->name){
 	                case 'student' :    if($user->meta->course_grade_id){ 
 	                                        $self->registerStudent($user); 
 	                                    } 
@@ -176,7 +177,8 @@ class NimbusEdu
 	            $registration = Registration::firstOrNew([
 	                'tenant_id' => $this->tenant_id ,
 	                'user_id' => $user->id ,
-	                'course_id' => $course['id']
+	                'course_id' => $course['id'],
+	                //set term id here
 	            ]);
 
 	            $registration->save();

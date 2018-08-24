@@ -44,6 +44,10 @@ class User extends Authenticatable implements JWTSubject
 	function tenant(){
 		return $this->belongsTo('App\Tenant');
 	}
+
+    function usertype(){
+        return $this->belongsTo('App\UserType','user_type_id');
+    }
 	
 	/**
      * Get the identifier that will be stored in the subject claim of the JWT.

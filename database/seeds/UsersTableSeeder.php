@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     {
         $count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create()
+			->create(['meta' => [ 'country' => 'nigeria']])
 			->each(function($tenant)use($count){
 				
 				$students = factory(App\User::class,'student',7)
@@ -54,7 +54,7 @@ class UsersTableSeeder extends Seeder
 					'access_level' => 1
 				])->each(function($student)use($count,$tenant){ 
 				
-					$course = App\Course::all()->each(function($course)use($tenant,$student){
+					/*$course = App\Course::all()->each(function($course)use($tenant,$student){
 								
 								$registration = App\Registration::create([
 									'course_id' => $course->id,
@@ -68,7 +68,7 @@ class UsersTableSeeder extends Seeder
 								echo "Registered Student in ".$course->code."\r\n";
 								
 								var_dump($registration->uuid);
-							});
+							});*/
 							
 					$count++; 
 				
@@ -84,7 +84,7 @@ class UsersTableSeeder extends Seeder
 						'access_level' => 1
 					])->each(function($teacher)use($count){ $count++; });
 				
-				$teachers = factory(App\User::class,'teacher',2)
+				/*$teachers = factory(App\User::class,'teacher',2)
 					->create([
 						'tenant_id' => $tenant->id,
 						'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
@@ -94,7 +94,7 @@ class UsersTableSeeder extends Seeder
 						$count++;
 					});
 					
-				\Log::info('Created '.$teachers->count().' teachers');
+				\Log::info('Created '.$teachers->count().' teachers');*/
 				
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 						'tenant_id' => $tenant->id,

@@ -13,7 +13,8 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create(/*[
+			->create(['meta' => [ 'country' => 'nigeria']]
+			/*[
 				'meta'=>  [
 					'settings' => [
 						'classes' => [
@@ -32,12 +33,22 @@ class DemoUsersSeeder extends Seeder
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,
 					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
+					'firstname'		=>	'ekama',
+					'lastname'		=>	'akpan',
+					'email'		=>	'info@showersedu.com',
+					'password'	=>	app('hash')->make('info@showersedu.com'),
+					//'access_level' => 3
+				])->each(function($admin)use($count){ $count++; });
+
+				$superadmin 	=	factory(App\User::class,'superadmin',1)->create([
+					'tenant_id' => $tenant->id,
+					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
 					'firstname'		=>	'anthony',
 					'lastname'		=>	'akpan',
 					'email'		=>	'anthony.akpan@hotmail.com',
 					'password'	=>	app('hash')->make('easier'),
-					'access_level' => 3
-				])->each(function($admin)use($count){ $count++; });
+					//'access_level' => 4
+				])->each(function($superadmin)use($count){ $count++; });
 
 				$demoTeacher 	=	factory(App\User::class,'teacher',1)->create([
 					'tenant_id' => $tenant->id,
@@ -46,7 +57,7 @@ class DemoUsersSeeder extends Seeder
 					'lastname'		=>	'teacher',
 					'email'		=>	'teacher@yopmail.com',
 					'password'	=>	app('hash')->make('demo'),
-					'access_level' => 1
+					//'access_level' => 1
 				])->each(function($teacher)use($count){ $count++; });
 
 				$demoStudent 	=	factory(App\User::class,'student',1)->create([
@@ -56,9 +67,9 @@ class DemoUsersSeeder extends Seeder
 							'lastname'		=>	'student',
 							'email'		=>	'student@yopmail.com',
 							'password'	=>	app('hash')->make('demo'),
-							'access_level' => 1,
+							//'access_level' => 1,
 							'meta' => ['course_grade_id' => 1]
-						])->each(function($teacher)use($count){ $count++; });
+						])->each(function($student)use($count){ $count++; });
 		});
 
 		\Log::info('Created '.$count.' total test users');

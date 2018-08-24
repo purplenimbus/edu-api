@@ -25,7 +25,7 @@ class Curriculum extends Model
      * @var array
      */
     protected $fillable = [
-        'course_grade_id','description','meta','course_load',
+        'course_grade_id','description','meta','course_load','type_id',
     ];
 
     /**
