@@ -7,20 +7,23 @@ use App\User as User;
 use App\Http\Requests\StoreUser as StoreUser;
 use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
+use App\Nimbus\NimbusEdu;
 
 class UserController extends Controller
 {
     public function userList($tenant_id , Request $request){
-		
+
+		$nimbus_edu = new NimbusEdu($tenant_id);
+
 		$query = [
 			['tenant_id', '=', $tenant_id]
 		];
 		
 		if($request->has('user_type')){
-			array_push($query,['meta->user_type', '=', $request->user_type]);
+			array_push($query,['user_type_id', '=', $nimbus_edu->getUserType($request->user_type)->id]);
 		}
 		
-		if($request->has('ids')){
+		/*if($request->has('ids')){
 			
 			//array_push($query,['id', '=', explode(",",$request->ids)]);
 			
@@ -30,22 +33,15 @@ class UserController extends Controller
 					->only(['id','firstname','lastname','image'])
 			: 	User::where($query)->whereIn('id',explode(",",$request->ids))
 					->get(['id','firstname','lastname','image']);
-		}else{
+		}else{*/
 			$users = 	$request->has('paginate') ? 
-				User::with('tenant')->where($query)
+				User::with(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id'])->where($query)
 					->paginate($request->paginate)							
-			: 	User::with('tenant')->where($query)
+			: 	User::with(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id'])->where($query)
 					->get();
-		}
+		//}
 				
-		if(sizeof($users)){
-			return response()->json($users,200);
-		}else{
-			
-			$message = 'no users found for tenant : '.$tenant_id;
-			
-			return response()->json(['message' => $message],401);
-		}
+		return response()->json($users,200);
 		
 	}
 
@@ -53,7 +49,7 @@ class UserController extends Controller
 		
 		//validate tenant id ?
 		try {
-			$user = User::with('tenant')->where([
+			$user = User::with(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id'])->where([
 					['tenant_id', '=', $tenant_id],
 					['id', '=', $user_id],
 				])->get();
@@ -85,7 +81,7 @@ class UserController extends Controller
 
 			$user->save($data);
 
-			$user->load('tenant');
+			$user->load(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id']);
 					  
 			return response()->json($user,200);
 

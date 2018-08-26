@@ -98,6 +98,24 @@ class CourseController extends Controller
 		
     }
 	
+	/**
+     * Create a new course
+     *
+     * @return void
+     */
+	public function updateCourse($tenant_id,StoreCourse $request){
+		dd($request->all());
+		
+		//$data = $request->all();
+		
+		/*$data['tenant_id'] = $tenant_id;
+
+		$data['code'] = $data['class']['name']
+		
+		$course = Course::create($data);
+		
+		return response()->json($course,200)->setCallback($request->input('callback'));*/
+	}
 
 	/**
      * Create a new course

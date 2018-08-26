@@ -62,5 +62,18 @@ class OtherSeeders extends Seeder
 		foreach($curricula_types as $curricula_type){
 			App\CurriculumType::create($curricula_type);
 		}
+
+		$account_status_types = [
+			[	'name' => 'created'	],
+			[	'name' => 'registered'	],
+			[	'name' => 'assigned'	],
+			[	'name' => 'terminated'	],
+			[	'name' => 'archived'	],
+		];
+		
+		//Create Currencies
+		foreach($account_status_types as $account_status_type){
+			App\StatusType::create($account_status_type);
+		}
     }
 }

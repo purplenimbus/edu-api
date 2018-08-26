@@ -60,7 +60,7 @@ class LoginController extends Controller
 			return response()->json(['error' => 'could_not_create_token'], 500);
 		}
 		
-		$user = Auth::user()->load('tenant');
+		$user = Auth::user()->load(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id']);
 		
 		return response()->json(compact(['token','user']));
 

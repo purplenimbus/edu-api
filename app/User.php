@@ -19,7 +19,19 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'firstname','lastname','othernames','email','tenant_id','meta','password','tenant','image','user_type_id'
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'tenant_id',
+        'meta',
+        'password',
+        'tenant',
+        'image',
+        'user_type_id',
+        'account_status_id',
+        'access_level_id',
+        'user_role_id'
     ];
 
     /**
@@ -28,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $hidden = [
-        'password','tenant_id','created_at','updated_at'
+        'password','tenant_id','created_at','updated_at','remember_token','access_level_id','user_type_id','user_role_id','account_status_id'
     ];
 	
 	/**
@@ -45,8 +57,16 @@ class User extends Authenticatable implements JWTSubject
 		return $this->belongsTo('App\Tenant');
 	}
 
-    function usertype(){
+    function user_type(){
         return $this->belongsTo('App\UserType','user_type_id');
+    }
+
+    function account_status(){
+        return $this->belongsTo('App\StatusType','account_status_id');
+    }
+
+    function access_level(){
+        return $this->belongsTo('App\AccessLevel','access_level_id');
     }
 	
 	/**

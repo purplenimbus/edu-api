@@ -20,7 +20,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'email' => $faker->email,
         'password' => app('hash')->make('123456'),
 		'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
-		'access_level' => 2
+		'access_level_id' => 2
     ];
 });
 
@@ -39,11 +39,11 @@ $factory->defineAs(App\User::class, 'teacher', function (Faker $faker) use ($fac
 $factory->defineAs(App\User::class, 'admin', function (Faker $faker) use ($factory) {
     $user = $factory->raw(App\User::class);
 	
-    return array_merge($user, ["user_type_id" => 6 ,"access_level" => 3 ,"meta" => ["address" => ["street" => $faker->streetAddress]]]);
+    return array_merge($user, ["user_type_id" => 6 ,"access_level_id" => 3 ,"meta" => ["address" => ["street" => $faker->streetAddress]]]);
 });
 
 $factory->defineAs(App\User::class, 'superadmin', function (Faker $faker) use ($factory) {
     $user = $factory->raw(App\User::class);
     
-    return array_merge($user, ["user_type_id" => 6 ,"access_level" => 4 ,"meta" => ["address" => ["street" => $faker->streetAddress]]]);
+    return array_merge($user, ["user_type_id" => 6 ,"access_level_id" => 4 ,"meta" => ["address" => ["street" => $faker->streetAddress]]]);
 });

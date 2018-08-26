@@ -13,7 +13,7 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create(['meta' => [ 'country' => 'nigeria','current_term' => 'first']]
+			->create(['name'=> 'showers christian high hchool','meta' => [ 'country' => 'nigeria','current_term' => 'first']]
 			/*[
 				'meta'=>  [
 					'settings' => [
@@ -41,7 +41,6 @@ class DemoUsersSeeder extends Seeder
 					'lastname'		=>	'akpan',
 					'email'		=>	'info@showersedu.com',
 					'password'	=>	app('hash')->make('info@showersedu.com'),
-					//'access_level' => 3
 				])->each(function($admin)use($count){ $count++; });
 
 				$superadmin 	=	factory(App\User::class,'superadmin',1)->create([
@@ -51,7 +50,6 @@ class DemoUsersSeeder extends Seeder
 					'lastname'		=>	'akpan',
 					'email'		=>	'anthony.akpan@hotmail.com',
 					'password'	=>	app('hash')->make('easier'),
-					//'access_level' => 4
 				])->each(function($superadmin)use($count){ $count++; });
 
 				$demoTeacher 	=	factory(App\User::class,'teacher',1)->create([
@@ -61,7 +59,6 @@ class DemoUsersSeeder extends Seeder
 					'lastname'		=>	'teacher',
 					'email'		=>	'teacher@yopmail.com',
 					'password'	=>	app('hash')->make('demo'),
-					//'access_level' => 1
 				])->each(function($teacher)use($count){ $count++; });
 
 				$demoStudent 	=	factory(App\User::class,'student',1)->create([
@@ -71,7 +68,6 @@ class DemoUsersSeeder extends Seeder
 							'lastname'		=>	'student',
 							'email'		=>	'student@yopmail.com',
 							'password'	=>	app('hash')->make('demo'),
-							//'access_level' => 1,
 							'meta' => ['course_grade_id' => 1]
 						])->each(function($student)use($count){ $count++; });
 		});

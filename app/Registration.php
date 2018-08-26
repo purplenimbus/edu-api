@@ -13,7 +13,7 @@ class Registration extends Model
      * @var array
      */
     protected $fillable = [
-        'course_id','user_id','meta','course','tenant_id'
+        'course_id','user_id','meta','course','tenant_id','term_id'
     ];
 
     /**
@@ -42,6 +42,10 @@ class Registration extends Model
 	
 	public function user(){
         return $this->belongsTo('App\User');
+    }
+
+    public function term(){
+        return $this->belongsTo('App\SchoolTerm','term_id');
     }
 	/**
 	 *  Setup model event hooks

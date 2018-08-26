@@ -12,6 +12,7 @@ use App\Registration as Registration;
 use App\SchoolTerm as SchoolTerm;
 use App\CurriculumType as CurriculumType;
 use App\UserType as UserType;
+use App\StatusType as StatusType;
 
 class NimbusEdu
 {
@@ -35,19 +36,19 @@ class NimbusEdu
 	        //'\App'::make('App\\'.ucfirst($this->type))
 
 	        $self = $this;
-	        $user = User::with('usertype')->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
+	        $user = User::with(['user_type','account_status'])->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
+	        $created = isset($user->id) ? false : true;
+	        $user_type = $this->getUserType($data['meta']['user_type']);
 
-	        if($user->id){
-	            $payload['updated'][] = $user;
+	        if($created){
+	            
 	        }else{
-	            $data['access_level'] = 1;
+	            //$data['access_level'] = 2; //all imported users are granted level 2 access
 
 	            $data['password'] = $this->createDefaultPassword($data['email']);
-
-	            $payload['created'][] = $user;
 	        }
 
-	        $data['user_type_id'] = $this->getUserType($data['meta']['user_type'])->id;
+	        $data['user_type_id'] = $user_type->id;
 
 	        $user_type = $data['meta']['user_type'];
 
@@ -60,16 +61,22 @@ class NimbusEdu
 
 	        unset($data['meta']['user_type']);
 
-	        //var_dump($data);
-	        
 	        $user->fill($data);
+
+	        $user->access_level_id = 2;
 
 	        $user->save();
 
+	        //var_dump($user->account_status->name != 'registered');
+
             switch($user_type){
-                case 'student' :    if($user->meta->course_grade_id){ 
+                case 'student' :    /*if(
+                						$user->meta->course_grade_id 
+                						&& isset($user->account_status->name) 
+                						&& $user->account_status->name != 'registered'
+                					){ */
                                         $self->registerStudent($user); 
-                                    } 
+                                    //} 
 
                                     break;
 
@@ -83,7 +90,9 @@ class NimbusEdu
                                             //if(sizeof($course->registrations)){
                                                 $self->assignInstructor($user,$course);
                                             //}else{
-                                               // \Log::info('Cant assign instructor '.$course_code.' , no students registered ');
+                                               //\Log::info('Cant assign instructor '.$course_code.' , no students registered ');
+
+                                            	//\Log::info('Cant assign instructor '.$course_code.' , instructor already assigned ');
                                             //} 
                                             
                                         }else{
@@ -95,7 +104,13 @@ class NimbusEdu
 
                                 break;
             }
-	        
+
+            if($created){
+            	$payload['created'][] = $user;
+            }else{
+            	$payload['updated'][] = $user;
+            }
+				        
 	        return $payload;
 
         }catch(Exception $e){
@@ -185,6 +200,10 @@ class NimbusEdu
     	return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
     }
 
+    public function getStatusID($name){
+    	return  StatusType::where(['name' => $name])->first();
+    }
+
     public function processCourseGrade($data,$payload){
         try{
 	        //'\App'::make('App\\'.ucfirst($this->type))
@@ -223,10 +242,14 @@ class NimbusEdu
 
 	            $registration->save();
 
+	           	$user->account_status_id = $this->getStatusID('registered')->id;
+
+	        	$user->save();
+
 	            \Log::info('Student '.$user->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
 	        }
 
-	        return $registration;
+	        //return $registration;
         }catch(Exception $e){
         	throw new Exception($e->getMessage());
         }
@@ -239,6 +262,10 @@ class NimbusEdu
 	        $course->save();
 
 	        \Log::info('Instructor '.$user->id.' Assigned to '.$course->code);
+
+	        $user->account_status_id = $this->getStatusID('assigned')->id;
+
+	        $user->save();
 
 	        return $course;
         }catch(Exception $e){

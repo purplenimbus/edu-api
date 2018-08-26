@@ -24,10 +24,11 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('email')->unique()->nullable();
             $table->string('image')->nullable();
-            $table->integer('access_level')->default(1);
+            $table->integer('access_level_id')->default(1);
             $table->json('meta')->nullable();
             $table->integer('user_type_id')->default(1);
             $table->integer('user_role_id')->nullable();
+            $table->integer('account_status_id')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });

@@ -13,7 +13,7 @@ use App\Tenant as Tenant;
 use App\Transaction as Transaction;
 use App\Service as Service;
 use App\Http\Requests\StoreTenant as StoreTenant;
-
+use App\Nimbus\NimbusEdu as NimbusEdu;
 
 class TenantController extends BaseController
 {
