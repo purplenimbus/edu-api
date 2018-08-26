@@ -10,7 +10,8 @@
         "laravel/framework": "5.6.*",
         "laravel/tinker": "^1.0",
         "tymon/jwt-auth": "dev-develop",
-        "webpatser/laravel-uuid": "^3.0"
+        "webpatser/laravel-uuid": "^3.0",
+        "fzaninotto/faker": "^1.4"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
