@@ -219,19 +219,19 @@ class NimbusEdu
         }
     } 
 
-    private function getUserType($name,$new = false){
+    public function getUserType($name,$new = false){
     	return $new ? 
                 UserType::firstOrCreate(['name' => strtolower($name)]) : 
                 UserType::where(['name' => strtolower($name)])->first();
     }
 
-    private function getCurriculumType($new = false){
+    public function getCurriculumType($new = false){
     	return $new ? 
                 CurriculumType::firstOrCreate(['country' => $this->tenant->meta->country]) : 
                 CurriculumType::where(['country' => $this->tenant->meta->country])->first();
     }
 
-    private function getStatusID($name,$new = false){
+    public function getStatusID($name,$new = false){
         return  $new ? 
                 StatusType::firstOrCreate(['name' => $name]) : 
                 StatusType::where(['name' => $name])->first();
