@@ -219,20 +219,26 @@ class NimbusEdu
         }
     } 
 
-    public function getUserType($name){
-    	return UserType::where(['name' => strtolower($name)])->first();
+    private function getUserType($name,$new = false){
+    	return $new ? 
+                UserType::firstOrCreate(['name' => strtolower($name)]) : 
+                UserType::where(['name' => strtolower($name)])->first();
     }
 
-    public function getCurriculumType(){
-    	return CurriculumType::where(['country' => $this->tenant->meta->country])->first();
+    private function getCurriculumType($new = false){
+    	return $new ? 
+                CurriculumType::firstOrCreate(['country' => $this->tenant->meta->country]) : 
+                CurriculumType::where(['country' => $this->tenant->meta->country])->first();
+    }
+
+    private function getStatusID($name,$new = false){
+        return  $new ? 
+                StatusType::firstOrCreate(['name' => $name]) : 
+                StatusType::where(['name' => $name])->first();
     }
 
     public function getCurrentTerm(){
     	return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
-    }
-
-    public function getStatusID($name){
-    	return  StatusType::where(['name' => $name])->first();
     }
 
     public function registerStudent(User $user){

@@ -16,10 +16,7 @@ class DemoUsersSeeder extends Seeder
 		$records = factory(App\Tenant::class, 1)
 			->create(['name'=> 'showers christian high hchool','meta' => [ 'country' => 'nigeria','current_term' => 'first']])
 			->each(function($tenant)use($count){
-				$institution = new Institution($tenant->id,$tenant->meta->country);
-				
-				//create a new term
-				$school_term =  App\SchoolTerm::create(['tenant_id' => $tenant->id,'name' => 'first','year' => 2018]);
+				$institution = new Institution($tenant->id,$tenant->meta->country);				
 
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,

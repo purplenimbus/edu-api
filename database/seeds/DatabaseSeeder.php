@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
     {
 
         //$this->call('CoursesSeeder');
+        $this->call('OtherSeeders');
 		$this->call('DemoUsersSeeder');
-		$this->call('OtherSeeders');
 
     }
 }
