@@ -1,0 +1,338 @@
+[
+  {
+    "name": "accounting",
+    "code": "ACCT",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "agricultural science",
+    "code": "AGRICS",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "agriculture",
+    "code": "AGRIC",
+    "group": "pre-vocational studies",
+    "description": ""
+  },
+  {
+    "name": "arabic",
+    "code": "ARAB",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "arabic langauge",
+    "code": "ARABL",
+    "group": "arabic langauge",
+    "description": ""
+  },
+  {
+    "name": "basic electricity",
+    "code": "BELEC",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "basic electronics",
+    "code": "BTRON",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "basic science",
+    "code": "BSCI",
+    "group": "basic science and technology",
+    "description": ""
+  },
+  {
+    "name": "basic technology",
+    "code": "BTECH",
+    "group": "basic science and technology",
+    "description": ""
+  },
+  {
+    "name": "biology",
+    "code": "BIO",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "book keeping",
+    "code": "BOOK",
+    "group": "business studies (junior)",
+    "description": ""
+  },
+  {
+    "name": "building construction",
+    "code": "CONST",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "business studies",
+    "code": "BUS",
+    "group": "business studies (junior)",
+    "description": ""
+  },
+  {
+    "name": "chemistry",
+    "code": "CHEM",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "christian religious studies",
+    "code": "CRS",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "civic education",
+    "code": "CIVIC",
+    "group": "civic education (senior)",
+    "description": ""
+  },
+  {
+    "name": "civic education (basic)",
+    "code": "CIVICB",
+    "group": "religion and national values",
+    "description": ""
+  },
+  {
+    "name": "clothing and textiles",
+    "code": "CLOTH",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "commerce",
+    "code": "COMM",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "computer & IT",
+    "code": "COMP",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "cultural and creative arts",
+    "code": "CART",
+    "group": "cultural and creative arts",
+    "description": ""
+  },
+  {
+    "name": "data processing",
+    "code": "DP",
+    "group": "data processing",
+    "description": ""
+  },
+  {
+    "name": "economics",
+    "code": "ECON",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "english",
+    "code": "ENG",
+    "group": "english studies",
+    "description": ""
+  },
+  {
+    "name": "entrepreneurship",
+    "code": "ENT",
+    "group": "pre-vocational studies",
+    "description": ""
+  },
+  {
+    "name": "financial accounting",
+    "code": "FIN",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "food and nutrition",
+    "code": "FOOD",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "french langauge",
+    "code": "FRENCH",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "further mathematics",
+    "code": "FMATH",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "geography",
+    "code": "GEO",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "government",
+    "code": "GOVT",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "hausa language",
+    "code": "HAUSA",
+    "group": "nigerian languages",
+    "description": ""
+  },
+  {
+    "name": "health education",
+    "code": "HEALTH",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "history",
+    "code": "HIST",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "home economics",
+    "code": "HOME",
+    "group": "pre-vocational studies",
+    "description": ""
+  },
+  {
+    "name": "home management",
+    "code": "HMGMT",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "igbo language",
+    "code": "IGBO",
+    "group": "nigerian languages",
+    "description": ""
+  },
+  {
+    "name": "information technology",
+    "code": "IT",
+    "group": "basic science and technology",
+    "description": ""
+  },
+  {
+    "name": "insurance",
+    "code": "INS",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "Integrated Science",
+    "code": "INT",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "islamic studies",
+    "code": "ISLAM",
+    "group": "religion and national values",
+    "description": ""
+  },
+  {
+    "name": "literature in english",
+    "code": "LIT",
+    "group": "english studies",
+    "description": ""
+  },
+  {
+    "name": "mathematics",
+    "code": "MATH",
+    "group": "mathematics",
+    "description": ""
+  },
+  {
+    "name": "metal work",
+    "code": "METAL",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "music",
+    "code": "MUSIC",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "nigerian languages",
+    "code": "LANG",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "office practice",
+    "code": "OFFICE",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "physical and health education",
+    "code": "PE",
+    "group": "basic science and technology",
+    "description": ""
+  },
+  {
+    "name": "physics",
+    "code": "PHYS",
+    "group": "science and mathematics",
+    "description": ""
+  },
+  {
+    "name": "security education",
+    "code": "SEC",
+    "group": "religion and national values",
+    "description": ""
+  },
+  {
+    "name": "social studies",
+    "code": "SOCIAL",
+    "group": "religion and national values",
+    "description": ""
+  },
+  {
+    "name": "store management",
+    "code": "STORE",
+    "group": "business studies (senior)",
+    "description": ""
+  },
+  {
+    "name": "technical drawing",
+    "code": "TD",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "visual art",
+    "code": "ART",
+    "group": "humanities",
+    "description": ""
+  },
+  {
+    "name": "wood work",
+    "code": "WOOD",
+    "group": "technology",
+    "description": ""
+  },
+  {
+    "name": "yoruba language",
+    "code": "YOR",
+    "group": "nigerian languages",
+    "description": ""
+  }
+]

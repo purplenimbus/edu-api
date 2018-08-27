@@ -52,7 +52,7 @@ class ProcessBatch implements ShouldQueue
         foreach ($this->data as $data){
 
             // validate user here;
-            $data['tenant_id'] = $self->tenant_id;
+            $data['tenant_id'] = $self->tenant_id; //why?
 
             //$data['access_level'] = 1; //All imported users will have level 1 access
 

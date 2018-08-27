@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Nimbus\Institution;
 
 class DemoUsersSeeder extends Seeder
 {
@@ -13,24 +14,10 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create(['name'=> 'showers christian high hchool','meta' => [ 'country' => 'nigeria','current_term' => 'first']]
-			/*[
-				'meta'=>  [
-					'settings' => [
-						'classes' => [
-							['id' => 1, 'name' => 'js 1','sections'=>['a','b'],'alias' => ''],
-							['id' => 2, 'name' => 'js 2','sections'=>['a','b'],'alias' => ''],
-							['id' => 3, 'name' => 'js 3','sections'=>['a','b'],'alias' => ''],
-							['id' => 4, 'name' => 'ss 1','sections'=>['a','b'],'alias' => ''],
-							['id' => 5, 'name' => 'ss 2','sections'=>['a','b'],'alias' => ''],
-							['id' => 6, 'name' => 'ss 3','sections'=>['a','b'],'alias' => ''],
-							['id' => 7, 'name' => 'a level','sections'=>['a','b'],'alias' => '']
-						]
-					]
-				]
-			]*/)
+			->create(['name'=> 'showers christian high hchool','meta' => [ 'country' => 'nigeria','current_term' => 'first']])
 			->each(function($tenant)use($count){
-
+				$institution = new Institution($tenant->id,$tenant->meta->country);
+				
 				//create a new term
 				$school_term =  App\SchoolTerm::create(['tenant_id' => $tenant->id,'name' => 'first','year' => 2018]);
 

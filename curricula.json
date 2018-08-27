@@ -1,0 +1,80 @@
+[
+  {
+    "course_grade_id": 1,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 2,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 3,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 4,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 5,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 6,
+    "core_subjects_code": "MATH,ENG,CART,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,IGBO,MUSIC",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 7,
+    "core_subjects_code": "MATH,ENG,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,FRENCH,BUS,BOOK,DP,ART,GEO,MUSIC,IGBO",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 8,
+    "core_subjects_code": "MATH,ENG,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,FRENCH,BUS,BOOK,DP,ART,GEO,MUSIC,IGBO",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 9,
+    "core_subjects_code": "MATH,ENG,BSCI,BTECH,COMP,PE,CRS,CIVICB,SOCIAL,AGRIC,HOME,FRENCH,BUS,BOOK,DP,ART,GEO,MUSIC,IGBO",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 10,
+    "core_subjects_code": "MATH,ENG,CRS,COMP,CIVIC",
+    "elective_subjects_code": "CHEM,BIO,PHYS,FMATH,HISTORY,LIT,COMM,HMGMT,FOOD,AGRICS,GOVT,HIST,ECON",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 11,
+    "core_subjects_code": "MATH,ENG,CRS,COMP,CIVIC",
+    "elective_subjects_code": "CHEM,BIO,PHYS,FMATH,HISTORY,LIT,COMM,HMGMT,FOOD,AGRICS,GOVT,HIST,ECON",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 12,
+    "core_subjects_code": "MATH,ENG,CRS,COMP,CIVIC",
+    "elective_subjects_code": "CHEM,BIO,PHYS,FMATH,HISTORY,LIT,COMM,HMGMT,FOOD,AGRICS,GOVT,HIST,ECON",
+    "optional_subjects_code": ""
+  },
+  {
+    "course_grade_id": 13,
+    "core_subjects_code": "*",
+    "elective_subjects_code": "",
+    "optional_subjects_code": ""
+  }
+]

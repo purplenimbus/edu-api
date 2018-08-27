@@ -130,11 +130,16 @@ class NimbusEdu
 	            $payload['created'][] = $subject;
 	        }
 
-	        $subject->fill($data);
+            if(isset($data['tenant_id'])){
+                unset($data['tenant_id']);
+            }
+
+            $subject->fill($data);
 
 	        $subject->save();
 
 	        return $payload;
+            
         }catch(Exception $e){
         	throw new Exception($e->getMessage());
         }
@@ -188,6 +193,32 @@ class NimbusEdu
         }
     }
 
+    public function processCourseGrade($data,$payload){
+        try{
+            //'\App'::make('App\\'.ucfirst($this->type))
+            $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
+
+            if($curriculum->id){
+                $payload['updated'][] = $curriculum;
+            }else{
+
+                $payload['created'][] = $curriculum;
+            }
+
+            if(isset($data['tenant_id'])){
+                unset($data['tenant_id']);
+            }
+            
+            $curriculum->fill($data);
+
+            $curriculum->save();
+
+            return $payload;
+        }catch(Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    } 
+
     public function getUserType($name){
     	return UserType::where(['name' => strtolower($name)])->first();
     }
@@ -203,28 +234,6 @@ class NimbusEdu
     public function getStatusID($name){
     	return  StatusType::where(['name' => $name])->first();
     }
-
-    public function processCourseGrade($data,$payload){
-        try{
-	        //'\App'::make('App\\'.ucfirst($this->type))
-	        $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
-
-	        if($curriculum->id){
-	            $payload['updated'][] = $curriculum;
-	        }else{
-
-	            $payload['created'][] = $curriculum;
-	        }
-
-	        $curriculum->fill($data);
-
-	        $curriculum->save();
-
-	        return $payload;
-        }catch(Exception $e){
-        	throw new Exception($e->getMessage());
-        }
-    } 
 
     public function registerStudent(User $user){
 

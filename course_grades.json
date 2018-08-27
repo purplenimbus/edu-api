@@ -1,0 +1,67 @@
+[
+  {
+    "name": "primary 1",
+    "description": "",
+    "alias": "primary school 1"
+  },
+  {
+    "name": "primary 2",
+    "description": "",
+    "alias": "primary school 2"
+  },
+  {
+    "name": "primary 3",
+    "description": "",
+    "alias": "primary school 3"
+  },
+  {
+    "name": "primary 4",
+    "description": "",
+    "alias": "primary school 4"
+  },
+  {
+    "name": "primary 5",
+    "description": "",
+    "alias": "primary school 5"
+  },
+  {
+    "name": "primary 6",
+    "description": "",
+    "alias": "primary school 6"
+  },
+  {
+    "name": "js 1",
+    "description": "",
+    "alias": "junior secondary 1"
+  },
+  {
+    "name": "js 2",
+    "description": "",
+    "alias": "junior secondary 2"
+  },
+  {
+    "name": "js 3",
+    "description": "",
+    "alias": "junior secondary 3"
+  },
+  {
+    "name": "ss 1",
+    "description": "",
+    "alias": "senior secondary 1"
+  },
+  {
+    "name": "ss 2",
+    "description": "",
+    "alias": "senior secondary 2"
+  },
+  {
+    "name": "ss 3",
+    "description": "",
+    "alias": "senior secondary 3"
+  },
+  {
+    "name": "a levels",
+    "description": "",
+    "alias": "a level"
+  }
+]
