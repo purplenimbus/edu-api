@@ -32,7 +32,7 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 
 	/* Courses , Registrations & Lessons */
 	Route::get('/courses', 'CourseController@getCourses'); //List all courses for a certain tenant
-	Route::get('/lessons', 'CourseController@lessons'); //List all registrations for a certain tenant
+	Route::get('/lessons', 'CurriculumController@lessons'); //List all registrations for a certain tenant
 	Route::post('/courses/new', 'CourseController@createCourse'); //create new course
 	Route::post('/courses/edit', 'CourseController@updateCourse'); //create new course
 	Route::post('/courses/batch', 'CourseController@batchUpdate');//Batch import subjects and courses
