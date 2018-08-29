@@ -8,6 +8,7 @@ use App\Course as Course;
 use App\Curriculum as Curriculum;
 
 use App\Http\Requests\StoreCourse as StoreCourse;
+use App\Http\Requests\UpdateCourse as UpdateCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
 
 use App\Jobs\ProcessBatch;
@@ -103,7 +104,7 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function updateCourse($tenant_id,StoreCourse $request){
+	public function updateCourse($tenant_id,UpdateCourse $request){
 		dd($request->all());
 		
 		//$data = $request->all();

@@ -19,7 +19,7 @@ $factory->define(App\User::class, function (Faker $faker) {
         'lastname' => $faker->name,
         'email' => $faker->email,
         'password' => app('hash')->make('123456'),
-		'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
+		//'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
 		'access_level_id' => 2
     ];
 });
