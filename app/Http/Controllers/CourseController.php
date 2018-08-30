@@ -143,7 +143,7 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function batchUpdate($tenant_id,StoreBatch $request){
+	public function batchUpdate($tenant_id,Request $request){
 		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
 
 		return response()->json(['message' => 'your request is being processed'],200);

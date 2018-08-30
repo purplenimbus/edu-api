@@ -24,10 +24,9 @@ class UpdateCourse extends FormRequest
     public function rules()
     {
         return [
-            'instructor_id' => 'required|max:255|exists:users,id',
-            //'id' => 'required|max:255|exists:courses,id',
-            'tenant_id' => 'required|max:255|exists:tenants,id',
-            'name' => 'required|max:255',
+            'instructor_id' => 'integer|max:255|exists:users,id',
+            'tenant_id' => 'integer|required|max:255|exists:tenants,id',
+            'name' => 'string|required|max:255'
         ];
     }
 }
