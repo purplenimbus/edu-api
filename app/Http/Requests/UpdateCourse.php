@@ -13,7 +13,7 @@ class UpdateCourse extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,7 +25,9 @@ class UpdateCourse extends FormRequest
     {
         return [
             'instructor_id' => 'required|max:255|exists:users,id',
-            'course_id' => 'required|max:255|exists:courses,id'
+            //'id' => 'required|max:255|exists:courses,id',
+            'tenant_id' => 'required|max:255|exists:tenants,id',
+            'name' => 'required|max:255',
         ];
     }
 }
