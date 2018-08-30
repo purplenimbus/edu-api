@@ -14,13 +14,13 @@ class DemoUsersSeeder extends Seeder
     {
 		$count = 0;
 		$records = factory(App\Tenant::class, 1)
-			->create(['name'=> 'showers christian high hchool','meta' => [ 'country' => 'nigeria','current_term' => 'first']])
+			->create(['name'=> 'showers christian high school','meta' => [ 'country' => 'nigeria','current_term' => 'first']])
 			->each(function($tenant)use($count){
 				$institution = new Institution($tenant->id,$tenant->meta->country);				
 
 				$admin 	=	factory(App\User::class,'admin',1)->create([
 					'tenant_id' => $tenant->id,
-					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
+					//'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
 					'firstname'		=>	'ekama',
 					'lastname'		=>	'akpan',
 					'email'		=>	'info@showersedu.com',
@@ -29,7 +29,7 @@ class DemoUsersSeeder extends Seeder
 
 				$superadmin 	=	factory(App\User::class,'superadmin',1)->create([
 					'tenant_id' => $tenant->id,
-					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
+					//'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
 					'firstname'		=>	'anthony',
 					'lastname'		=>	'akpan',
 					'email'		=>	'anthony.akpan@hotmail.com',

@@ -219,6 +219,26 @@ class NimbusEdu
         }
     } 
 
+    public function processResults($data,$payload){
+        try{
+            
+            $registration = Registration::findOrFail($data['id']);
+
+            //dd($registration);
+
+            $registration->fill($data);
+
+            $registration->save();
+
+            $payload['updated'][] = $registration;
+
+            return $payload;
+
+        }catch(Exception $e){
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function getUserType($name,$new = false){
     	return $new ? 
                 UserType::firstOrCreate(['name' => strtolower($name)]) : 

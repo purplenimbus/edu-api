@@ -36,6 +36,7 @@ class Course extends Model
     {
         return $this->belongsTo('App\User','instructor_id','id');
     }
+
 	/**
      * Cast meta property to array
      *

@@ -8,6 +8,7 @@ use App\Course as Course;
 use App\Curriculum as Curriculum;
 
 use App\Http\Requests\StoreCourse as StoreCourse;
+use App\Http\Requests\UpdateCourse as UpdateCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
 
 use App\Jobs\ProcessBatch;
@@ -103,18 +104,19 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function updateCourse($tenant_id,StoreCourse $request){
-		dd($request->all());
-		
-		//$data = $request->all();
-		
-		/*$data['tenant_id'] = $tenant_id;
+	public function updateCourse($tenant_id,$id,UpdateCourse $request){
+				
+		$course = Course::where('tenant_id',$tenant_id)
+						->where('id',$id)
+						->first();
 
-		$data['code'] = $data['class']['name']
+		//dd($course->first());
+
+		$course->fill($request->all());
+
+		$course->save();
 		
-		$course = Course::create($data);
-		
-		return response()->json($course,200)->setCallback($request->input('callback'));*/
+		return response()->json($course,200);
 	}
 
 	/**
@@ -141,7 +143,7 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function batchUpdate($tenant_id,StoreBatch $request){
+	public function batchUpdate($tenant_id,Request $request){
 		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
 
 		return response()->json(['message' => 'your request is being processed'],200);
