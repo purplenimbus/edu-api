@@ -13,6 +13,7 @@ use App\SchoolTerm as SchoolTerm;
 use App\CurriculumType as CurriculumType;
 use App\UserType as UserType;
 use App\StatusType as StatusType;
+use App\Billing as Billing;
 
 class NimbusEdu
 {
@@ -24,11 +25,7 @@ class NimbusEdu
     		throw new Exception("Tenant id required", 1);	
     	}
 
-    	$this->tenant = Tenant::find($tenant_id);
-
-    	if(!$this->tenant->id){
-    		throw new ModelNotFoundException("Tenant not found", 1);	
-    	}
+    	$this->tenant = Tenant::findOrFail($tenant_id);
     }
 
     public function processUser($data,$payload){
@@ -224,8 +221,6 @@ class NimbusEdu
             
             $registration = Registration::findOrFail($data['id']);
 
-            //dd($registration);
-
             $registration->fill($data);
 
             $registration->save();
@@ -267,17 +262,27 @@ class NimbusEdu
         	
         	$school_term = $this->getCurrentTerm();
         	
+            $billing = Billing::create();
+
         	foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
+
 	            $registration = Registration::firstOrNew([
 	                'tenant_id' => $this->tenant->id ,
 	                'user_id' => $user->id ,
 	                'course_id' => $course['id'],
-	                'term_id' => $school_term->id
+	                'term_id' => $school_term->id,
+                    'billing_id' => $billing->id
 	            ]);
 
 	            $registration->save();
 
 	           	$user->account_status_id = $this->getStatusID('registered')->id;
+
+                //$user->meta->student_id = '';
+
+                //$this->generateStudentId($user->id);
+
+               // dd($user->meta);
 
 	        	$user->save();
 
@@ -417,4 +422,9 @@ class NimbusEdu
     private function createDefaultPassword($str = false){
         return app('hash')->make($str);
     }
+
+    private function generateStudentId($id){
+        $user_id = sprintf("%04d", $id);
+        return date("Y").$user_id;
+    }  
 }

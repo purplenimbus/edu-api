@@ -75,5 +75,17 @@ class OtherSeeders extends Seeder
 		foreach($account_status_types as $account_status_type){
 			App\StatusType::create($account_status_type);
 		}
+
+		$billing_status_types = [
+			[	'name' => 'pending'	],
+			[	'name' => 'completed'	],
+			[	'name' => 'cancelled'	],
+			[	'name' => 'archived'	],
+		];
+		
+		//Create Currencies
+		foreach($billing_status_types as $billing_status_type){
+			App\BillingStatus::create($billing_status_type);
+		}
     }
 }

@@ -21,6 +21,7 @@ class CreateRegistrationsTable extends Migration
             $table->integer('course_id');
             $table->integer('term_id')->nullable();
             $table->json('meta')->nullable();
+            $table->integer('billing_id')->nullable();
             $table->timestamps();
         });
     }

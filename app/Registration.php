@@ -13,7 +13,7 @@ class Registration extends Model
      * @var array
      */
     protected $fillable = [
-        'course_id','user_id','meta','course','tenant_id','term_id'
+        'course_id','user_id','meta','course','tenant_id','term_id','billing_id'
     ];
 
     /**

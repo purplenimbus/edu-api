@@ -22,7 +22,6 @@ class UsersTableSeeder extends Seeder
 			$students = factory(App\User::class,'student',10)
 				->create([
 					'tenant_id' =>  $nimbus_edu->tenant->id,
-					'image' =>	'https://www.victoria147.com/wp-content/uploads/2014/10/user-avatar-placeholder.png',
 					'meta' => ['course_grade_id'=>$course_grade]
 				])
 				->each(function($student)use($nimbus_edu,$course_grade,$count){

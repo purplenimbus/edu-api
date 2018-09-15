@@ -101,6 +101,17 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Set the user's las name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setLastNameAttribute($value)
+    {
+        $this->attributes['lastname'] = strtolower($value);
+    }
+
+    /**
      * Set the user's last name.
      *
      * @param  string  $value
