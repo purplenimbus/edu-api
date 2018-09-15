@@ -278,8 +278,10 @@ class NimbusEdu
 
 	           	$user->account_status_id = $this->getStatusID('registered')->id;
 
-                $user->ref_id = $this->generateStudentId($user->id);
-
+                if(!$user->ref_id || $user->ref_id == null){
+                    $user->ref_id = $this->generateStudentId($user->id);
+                }
+                
                 //dd($user);
 
 	        	$user->save();
