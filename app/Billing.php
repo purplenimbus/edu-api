@@ -13,11 +13,21 @@ class Billing extends Model
      * @var array
      */
     protected $fillable = [
-        'details','status_id'
+        'details','status_id','tenant_id'
+    ];
+
+    /**
+     * The attributes excluded from the model's JSON form.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'status_id',
+        'tenant_id'
     ];
 
     public function registrations(){
-        return $this->hasMany('App\Registrations');
+        return $this->hasMany('App\Registration');
     }
 
     public function status(){

@@ -18,6 +18,7 @@ class CreateBillingsTable extends Migration
             $table->uuid('uuid');
             $table->integer('status_id')->default(1);
             $table->json('details')->nullable();
+            $table->integer('tenant_id');
             $table->timestamps();
         });
     }

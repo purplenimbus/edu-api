@@ -37,9 +37,9 @@ class NimbusEdu
 	        $created = isset($user->id) ? false : true;
 	        $user_type = $this->getUserType($data['meta']['user_type']);
 
-	        if($created){
-	            
-	        }else{
+            //dd($user);
+
+	        if(!isset($user->id)){
 	            //$data['access_level'] = 2; //all imported users are granted level 2 access
 
 	            $data['password'] = $this->createDefaultPassword($data['email']);
@@ -262,7 +262,7 @@ class NimbusEdu
         	
         	$school_term = $this->getCurrentTerm();
         	
-            $billing = Billing::create();
+            $billing = Billing::create(['tenant_id' => $this->tenant->id]);
 
         	foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 
@@ -278,11 +278,9 @@ class NimbusEdu
 
 	           	$user->account_status_id = $this->getStatusID('registered')->id;
 
-                //$user->meta->student_id = '';
+                $user->ref_id = $this->generateStudentId($user->id);
 
-                //$this->generateStudentId($user->id);
-
-               // dd($user->meta);
+                //dd($user);
 
 	        	$user->save();
 

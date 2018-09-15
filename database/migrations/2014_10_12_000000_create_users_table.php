@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->integer('user_type_id')->default(1);
             $table->integer('user_role_id')->nullable();
             $table->integer('account_status_id')->default(1);
+            $table->string('ref_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
