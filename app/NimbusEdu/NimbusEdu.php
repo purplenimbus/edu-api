@@ -264,20 +264,19 @@ class NimbusEdu
         	
             $billing = Billing::firstOrCreate([
                 'tenant_id' => $this->tenant->id,
-                'student_id' => $user->id
+                'student_id' => $user->id,
+                'term_id' => $school_term->id
             ]);
 
         	foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 
-	            $registration = Registration::firstOrNew([
+	            $registration = Registration::firstOrCreate([
 	                'tenant_id' => $this->tenant->id ,
 	                'user_id' => $user->id ,
 	                'course_id' => $course['id'],
 	                'term_id' => $school_term->id,
                     'billing_id' => $billing->id
 	            ]);
-
-	            $registration->save();
 
 	           	$user->account_status_id = $this->getStatusID('registered')->id;
 
