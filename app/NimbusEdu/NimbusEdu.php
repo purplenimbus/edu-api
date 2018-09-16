@@ -72,7 +72,7 @@ class NimbusEdu
                 						&& isset($user->account_status->name) 
                 						&& $user->account_status->name != 'registered'
                 					){ */
-                                        $self->registerStudent($user,$user->meta->course_grade_id); 
+                                        $self->enrollCoreCourses($user,$user->meta->course_grade_id); 
                                     //} 
 
                                     break;
@@ -256,13 +256,16 @@ class NimbusEdu
     	return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
     }
 
-    public function registerStudent(User $user,$course_grade_id){
+    public function enrollCoreCourses(User $user,$course_grade_id){
 
         try{
         	
         	$school_term = $this->getCurrentTerm();
         	
-            $billing = Billing::create(['tenant_id' => $this->tenant->id]);
+            $billing = Billing::firstOrCreate([
+                'tenant_id' => $this->tenant->id,
+                'student_id' => $user->id
+            ]);
 
         	foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 

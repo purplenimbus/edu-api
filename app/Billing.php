@@ -13,7 +13,7 @@ class Billing extends Model
      * @var array
      */
     protected $fillable = [
-        'details','status_id','tenant_id'
+        'details','status_id','tenant_id','student_id'
     ];
 
     /**
