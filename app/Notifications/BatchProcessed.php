@@ -69,4 +69,15 @@ class BatchProcessed extends Notification implements ShouldBroadcast
     {
         return new BroadcastMessage($this->payload);
     }
+
+    /**
+     * The event's broadcast name.
+     *
+     * @return string
+     */
+    public function broadcastAs()
+    {
+        return 'batch.processed';
+    }
+
 }

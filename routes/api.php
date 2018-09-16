@@ -14,11 +14,13 @@ use Illuminate\Http\Request;
 */
 
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+/*Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
-});
+});*/
 
 Route::post('/v'.env('API_VERSION',1).'/login','Auth\LoginController@authenticate')->middleware('cors');
+
+Route::post('/v'.env('API_VERSION',1).'/pusher/auth','Auth\LoginController@pusher')->middleware('cors');
 
 /* Curriculum */
 Route::get('/v'.env('API_VERSION',1).'/subjects', 'CurriculumController@subjects'); //List all Subjects
