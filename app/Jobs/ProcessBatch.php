@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\Notifications\BatchProcessed;
+
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant as Tenant;
@@ -23,6 +24,7 @@ class ProcessBatch implements ShouldQueue
     var $tenant_id;
     var $payload;
     var $NimbusEdu;
+    var $author;
     /**
      * Create a new job instance.
      *
@@ -39,6 +41,9 @@ class ProcessBatch implements ShouldQueue
             'created' => [],
             'skipped' => []
         ];
+
+        $this->author = Auth::user();
+
     }
 
     /**
@@ -78,6 +83,9 @@ class ProcessBatch implements ShouldQueue
         }
 
         $payload['batch_type'] = $this->type;
+        $payload['author'] = $this->author->only(['id','firstname','lastname']);
+
+        //dd($payload);
 
         $tenant->notify(new BatchProcessed($payload));
 
