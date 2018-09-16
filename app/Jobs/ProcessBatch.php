@@ -71,7 +71,17 @@ class ProcessBatch implements ShouldQueue
 
         $tenant = Tenant::find($this->tenant_id);
 
-        $tenant->notify(new BatchProcessed($this->payload));
+        $payload = [];
+
+        foreach ($this->payload as $key => $value) {
+           $payload[$key] = sizeof($value);
+        }
+
+        $payload['batch_type'] = $this->type;
+
+        $tenant->notify(new BatchProcessed($payload));
+
+        //dd($this->payload);
 
         \Log::info('ProcessBatch '.ucfirst($this->type).': '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated for tenant_id: '.$this->tenant_id);
         

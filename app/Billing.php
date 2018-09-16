@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid as Uuid;
 
-class Registration extends Model
+class Billing extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -13,7 +13,7 @@ class Registration extends Model
      * @var array
      */
     protected $fillable = [
-        'course_id','user_id','meta','course','tenant_id','term_id','billing_id'
+        'details','status_id','tenant_id','student_id','term_id'
     ];
 
     /**
@@ -22,32 +22,28 @@ class Registration extends Model
      * @var array
      */
     protected $hidden = [
-		//'course_id',
-		//'user_id'
+        'status_id',
+        'tenant_id'
     ];
-	
-	/**
+
+    public function registrations(){
+        return $this->hasMany('App\Registration');
+    }
+
+    public function status(){
+        return $this->belongsTo('App\BillingStatus','status_id');
+    }
+
+    /**
      * Cast meta property to array
      *
      * @var array
      */
-	 
 	protected $casts = [
         'meta' => 'array',
     ];
-	
-	public function course(){
-        return $this->belongsTo('App\Course');
-    }
-	
-	public function user(){
-        return $this->belongsTo('App\User');
-    }
 
-    public function term(){
-        return $this->belongsTo('App\SchoolTerm','term_id');
-    }
-	/**
+    /**
 	 *  Setup model event hooks
 	 */
 	public static function boot()

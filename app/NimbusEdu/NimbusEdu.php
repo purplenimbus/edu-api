@@ -13,6 +13,7 @@ use App\SchoolTerm as SchoolTerm;
 use App\CurriculumType as CurriculumType;
 use App\UserType as UserType;
 use App\StatusType as StatusType;
+use App\Billing as Billing;
 
 class NimbusEdu
 {
@@ -24,11 +25,7 @@ class NimbusEdu
     		throw new Exception("Tenant id required", 1);	
     	}
 
-    	$this->tenant = Tenant::find($tenant_id);
-
-    	if(!$this->tenant->id){
-    		throw new ModelNotFoundException("Tenant not found", 1);	
-    	}
+    	$this->tenant = Tenant::findOrFail($tenant_id);
     }
 
     public function processUser($data,$payload){
@@ -40,9 +37,9 @@ class NimbusEdu
 	        $created = isset($user->id) ? false : true;
 	        $user_type = $this->getUserType($data['meta']['user_type']);
 
-	        if($created){
-	            
-	        }else{
+            //dd($user);
+
+	        if(!isset($user->id)){
 	            //$data['access_level'] = 2; //all imported users are granted level 2 access
 
 	            $data['password'] = $this->createDefaultPassword($data['email']);
@@ -75,7 +72,7 @@ class NimbusEdu
                 						&& isset($user->account_status->name) 
                 						&& $user->account_status->name != 'registered'
                 					){ */
-                                        $self->registerStudent($user,$user->meta->course_grade_id); 
+                                        $self->enrollCoreCourses($user,$user->meta->course_grade_id); 
                                     //} 
 
                                     break;
@@ -224,8 +221,6 @@ class NimbusEdu
             
             $registration = Registration::findOrFail($data['id']);
 
-            //dd($registration);
-
             $registration->fill($data);
 
             $registration->save();
@@ -261,23 +256,35 @@ class NimbusEdu
     	return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
     }
 
-    public function registerStudent(User $user,$course_grade_id){
+    public function enrollCoreCourses(User $user,$course_grade_id){
 
         try{
         	
         	$school_term = $this->getCurrentTerm();
         	
+            $billing = Billing::firstOrCreate([
+                'tenant_id' => $this->tenant->id,
+                'student_id' => $user->id,
+                'term_id' => $school_term->id
+            ]);
+
         	foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
-	            $registration = Registration::firstOrNew([
+
+	            $registration = Registration::firstOrCreate([
 	                'tenant_id' => $this->tenant->id ,
 	                'user_id' => $user->id ,
 	                'course_id' => $course['id'],
-	                'term_id' => $school_term->id
+	                'term_id' => $school_term->id,
+                    'billing_id' => $billing->id
 	            ]);
 
-	            $registration->save();
-
 	           	$user->account_status_id = $this->getStatusID('registered')->id;
+
+                if(!$user->ref_id || $user->ref_id == null){
+                    $user->ref_id = $this->generateStudentId($user->id);
+                }
+                
+                //dd($user);
 
 	        	$user->save();
 
@@ -417,4 +424,9 @@ class NimbusEdu
     private function createDefaultPassword($str = false){
         return app('hash')->make($str);
     }
+
+    private function generateStudentId($id){
+        $user_id = sprintf("%04d", $id);
+        return date("Y").$user_id;
+    }  
 }

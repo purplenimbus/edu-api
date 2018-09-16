@@ -31,7 +31,8 @@ class User extends Authenticatable implements JWTSubject
         'user_type_id',
         'account_status_id',
         'access_level_id',
-        'user_role_id'
+        'user_role_id',
+        'ref_id'
     ];
 
     /**
@@ -98,6 +99,17 @@ class User extends Authenticatable implements JWTSubject
     public function setFirstNameAttribute($value)
     {
         $this->attributes['firstname'] = strtolower($value);
+    }
+
+    /**
+     * Set the user's las name.
+     *
+     * @param  string  $value
+     * @return void
+     */
+    public function setLastNameAttribute($value)
+    {
+        $this->attributes['lastname'] = strtolower($value);
     }
 
     /**
