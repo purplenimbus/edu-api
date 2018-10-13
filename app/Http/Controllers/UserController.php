@@ -22,6 +22,10 @@ class UserController extends Controller
 		if($request->has('user_type')){
 			array_push($query,['user_type_id', '=', $nimbus_edu->getUserType($request->user_type)->id]);
 		}
+
+		if($request->has('course_grade_id')){
+			array_push($query,['meta->course_grade_id', '=', $request->course_grade_id]);
+		}
 		
 		/*if($request->has('ids')){
 			

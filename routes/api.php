@@ -59,6 +59,5 @@ Route::prefix('v'.env('API_VERSION',1).'/{tenant}')->group(function () {
 	Route::post('/instructors', 'InstructorController@assignInstructor'); //Assign instructor to a course
 
 	/* Billing */
-	Route::get('/billing', 'BillingController@getBills'); //Assign instructor to a course
-
+	Route::get('/billing', 'BillingController@getBills'); //get invoice
 });
