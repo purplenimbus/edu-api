@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
 use App\Notifications\BatchProcessed;
+
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant as Tenant;
@@ -23,6 +24,7 @@ class ProcessBatch implements ShouldQueue
     var $tenant_id;
     var $payload;
     var $NimbusEdu;
+    var $author;
     /**
      * Create a new job instance.
      *
@@ -39,6 +41,9 @@ class ProcessBatch implements ShouldQueue
             'created' => [],
             'skipped' => []
         ];
+
+        $this->author = Auth::user();
+
     }
 
     /**
@@ -49,6 +54,9 @@ class ProcessBatch implements ShouldQueue
     public function handle()
     {
         $self = $this;
+        $payload = [];
+        $resource = [];
+
         foreach ($this->data as $data){
 
             // validate user here;
@@ -62,26 +70,29 @@ class ProcessBatch implements ShouldQueue
                 case 'subject' : $this->payload = $self->NimbusEdu->processSubject($data,$this->payload); break;
                 case 'coursegrade' : $this->payload = $self->NimbusEdu->processCourseGrade($data,$this->payload); break;
                 case 'curriculum' : $this->payload = $self->NimbusEdu->processCurriculum($data,$this->payload); break;
-                case 'results' : $this->payload = $self->NimbusEdu->processResults($data,$this->payload); break;
+                case 'results' : $this->payload = $self->NimbusEdu->processResults($data,$this->payload); 
+
+                    $resource =  isset($this->payload['resource']) ? 
+                                                $this->payload['resource'] 
+                                                //unset($this->payload['resource']);
+                                            : [];
+
+                    break;
                 default : break;
             }
         }
 
-        //var_dump($this->payload);
-
         $tenant = Tenant::find($this->tenant_id);
-
-        $payload = [];
 
         foreach ($this->payload as $key => $value) {
            $payload[$key] = sizeof($value);
         }
 
         $payload['batch_type'] = $this->type;
+        $payload['author'] = $this->author->only(['id','firstname','lastname']);
+        $payload['resource'] = $resource;
 
         $tenant->notify(new BatchProcessed($payload));
-
-        //dd($this->payload);
 
         \Log::info('ProcessBatch '.ucfirst($this->type).': '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated for tenant_id: '.$this->tenant_id);
         

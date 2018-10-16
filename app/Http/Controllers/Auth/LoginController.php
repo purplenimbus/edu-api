@@ -12,6 +12,9 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTFactory;
 use App\Tenant as Tenant;
 use App\User as User;
+use Pusher\Pusher as Pusher;
+
+use App\Http\Requests\PusherAuth as PusherAuth;
 
 class LoginController extends Controller
 {
@@ -28,6 +31,7 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    var $pusher;
     /**
      * Where to redirect users after login.
      *
@@ -42,7 +46,10 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        //parent::__construct();
         //$this->middleware('guest')->except('logout');
+        $this->pusher = new Pusher(env('PUSHER_APP_KEY'), env('PUSHER_APP_SECRET'), env('PUSHER_APP_ID'));
+
     }
 	
 	public function authenticate(Request $request)
@@ -61,7 +68,7 @@ class LoginController extends Controller
 		}
 		
 		$user = Auth::user()->load(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id']);
-		
+
 		return response()->json(compact(['token','user']));
 
     }
@@ -76,4 +83,13 @@ class LoginController extends Controller
 			return false;
 		}
 	}
+
+    public function pusher(PusherAuth $auth){
+        //if(Auth::check())
+        //{
+            return $this->pusher->socket_auth($auth->channel_name,$auth->socket_id); 
+        //}else{
+            //return response()->json(['message'=>'Forbidden'],403);
+        //}
+    }
 }

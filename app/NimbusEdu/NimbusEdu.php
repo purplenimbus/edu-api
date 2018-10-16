@@ -15,6 +15,8 @@ use App\UserType as UserType;
 use App\StatusType as StatusType;
 use App\Billing as Billing;
 
+use App\Notifications\BatchProcessed;
+
 class NimbusEdu
 {
  	var $tenant;
@@ -219,13 +221,21 @@ class NimbusEdu
     public function processResults($data,$payload){
         try{
             
-            $registration = Registration::findOrFail($data['id']);
+            $registration = Registration::with(['user','course:id,code'])->findOrFail($data['id']);
 
             $registration->fill($data);
 
             $registration->save();
 
             $payload['updated'][] = $registration;
+            $payload['resource'] = $registration->course;
+
+            /*$registration->user->notify(new BatchProcessed([
+                'message' => 'score updated',
+                'data' => [
+                    $registration->meta
+                ]
+            ]));*/
 
             return $payload;
 
