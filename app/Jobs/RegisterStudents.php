@@ -24,9 +24,9 @@ class RegisterStudents implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($tenant_id,$data)
+    public function __construct(Tenant $tenant,$data)
     {
-        $this->tenant_id = $tenant_id;
+        $this->tenant_id = $tenant->id;
         $this->data = $data;
         $this->payload = [
             'updated' => [],

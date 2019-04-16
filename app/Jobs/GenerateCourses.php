@@ -26,10 +26,10 @@ class GenerateCourses implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($tenant_id,$curricula)
+    public function __construct(Tenant $tenant,$curricula)
     {
         $this->curricula = $curricula;
-        $this->tenant_id = $tenant_id;
+        $this->tenant_id = $tenant->id;
         $this->payload = [
             'updated' => [],
             'created' => [],

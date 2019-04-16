@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User as User;
 use App\Http\Requests\StoreUser as StoreUser;
 use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Nimbus\NimbusEdu;
 
+
 class UserController extends Controller
 {
-    public function userList($tenant_id , Request $request){
+
+  public function userList(Request $request){
+
+    $tenant_id = Auth::user()->tenant()->id;
 
 		$nimbus_edu = new NimbusEdu($tenant_id);
 
@@ -45,9 +50,10 @@ class UserController extends Controller
 		
 	}
 
-    public function getUser($tenant_id,$user_id,Request $request){
+  public function getUser($user_id,Request $request){
 		
-		//validate tenant id ?
+		$tenant_id = Auth::user()->tenant()->id;
+
 		try {
 			$user = User::with(['tenant:id,name','user_type:name,id','account_status:name,id','access_level:name,id'])->where([
 					['tenant_id', '=', $tenant_id],
@@ -64,8 +70,10 @@ class UserController extends Controller
 		}
 	}
 	
-	public function saveUser($tenant_id,$user_id,StoreUser $request){
-			
+	public function saveUser($user_id,StoreUser $request){
+		
+		$tenant_id = Auth::user()->tenant()->id;
+
 		try {
 			$user = User::find($user_id);
 		  
@@ -92,9 +100,10 @@ class UserController extends Controller
 		}
 	}
 
-	public function batchUpdate($tenant_id,StoreBatch $request){
+	public function batchUpdate(StoreBatch $request){
+		$tenant = Auth::user()->tenant();
 
-		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
+		ProcessBatch::dispatch($tenant, $request->all()[0],$request->type);
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}

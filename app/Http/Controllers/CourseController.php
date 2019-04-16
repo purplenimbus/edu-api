@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Course as Course;
 use App\Curriculum as Curriculum;
 
+use App\Http\Requests\GetCourses as GetCourses;
 use App\Http\Requests\StoreCourse as StoreCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
 
@@ -16,65 +18,27 @@ use App\Jobs\GenerateCourses;
 
 class CourseController extends Controller
 {
-    //var	$client;
-	/**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-		//$this->middleware('jwt.auth');
-    }
 	
 	/**
-     * List courses
-     *
-     * @return void
-     */
-    public function getCourses($tenant_id,Request $request)
-    {
-        $query = [
-					['tenant_id', '=', $tenant_id]
-				];
-		
-		/*$valid_queries = [
-			[
-				'name' => 'course_id',
-				'query_key' => 'id'
-			],[
-				'name' => 'course_grade_id',
-				'query_key' => 'course_grade_id'
-			],[
-				'name' => 'instructor_id',
-				'query_key' => 'instructor_id'
-			],[
-				'name' => 'name',
-				'query_key' => 'name'
-			]
+   * List courses
+   *
+   * @return void
+   */
+  public function getCourses(GetCourses $request)
+  {
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
+    $query = [
+			['tenant_id', '=', $tenant_id]
 		];
 
-		foreach ($valid_queries as $query) {
-			if($request->has($query['name'])){
-				$query[] = [$query['query_key'], '=', $request[$query['name']]];
-			}	
-		}*/
+		$query[] = ['id', '=', $request->course_id];
 
-		if($request->has('course_id')){
-			$query[] = ['id', '=', $request->course_id];
-		}	
+		$query[] = ['course_grade_id', '=', $request->course_grade_id];
 
-		if($request->has('course_grade_id')){
-			$query[] = ['course_grade_id', '=', $request->course_grade_id];
-		}	
+		$query[] = ['name', '=', $request->name];
 
-		if($request->has('name')){
-			$query[] = ['name', '=', $request->name];
-		}	
-
-		if($request->has('instructor_id')){
-			$query[] = ['instructor_id', '=', $request->instructor_id];
-		}
+		$query[] = ['instructor_id', '=', $request->instructor_id];
 
 		$relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
 				
@@ -87,23 +51,17 @@ class CourseController extends Controller
 							->where($query)
 							->get();
 						
-		if(sizeof($courses)){
-			return response()->json($courses,200);
- 		}else{
-			
-			$message = 'no courses found for tenant id : '.$tenant_id;
-			
-			return response()->json(['message' => $message],204);
-		}
-		
-    }
+		return response()->json($courses,200);
+  }
 	
 	/**
      * Create a new course
      *
      * @return void
      */
-	public function updateCourse($tenant_id,StoreCourse $request){
+	public function updateCourse(StoreCourse $request){
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
 		dd($request->all());
 		
 		//$data = $request->all();
@@ -122,7 +80,9 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function createCourse($tenant_id,StoreCourse $request){
+	public function createCourse(StoreCourse $request){
+		$tenant_id = Auth::user()->tenant()->first()->id;
+
 		dd($request->all());
 		
 		//$data = $request->all();
@@ -141,8 +101,10 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function batchUpdate($tenant_id,StoreBatch $request){
-		ProcessBatch::dispatch($tenant_id,$request->all()[0],$request->type);
+	public function batchUpdate(StoreBatch $request){
+		$tenant = Auth::user()->tenant()->first();
+
+		ProcessBatch::dispatch($tenant, $request->all()[0],$request->type);
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}
@@ -152,8 +114,8 @@ class CourseController extends Controller
      *
      * @return void
      */
-	public function generateCourses($tenant_id,Request $request){
-		GenerateCourses::dispatch($tenant_id,Curriculum::with('grade')->get());
+	public function generateCourses(Request $request){
+		GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
 
 		return response()->json(['message' => 'your request is being processed'],200);
 	}

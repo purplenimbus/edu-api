@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\User as User;
 use App\Activity as Activity;
 use App\Tenant as Tenant;
@@ -17,17 +18,7 @@ use App\Nimbus\NimbusEdu as NimbusEdu;
 
 class TenantController extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-
-	/**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //$this->middleware('jwt.auth');
-    }
+  use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 	
 	public function tenants(Request $request){
 		
@@ -54,8 +45,8 @@ class TenantController extends BaseController
 	
 		return response()->json(['data' => $tenant],200);
 	}
-	
-	
+
+	//we may not need this
 	public function getTenant($tenant){
 		try{
 			$tenant = Tenant::where('username', $tenant)->first();
@@ -67,12 +58,11 @@ class TenantController extends BaseController
 		}
 	}
 	
-	public function getSettings($tenant_id,Request $request){
+	public function getSettings(Request $request){
+		$tenant = Auth::user()->tenant();
+
 		try{
-			$tenant = Tenant::find($tenant_id);
-			
 			return response()->json($tenant->meta->settings,200);
-			
 		}catch(Exception $e){
 			return false;
 		}

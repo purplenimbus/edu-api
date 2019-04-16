@@ -13,24 +13,19 @@ use Illuminate\Http\Request;
 |
 */
 
-
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});*/
-
 Route::group([
 	'middleware' => ['cors'],
 	'prefix' => 'v'.env('API_VERSION',1),
 ], function() {
-		Route::post('/login','Auth\LoginController@authenticate');
-		/* Curriculum */
-		Route::get('/subjects', 'CurriculumController@subjects'); //List all Subjects
-		Route::get('/grades/list', 'CurriculumController@listClasses'); //List all Classe
-		Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad'); //List all registrations for a certain tenant
-  Route::group([
-  	'middleware' => ['jwt.auth']
-  ], function() {
-  	/* Tenants */
+	Route::post('/login','Auth\LoginController@authenticate');
+	/* Curriculum */
+	Route::get('/subjects', 'CurriculumController@subjects'); //List all Subjects
+	Route::get('/grades/list', 'CurriculumController@listClasses'); //List all Classe
+	Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad');//List all registrations for a certain tenant
+	Route::group([
+		'middleware' => ['jwt.auth']
+	], function() {
+		/* Tenants */
 		Route::get('/settings', 'TenantController@getSettings');//Update user for a certain tenant
 
 		/* Courses , Registrations & Lessons */
@@ -58,5 +53,5 @@ Route::group([
 
 		/* Instructors */
 		Route::post('/instructors', 'InstructorController@assignInstructor'); //Assign instructor to a course
-  });
+	});
 });
