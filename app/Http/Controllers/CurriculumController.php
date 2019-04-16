@@ -18,8 +18,8 @@ class CurriculumController extends Controller
      */
 	public function generateCurriculum(Request $request){		
 		$request->validate([
-      'course_grade_id' => 'required|exists:course_grade,id|max:255',
-  	]);
+			'course_grade_id' => 'required|exists:course_grade,id|max:255',
+		]);
 
 		ProcessBatch::dispatch(Auth::user()->tenant(),$request->all()[0],$request->type);
 
@@ -61,70 +61,70 @@ class CurriculumController extends Controller
      *
      * @return void
      */
-    public function lessons(Request $request)
-    {
-      $query = [];
-			$tenant_id = Auth::user()->tenant()->id;
+	public function lessons(Request $request)
+	{
+		$query = [];
+		$tenant_id = Auth::user()->tenant()->id;
 
-			array_push($query,['tenant_id', '=', $tenant_id]);
+		array_push($query,['tenant_id', '=', $tenant_id]);
+		
+		if(!$request->has('course_id')){
+			$message = 'course id required';
 			
-			if(!$request->has('course_id')){
-				$message = 'course id required';
-				
-				return response()->json($message,500);
-			}else{
-				array_push($query,['course_id', '=', $request->course_id]);
-				array_push($query,['parent_id', '=', null]);
-			}	
+			return response()->json($message,500);
+		}else{
+			array_push($query,['course_id', '=', $request->course_id]);
+			array_push($query,['parent_id', '=', null]);
+		}	
 
-			if($request->has('instructor_id')){
-				array_push($query,['meta->instructor_id', '=', $request->instructor_id]);
-			}
-					
-			$lessons = $request->has('paginate') ? Lesson::with('sub_lessons','course')->where($query)->paginate($request->paginate) : Lesson::with('sub_lessons','course')->where($query)->get();
-							
-			if(sizeof($lessons)){
-				return response()->json($lessons,200);
-			}else{
-				
-				$message = 'no lessons found for course id : '.$request->course_id;
-				
-				return response()->json(['message' => $message],404);
-			}
-    }
+		if($request->has('instructor_id')){
+			array_push($query,['meta->instructor_id', '=', $request->instructor_id]);
+		}
+		
+		$lessons = $request->has('paginate') ? Lesson::with('sub_lessons','course')->where($query)->paginate($request->paginate) : Lesson::with('sub_lessons','course')->where($query)->get();
+		
+		if(sizeof($lessons)){
+			return response()->json($lessons,200);
+		}else{
+			
+			$message = 'no lessons found for course id : '.$request->course_id;
+			
+			return response()->json(['message' => $message],404);
+		}
+	}
 
     /**
      * Batch create subjects
      *
      * @return void
      */
-	public function getCourseLoad($course_grade_id){
-		$curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
+    public function getCourseLoad($course_grade_id){
+    	$curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
 
-		$course_load = [];
+    	$course_load = [];
 
-		if(isset($curriculum->course_load)){
-			foreach ($curriculum->course_load as $key => $section) {
+    	if(isset($curriculum->course_load)){
+    		foreach ($curriculum->course_load as $key => $section) {
 				//var_dump($section);
-				$course_load[$key] = [];
+    			$course_load[$key] = [];
 
-				if(sizeof($section)){
-					foreach ($section as $subject_id) {
-						if(is_int($subject_id)){
-							$subject = Subject::find($subject_id);
+    			if(sizeof($section)){
+    				foreach ($section as $subject_id) {
+    					if(is_int($subject_id)){
+    						$subject = Subject::find($subject_id);
 
-							$course_load[$key][] = $subject->only(['name','code','id','group']);
-						}
-					}
-				}
-			}
+    						$course_load[$key][] = $subject->only(['name','code','id','group']);
+    					}
+    				}
+    			}
+    		}
 
-			$curriculum = $curriculum->toArray();
+    		$curriculum = $curriculum->toArray();
 
-			$curriculum['course_load'] = $course_load;
-		}
+    		$curriculum['course_load'] = $course_load;
+    	}
 
-		return response()->json($curriculum,200);
+    	return response()->json($curriculum,200);
 
-	}
-}
+    }
+  }

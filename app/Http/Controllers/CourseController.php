@@ -15,11 +15,10 @@ use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 
-
 class CourseController extends Controller
 {
-	
-	/**
+  
+  /**
    * List courses
    *
    * @return void
@@ -29,94 +28,94 @@ class CourseController extends Controller
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [
-			['tenant_id', '=', $tenant_id]
-		];
+      ['tenant_id', '=', $tenant_id]
+    ];
 
-		$query[] = ['id', '=', $request->course_id];
+    $query[] = ['id', '=', $request->course_id];
 
-		$query[] = ['course_grade_id', '=', $request->course_grade_id];
+    $query[] = ['course_grade_id', '=', $request->course_grade_id];
 
-		$query[] = ['name', '=', $request->name];
+    $query[] = ['name', '=', $request->name];
 
-		$query[] = ['instructor_id', '=', $request->instructor_id];
+    $query[] = ['instructor_id', '=', $request->instructor_id];
 
-		$relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
-				
-		$courses = $request->has('paginate') ? 
-						Course::with($relationships)
-								->where($query)
-								->paginate($request->paginate) 
-								
-					: Course::with($relationships)
-							->where($query)
-							->get();
-						
-		return response()->json($courses,200);
+    $relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
+    
+    $courses = $request->has('paginate') ? 
+    Course::with($relationships)
+    ->where($query)
+    ->paginate($request->paginate) 
+    
+    : Course::with($relationships)
+    ->where($query)
+    ->get();
+    
+    return response()->json($courses,200);
   }
-	
-	/**
+  
+  /**
      * Create a new course
      *
      * @return void
      */
-	public function updateCourse(StoreCourse $request){
+  public function updateCourse(StoreCourse $request){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-		dd($request->all());
-		
-		//$data = $request->all();
-		
-		/*$data['tenant_id'] = $tenant_id;
+    dd($request->all());
+    
+    //$data = $request->all();
+    
+    /*$data['tenant_id'] = $tenant_id;
 
-		$data['code'] = $data['class']['name']
-		
-		$course = Course::create($data);
-		
-		return response()->json($course,200)->setCallback($request->input('callback'));*/
-	}
+    $data['code'] = $data['class']['name']
+    
+    $course = Course::create($data);
+    
+    return response()->json($course,200)->setCallback($request->input('callback'));*/
+  }
 
-	/**
+  /**
      * Create a new course
      *
      * @return void
      */
-	public function createCourse(StoreCourse $request){
-		$tenant_id = Auth::user()->tenant()->first()->id;
+  public function createCourse(StoreCourse $request){
+    $tenant_id = Auth::user()->tenant()->first()->id;
 
-		dd($request->all());
-		
-		//$data = $request->all();
-		
-		/*$data['tenant_id'] = $tenant_id;
+    dd($request->all());
+    
+    //$data = $request->all();
+    
+    /*$data['tenant_id'] = $tenant_id;
 
-		$data['code'] = $data['class']['name']
-		
-		$course = Course::create($data);
-		
-		return response()->json($course,200)->setCallback($request->input('callback'));*/
-	}
+    $data['code'] = $data['class']['name']
+    
+    $course = Course::create($data);
+    
+    return response()->json($course,200)->setCallback($request->input('callback'));*/
+  }
 
-	/**
+  /**
      * Batch create subjects
      *
      * @return void
      */
-	public function batchUpdate(StoreBatch $request){
-		$tenant = Auth::user()->tenant()->first();
+  public function batchUpdate(StoreBatch $request){
+    $tenant = Auth::user()->tenant()->first();
 
-		ProcessBatch::dispatch($tenant, $request->all()[0],$request->type);
+    ProcessBatch::dispatch($tenant, $request->all()[0],$request->type);
 
-		return response()->json(['message' => 'your request is being processed'],200);
-	}
+    return response()->json(['message' => 'your request is being processed'],200);
+  }
 
-	/**
+  /**
      * Generate courses based on subjects
      *
      * @return void
      */
-	public function generateCourses(Request $request){
-		GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
+  public function generateCourses(Request $request){
+    GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
 
-		return response()->json(['message' => 'your request is being processed'],200);
-	}
+    return response()->json(['message' => 'your request is being processed'],200);
+  }
 }

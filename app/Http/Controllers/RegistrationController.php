@@ -11,7 +11,7 @@ use App\Jobs\RegisterStudents;
 
 class RegistrationController extends Controller
 {
-	/**
+  /**
    * List registrations
    *
    * @return void
@@ -21,32 +21,32 @@ class RegistrationController extends Controller
     $tenant_id = Auth::user()->tenant()->id;
 
     $query = [
-			['tenant_id', '=', $tenant_id]
-		];
+      ['tenant_id', '=', $tenant_id]
+    ];
 
-		$relationships = ['course','user','course.grade:name,id,alias','course.instructor:id,firstname,lastname,meta','term:name,year'];
-		
-		if($request->has('user_id')){
-			array_push($query,['user_id', '=', $request->user_id]);
-			//array_push($relationships,'user');
-		}
+    $relationships = ['course','user','course.grade:name,id,alias','course.instructor:id,firstname,lastname,meta','term:name,year'];
+    
+    if($request->has('user_id')){
+      array_push($query,['user_id', '=', $request->user_id]);
+      //array_push($relationships,'user');
+    }
 
-		if($request->has('course_id')){
-			array_push($query,['course_id', '=', $request->course_id]);
-			//array_push($relationships,'course');
-		}
+    if($request->has('course_id')){
+      array_push($query,['course_id', '=', $request->course_id]);
+      //array_push($relationships,'course');
+    }
 
-		$registrations = $request->has('paginate') ? 
-			Registration::with($relationships)->where($query)->paginate($request->paginate) : 
-			Registration::with($relationships)->where($query)->get();
-				
-		if(sizeof($registrations)){
-			return response()->json($registrations,200)->setCallback($request->input('callback'));
-		}else{
-			$message = 'no registrations found for tenant id : '.$tenant_id;
+    $registrations = $request->has('paginate') ? 
+      Registration::with($relationships)->where($query)->paginate($request->paginate) : 
+      Registration::with($relationships)->where($query)->get();
+        
+    if(sizeof($registrations)){
+      return response()->json($registrations,200)->setCallback($request->input('callback'));
+    }else{
+      $message = 'no registrations found for tenant id : '.$tenant_id;
 
-			return response()->json(['message' => $message],204)->setCallback($request->input('callback'));
-		}
+      return response()->json(['message' => $message],204)->setCallback($request->input('callback'));
+    }
   }
 
     /**
@@ -54,13 +54,13 @@ class RegistrationController extends Controller
      *
      * @return void
      */
-	public function registerStudents(Request $request){
-		$tenant_id = Auth::user()->tenant()->id;
+  public function registerStudents(Request $request){
+    $tenant_id = Auth::user()->tenant()->id;
 
-		RegisterStudents::dispatch($tenant_id, $request->all()[0]);
+    RegisterStudents::dispatch($tenant_id, $request->all()[0]);
 
-		return response()->json(['message' => 'your request is being processed'],200);
-	}
+    return response()->json(['message' => 'your request is being processed'],200);
+  }
 
 
 }
