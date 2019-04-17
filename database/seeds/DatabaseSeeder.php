@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call('OtherSeeders');
+        $this->call('PermissionsSeeder');
 		$this->call('DemoUsersSeeder');
         //$this->call('UsersTableSeeder');
-
     }
 }

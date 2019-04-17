@@ -29,13 +29,18 @@ class CourseController extends Controller
       ['tenant_id', '=', $tenant_id]
     ];
 
-    $query[] = ['id', '=', $request->course_id];
-
-    $query[] = ['course_grade_id', '=', $request->course_grade_id];
-
-    $query[] = ['name', '=', $request->name];
-
-    $query[] = ['instructor_id', '=', $request->instructor_id];
+    if($request->has('course_id')){
+      $query[] = ['id', '=', $request->course_id];
+    } 
+    if($request->has('course_grade_id')){
+      $query[] = ['course_grade_id', '=', $request->course_grade_id];
+    } 
+    if($request->has('name')){
+      $query[] = ['name', '=', $request->name];
+    } 
+    if($request->has('instructor_id')){
+      $query[] = ['instructor_id', '=', $request->instructor_id];
+    }
 
     $relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
     
@@ -48,7 +53,7 @@ class CourseController extends Controller
     ->where($query)
     ->get();
     
-    return response()->json(['message' => $message],204);   
+    return response()->json(['message' => $message], 204);   
   }
   
   /**
@@ -71,7 +76,7 @@ class CourseController extends Controller
 
     $course->save();
     
-    return response()->json($course,200);
+    return response()->json($course, 200);
   }
 
   /**
