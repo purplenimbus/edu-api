@@ -78,8 +78,8 @@ class NimbusEdu
 
         break;
 
-        case 'admin' : $user->assignRole('other'); break;
-
+        case 'admin' : $user->assignRole('admin'); break;
+        case 'parent' : $user->assignRole('parent'); break;
         default : $user->assignRole('other'); break;
       }
 
