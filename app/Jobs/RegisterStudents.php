@@ -15,37 +15,33 @@ use App\User as User;
 
 class RegisterStudents implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    var $data;
-    var $tenant_id;
-    var $payload;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct($tenant_id,$data)
-    {
-        $this->tenant_id = $tenant_id;
-        $this->data = $data;
-        $this->payload = [
-            'updated' => [],
-            'created' => [],
-            'skipped' => []
-        ];
-    }
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  var $data;
+  var $tenant;
+  var $payload;
+  /**
+   * Create a new job instance.
+   *
+   * @return void
+   */
+  public function __construct(Tenant $tenant, $data)
+  {
+    $this->tenant = $tenant;
+    $this->data = $data;
+    $this->payload = [
+      'updated' => [],
+      'created' => [],
+      'skipped' => []
+    ];
+  }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        $tenant = Tenant::find($this->tenant_id);
-
-        $tenant->notify(new StudentsRegistered($this->payload));
-
-        var_dump($tenant);
-    }
+  /**
+   * Execute the job.
+   *
+   * @return void
+   */
+  public function handle()
+  {
+    $this->tenant->notify(new StudentsRegistered($this->payload));
+  }
 }

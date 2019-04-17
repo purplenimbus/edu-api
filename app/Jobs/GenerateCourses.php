@@ -17,92 +17,80 @@ use Illuminate\Support\Facades\Auth;
 
 class GenerateCourses implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    var $curricula;
-    var $tenant_id;
-    var $payload;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct($tenant_id,$curricula)
-    {
-        $this->curricula = $curricula;
-        $this->tenant_id = $tenant_id;
-        $this->payload = [
-            'updated' => [],
-            'created' => [],
-            'skipped' => []
-        ];
-    }
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  var $curricula;
+  var $tenant;
+  var $payload;
+  /**
+   * Create a new job instance.
+   *
+   * @return void
+   */
+  public function __construct(Tenant $tenant, $curricula)
+  {
+    $this->curricula = $curricula;
+    $this->tenant = $tenant;
+    $this->payload = [
+      'updated' => [],
+      'created' => [],
+      'skipped' => []
+    ];
+  }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
-    {
-        $self = $this;
-        $count = 0;
-        foreach ($this->curricula as $curriculum) {
+  /**
+   * Execute the job.
+   *
+   * @return void
+   */
+  public function handle()
+  {
+    $self = $this;
+    $count = 0;
 
-            foreach ($curriculum->course_load as $key => $section) {
+    foreach ($this->curricula as $curriculum) {
+      foreach ($curriculum->course_load as $key => $section) {
+        if(sizeof($section)){
+          foreach ($section as $subject_id) {
+            if(is_int($subject_id)){
+              $subject = Subject::find($subject_id);
 
-                //var_dump();
-                //$course_load[$key] = [];
-                //var_dump($section);
+              $data = [
+                'subject_id' => $subject->id,
+                'tenant_id' => $self->tenant->id,
+                'name' => $subject->name,
+                'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
+                'course_grade_id' => $curriculum->course_grade_id,
+                'meta' => [
+                  'course_schema' =>  [
+                    'quiz' =>  15,
+                    'midterm' => 30,
+                    'assignment' => 15,
+                    'lab' => 5,
+                    'exam' => 35
+                  ]
+                ]
+              ];
 
-                if(sizeof($section)){
-                    foreach ($section as $subject_id) {
+              $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));
 
-                        //var_dump($subject_id);
-                        if(is_int($subject_id)){
-                            $subject = Subject::find($subject_id);
+              if($course->id){
+                $self->payload['updated'][] = $course;
+              }else{
+                $self->payload['created'][] = $course;
+              }
 
-                            //$course_load[$key][] = $subject->only(['name','code','id','group']);
+              $course->fill($data);
 
-                            $data = [
-                                'subject_id' => $subject->id,
-                                'tenant_id' => $self->tenant_id,
-                                'name' => $subject->name,
-                                'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
-                                'course_grade_id' => $curriculum->course_grade_id,
-                                'meta' => [
-                                    'course_schema' =>  [
-                                        'quiz' =>  15,
-                                        'midterm' => 30,
-                                        'assignment' => 15,
-                                        'lab' => 5,
-                                        'exam' => 35
-                                    ]
-                                ]
-                            ];
+              $course->save();
 
-                            $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));
-
-                            if($course->id){
-                                $self->payload['updated'][] = $course;
-                            }else{
-                                $self->payload['created'][] = $course;
-                            }
-
-                            $course->fill($data);
-
-                            $course->save();
-
-                        }
-                    }
-                }
             }
-
+          }
         }
-
-        $tenant = Tenant::find($self->tenant_id);
-
-        $tenant->notify(new CoursesGenerated($this->payload));
-
-        \Log::info('GenerateCourses : '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated GeneratedCourses for tenant_id: '.$this->tenant_id);
+      }
     }
+
+    $this->tenant->notify(new CoursesGenerated($this->payload));
+
+    \Log::info('GenerateCourses : '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated GeneratedCourses for tenant_id: '.$this->tenant->id);
+  }
 }

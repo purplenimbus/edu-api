@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBatch extends FormRequest
+class GetCourses extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,7 +24,10 @@ class StoreBatch extends FormRequest
   public function rules()
   {
     return [
-      'type'  => 'required|max:255'
+      'id' => 'exists:courses,id|number',
+      'course_grade_id' => 'exists:course_grade_id,id|number',
+      'instructor_id' => 'number',
+      'name' => 'string', 
     ];
   }
 }
