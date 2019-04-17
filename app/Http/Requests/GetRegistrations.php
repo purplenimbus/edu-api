@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBatch extends FormRequest
+class GetRegistrations extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,7 +24,9 @@ class StoreBatch extends FormRequest
   public function rules()
   {
     return [
-      'type'  => 'required|max:255'
+      'course_id' => 'integer|exists:courses,id',
+      'paginate' => 'integer',
+      'user_id' => 'integer|exists:users,id',
     ];
   }
 }

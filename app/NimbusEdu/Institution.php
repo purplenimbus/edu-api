@@ -9,48 +9,42 @@ use App\Jobs\ProcessBatch;
 
 class Institution extends NimbusEdu
 {
- 	var $tenant;
- 	var $country_name;
+  var $tenant;
+  var $country_name;
 
- 	public function __construct($tenant_id,$country_name)
-    {
-    	$this->tenant = Tenant::findOrfail($tenant_id);
+  public function __construct(Tenant $tenant,$country_name)
+  {
+    $this->tenant = $tenant;
 
-    	$this->country_name = $country_name;
+    $this->country_name = $country_name;
 
-    	switch($this->country_name){
-    		default : 	$subjects = $this->generate('subjects.json','subject');
-    					$course_grades = $this->generate('course_grades.json','coursegrade');
-    					$curricula = $this->generate('curricula.json','curriculum');
+    switch($this->country_name){
+      default :   $subjects = $this->generate('subjects.json','subject');
+      $course_grades = $this->generate('course_grades.json','coursegrade');
+      $curricula = $this->generate('curricula.json','curriculum');
 
-    					break;
-    	}
-
-    	$school_term =  SchoolTerm::create(['tenant_id' => $this->tenant->id,'name' => 'first','year' => 2018]);
+      break;
     }
 
-    private function readJson($path){
-    	try{
+    $school_term =  SchoolTerm::create(['tenant_id' => $this->tenant->id,'name' => 'first','year' => 2018]);
+  }
 
-    		return json_decode(file_get_contents($path),true);
+  private function readJson($path){
+    try{
+      return json_decode(file_get_contents($path),true);
+    }catch(Exception $e){
+      throw new Exception($e->getMessage());
+    }
+  }
 
-    	}catch(Exception $e){
-    		throw new Exception($e->getMessage());
-    	}
+  public function generate($path,$type){
+    try{
+      echo 'Generating new '.$type.' for tenant : '.$this->tenant->name."\r\n";
+
+      ProcessBatch::dispatch($this->tenant, $this->readJson($path),$type);
+    }catch(Exception $e){
+      throw new Exception($e->getMessage());
     }
 
-    public function generate($path,$type){
-
-    	try{
-
-    		echo 'Generating new '.$type.' for tenant : '.$this->tenant->name."\r\n";
-
-    		ProcessBatch::dispatch($this->tenant->id,$this->readJson($path),$type);
-
-
-    	}catch(Exception $e){
-    		throw new Exception($e->getMessage());
-    	}
-
-    }
+  }
 }
