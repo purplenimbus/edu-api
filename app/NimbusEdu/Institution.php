@@ -26,7 +26,7 @@ class Institution extends NimbusEdu
       break;
     }
 
-    $school_term =  SchoolTerm::create(['tenant_id' => $this->tenant->id,'name' => 'first','year' => 2018]);
+    $school_term =  SchoolTerm::create(['tenant_id' => $this->tenant->id,'name' => 'first','year' => 2019]); // need to set this some how , perhaps pass it in the request?
   }
 
   private function readJson($path){

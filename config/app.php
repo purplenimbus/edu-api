@@ -151,6 +151,7 @@ return [
          * Package Service Providers...
          */
 		Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Spatie\Permission\PermissionServiceProvider::class,
         /*
          * Application Service Providers...
          */

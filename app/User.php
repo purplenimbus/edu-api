@@ -4,14 +4,17 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Webpatser\Uuid\Uuid as Uuid;
 
 class User extends Authenticatable implements JWTSubject
 {
-  use Notifiable;
+  use HasRoles, Notifiable;
 
   public $table = "users";
+
+  protected $guard_name = 'api';
 
 	/**
    * The attributes that are mass assignable.

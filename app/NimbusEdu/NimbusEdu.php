@@ -60,17 +60,16 @@ class NimbusEdu
       $user->save();
 
       switch($user_type){
-        case 'student' : $self->enrollCoreCourses($user,$user->meta->course_grade_id); 
+        case 'student' : $self->enrollCoreCourses($user, $user->meta->course_grade_id); 
 
         break;
 
         case 'teacher' : if($course_codes){ 
           foreach (explode(',',$course_codes) as $course_code){
-
             $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
 
             if(isset($course->id)){
-              $self->assignInstructor($user,$course);
+              $self->assignInstructor($user, $course);
             }else{
               \Log::info('Cant assign instructor, '.$course_code.' not found ');
             }
@@ -78,6 +77,10 @@ class NimbusEdu
         }
 
         break;
+
+        case 'admin' : $user->assignRole('other'); break;
+
+        default : $user->assignRole('other'); break;
       }
 
       if($created){
@@ -137,15 +140,15 @@ class NimbusEdu
       $new = isset($curriculum->id) ? $curriculum->id : false;
 
       if(isset($data['core_subjects_code'])){
-        $course_load['core'] = $this->parseSubjects($data['core_subjects_code'],$curriculum,true,$payload);
+        $course_load['core'] = $this->parseSubjects($data['core_subjects_code'], $curriculum, true, $payload);
       }
 
       if(isset($data['elective_subjects_code'])){
-        $course_load['elective'] = $this->parseSubjects($data['elective_subjects_code'],$curriculum,true,$payload);
+        $course_load['elective'] = $this->parseSubjects($data['elective_subjects_code'], $curriculum, true, $payload);
       }
 
       if(isset($data['optional_subjects_code'])){
-        $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code'],$curriculum,true,$payload);
+        $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code'], $curriculum, true, $payload);
       }
 
       $curriculum->course_load = $course_load;
@@ -258,6 +261,8 @@ class NimbusEdu
           $user->ref_id = $this->generateStudentId($user->id);
         }
         
+        $user->assignRole('student');
+
         $user->save();
 
         \Log::info('Student '.$user->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
@@ -276,6 +281,8 @@ class NimbusEdu
       \Log::info('Instructor '.$instructor->id.' Assigned to '.$course->code);
 
       $instructor->account_status_id = $this->getStatusID('assigned')->id;
+
+      $instructor->assignRole('teacher');
 
       $instructor->save();
 
