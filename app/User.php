@@ -30,10 +30,7 @@ class User extends Authenticatable implements JWTSubject
     'meta',
     'password',
     'image',
-    'user_type_id',
     'account_status_id',
-    'access_level_id',
-    'user_role_id',
     'ref_id'
   ];
 
@@ -43,7 +40,7 @@ class User extends Authenticatable implements JWTSubject
    * @var array
    */
   protected $hidden = [
-    'password','tenant_id','created_at','updated_at','remember_token','access_level_id','user_type_id','user_role_id','account_status_id'
+    'password','tenant_id','created_at','updated_at','remember_token','account_status_id'
   ];
 
 	/**
@@ -74,7 +71,7 @@ class User extends Authenticatable implements JWTSubject
   public function getJWTCustomClaims()
   {
     return [
-      'user' => $this->only(['email', 'first_name', 'last_name', 'id']),
+      'user' => $this->only(['email', 'firstname', 'lastname', 'id']),
       'tenant' => $this->tenant()->get()->toArray(),
     ];
   }
@@ -134,6 +131,11 @@ class User extends Authenticatable implements JWTSubject
 		});
 	}
 
+  public function getTypeAttribute()
+  {
+    return $this->roles->first()->name;
+  }
+
   /**
    * Relationships.
    *
@@ -142,15 +144,7 @@ class User extends Authenticatable implements JWTSubject
     return $this->belongsTo('App\Tenant');
   }
 
-  function user_type(){
-    return $this->belongsTo('App\UserType','user_type_id');
-  }
-
   function account_status(){
     return $this->belongsTo('App\StatusType','account_status_id');
-  }
-
-  function access_level(){
-    return $this->belongsTo('App\AccessLevel','access_level_id');
   }
 }

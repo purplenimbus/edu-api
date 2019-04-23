@@ -4,29 +4,13 @@ use Illuminate\Database\Seeder;
 
 class OtherSeeders extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
-    public function run()
-    {
-        $access_levels = [
-			[
-				'name' => 'guest',
-			],[
-				'name' => 'user',
-			],[
-				'name' => 'admin',
-			],[
-				'name' => 'super admin'
-			]
-		];
-		
-		foreach($access_levels as $level){
-			App\AccessLevel::create($level);
-		}
-		
+	/**
+   * Run the database seeds.
+   *
+   * @return void
+   */
+  public function run()
+  {
 		$currencies = [
 			[
 				'shortname' => 'NGN',
@@ -40,25 +24,11 @@ class OtherSeeders extends Seeder
 			App\Currency::create($currency);
 		}
 
-		$user_types = [
-			[	'name' => 'guest'	],
-			[	'name' => 'student'	],
-			[	'name' => 'teacher'	],
-			[	'name' => 'parent'	],
-			[	'name' => 'alumni'	],
-			[	'name' => 'other'	]
-		];
-		
-		//Create Currencies
-		foreach($user_types as $user_type){
-			App\UserType::create($user_type);
-		}
-
 		$curricula_types = [
 			[	'country' => 'nigeria'	],
 		];
 		
-		//Create Currencies
+		//Create Curriculla Types
 		foreach($curricula_types as $curricula_type){
 			App\CurriculumType::create($curricula_type);
 		}
@@ -71,7 +41,7 @@ class OtherSeeders extends Seeder
 			[	'name' => 'archived'	],
 		];
 		
-		//Create Currencies
+		//Create Account Status Types
 		foreach($account_status_types as $account_status_type){
 			App\StatusType::create($account_status_type);
 		}
@@ -83,7 +53,7 @@ class OtherSeeders extends Seeder
 			[	'name' => 'archived'	],
 		];
 		
-		//Create Currencies
+		//Create Biling Status Types
 		foreach($billing_status_types as $billing_status_type){
 			App\BillingStatus::create($billing_status_type);
 		}

@@ -40,9 +40,9 @@ Route::group([
 		Route::post('/register','RegistrationController@registerStudents');
 		/* Users */
 		Route::get('/users/index', 'UserController@userList');
-		Route::get('/users/', 'UserController@getUser');
+		Route::get('/user', 'UserController@getUser');
 		Route::post('/users/batch', 'UserController@batchUpdate');
-		Route::post('/users/', 'UserController@saveUser');
+		Route::post('/user', 'UserController@saveUser');
 		/* Instructors */
 		Route::post('/instructors', 'InstructorController@assignInstructor');
 	});
