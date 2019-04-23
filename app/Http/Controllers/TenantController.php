@@ -60,7 +60,7 @@ class TenantController extends BaseController
   
   public function getSettings($tenant_id,Request $request){
     try{
-      $tenant = Auth::user()->tenant();
+      $tenant = Auth::user()->tenant()->first();
       
       return response()->json($tenant->meta->settings,200);
       

@@ -14,7 +14,8 @@ class PermissionsSeeder extends Seeder
   public function run()
   {
     $roles = [
-    	['name' => 'admin'],
+      ['name' => 'admin'],
+    	['name' => 'alumni'],
     	['name' => 'other'],
     	['name' => 'student'],
     	['name' => 'superadmin'],
@@ -62,6 +63,11 @@ class PermissionsSeeder extends Seeder
         'users' => ['view', 'edit', 'delete'],
         'registrations' => ['view', 'edit', 'delete'],
         'tenants' => ['view', 'edit', 'delete'],
+      ],
+      'alumni' => [
+        'bills' => ['view'],
+        'users' => ['view'],
+        'registrations' => ['view'],
       ],
     ];
 

@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreUser extends FormRequest
+class GetUsers extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,10 +25,8 @@ class StoreUser extends FormRequest
   public function rules()
   {
     return [
-      'email'  => 'email|max:255',
-      'firstname'   => 'required|max:255',
-      'lastname'  => 'required|max:255',
-      'othernames'  => 'string|max:255',
+      'course_grade_id' => 'course_grades:id|integer',
+      'user_type' => Rule::in(['admin' , 'other', 'student', 'superadmin', 'teacher']),
     ];
   }
 }

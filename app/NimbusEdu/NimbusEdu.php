@@ -29,7 +29,7 @@ class NimbusEdu
   public function processUser($data, $payload){
     try{
       $self = $this;
-      $user = User::with(['user_type','account_status'])
+      $user = User::with(['account_status'])
         ->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
 
       $created = isset($user->id) ? false : true;

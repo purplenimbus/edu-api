@@ -24,7 +24,8 @@ class GetUser extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'integer|required|exists:users,id'
+            'email' => 'email|exists:users,email',
+            'user_id' => 'integer|exists:users,id',
         ];
     }
 }
