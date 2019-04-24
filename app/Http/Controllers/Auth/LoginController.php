@@ -77,4 +77,10 @@ class LoginController extends Controller
   public function pusher(PusherAuth $auth){
     return $this->pusher->socket_auth($auth->channel_name,$auth->socket_id); 
   }
+
+  public function logout(){
+    if(Auth::user()){
+        Auth::user()->logout();
+    }
+  }
 }
