@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Webpatser\Uuid\Uuid as Uuid;
+use Spatie\Permission\Models\Role as Role;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -133,7 +134,8 @@ class User extends Authenticatable implements JWTSubject
 
   public function getTypeAttribute()
   {
-    return $this->roles->first()->name;
+    return $this->hasAnyRole(Role::all()) ?
+      $this->roles->first()->name : '';
   }
 
   /**
