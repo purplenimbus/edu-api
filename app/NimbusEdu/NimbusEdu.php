@@ -55,6 +55,8 @@ class NimbusEdu
 
       $user->fill($data);
 
+      $user->access_level_id = 2;
+
       $user->save();
 
       switch($user_type){
