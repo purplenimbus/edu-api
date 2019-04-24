@@ -15,31 +15,23 @@ use App\Nimbus\NimbusEdu;
 class UserController extends Controller
 {
   public function userList(GetUsers $request){
-    $tenant = Auth::user()->tenant()->first();
-
-    $tenant_id = $tenant->id;
-
-    $nimbus_edu = new NimbusEdu($tenant);
+    $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [
       ['tenant_id', '=', $tenant_id]
     ];
 
     if($request->has('course_grade_id')){
-      array_push($query,['meta->course_grade_id', '=', $request->course_grade_id]);
+      array_push($query,['meta->course_grade_id', '=', (int)$request->course_grade_id]);
     }
-    
-    $users =  $request->has('paginate') ? 
-    User::with(['account_status:name,id','access_level:name,id'])->where($query)
-    ->paginate($request->paginate)              
-    :   User::with(['account_status:name,id'])->where($query)
-    ->get();
 
-    if($request->has('user_type')){
-      $users = $users->filter(function($user) use ($request){
-        return $user->type === $request->user_type;
-      });
-    }
+    $users =  $request->has('paginate') ? 
+    User::with(['account_status:name,id'])->where($query)
+    ->paginate($request->paginate)              
+    : User::with(['account_status:name,id'])->where($query);
+
+    $users = $request->has('user_type') ? 
+      $users->role($request->user_type)->get() : $users->get();
 
     return response()->json($users,200);
   }

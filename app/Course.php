@@ -16,6 +16,15 @@ class Course extends Model
     protected $fillable = [
         'name','description', 'meta','tenant_id','instructor_id','subject_id','code','course_grade_id'
     ];
+
+    /**
+       * The attributes excluded from the model's JSON form.
+       *
+       * @var array
+       */
+      protected $hidden = [
+        'tenant_id'
+      ];
 	
     /**
      * Get course registrations
