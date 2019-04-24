@@ -15,6 +15,7 @@ Route::group([
 	'prefix' => 'v'.env('API_VERSION',1),
 ], function() {
 	Route::post('/login','Auth\LoginController@authenticate');
+	Route::post('/logout','Auth\LoginController@logout');
 	Route::get('/subjects', 'CurriculumController@subjects');
 	Route::get('/grades/list', 'CurriculumController@listClasses');
 	Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad');
