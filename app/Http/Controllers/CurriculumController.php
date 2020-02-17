@@ -10,6 +10,7 @@ use App\Http\Requests\GetSubjects as GetSubjects;
 use App\Lesson as Lesson;
 use App\Subject as Subject;
 use App\Curriculum as Curriculum;
+use App\CourseGrade as CourseGrade;
 
 class CurriculumController extends Controller
 {
