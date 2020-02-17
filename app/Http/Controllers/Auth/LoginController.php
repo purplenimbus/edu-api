@@ -52,9 +52,12 @@ class LoginController extends Controller
 	public function authenticate(Request $request)
   {
     $credentials = $request->only('email', 'password');
+		
+		$expDate = $request->has('remember_me') && $request->remember_me ? 14 : 1;
+    $claims = ['exp' => Carbon::now()->addDays($expDate)->timestamp];
 
 		try {
-			if (! $token = JWTAuth::attempt($credentials)) {
+			if (!$token = JWTAuth::claims($claims)->attempt($credentials)) {
 				return response()->json(['error' => 'invalid_credentials'], 401);
 			}
 		} catch (JWTException $e) {
