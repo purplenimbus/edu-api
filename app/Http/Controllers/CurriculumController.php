@@ -47,7 +47,7 @@ class CurriculumController extends Controller
      * @return void
      */
 	public function listClasses(){
-		return response()->json(CourseGrade::all(), 200);
+		return response()->json(CourseGrade::get(['alias','description','id','name']), 200);
 	}
 	/**
    * List lessons
