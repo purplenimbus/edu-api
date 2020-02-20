@@ -125,7 +125,7 @@ class User extends Authenticatable implements JWTSubject
 
 	/**
 	 *  Setup model event hooks
-
+  */
 	public static function boot()
 	{
 		parent::boot();
@@ -133,7 +133,7 @@ class User extends Authenticatable implements JWTSubject
 			$model->uuid = (string) Uuid::generate(4);
 		});
 	}
-	*/
+
   public function getTypeAttribute()
   {
     return $this->hasAnyRole(Role::all()) ?
