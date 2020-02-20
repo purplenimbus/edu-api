@@ -10,6 +10,7 @@ use App\Http\Requests\GetSubjects as GetSubjects;
 use App\Lesson as Lesson;
 use App\Subject as Subject;
 use App\Curriculum as Curriculum;
+use App\CourseGrade as CourseGrade;
 
 class CurriculumController extends Controller
 {
@@ -46,7 +47,7 @@ class CurriculumController extends Controller
      * @return void
      */
 	public function listClasses(){
-		return response()->json(CourseGrade::all(), 200);
+		return response()->json(CourseGrade::get(['alias','description','id','name']), 200);
 	}
 	/**
    * List lessons

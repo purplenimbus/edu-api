@@ -25,6 +25,7 @@ class GetUsers extends FormRequest
   public function rules()
   {
     return [
+      'account_status_id' => 'exists:status_types,id|integer',
       'course_grade_id' => 'exists:course_grades,id|integer',
       'user_type' => Rule::in(['admin' , 'other', 'student', 'superadmin', 'teacher']),
     ];

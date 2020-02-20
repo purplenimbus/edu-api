@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User as User;
+use App\StatusType as StatusType;
 use App\Http\Requests\GetUser as GetUser;
 use App\Http\Requests\GetUsers as GetUsers;
 use App\Http\Requests\StoreUser as StoreUser;
@@ -25,13 +26,21 @@ class UserController extends Controller
       array_push($query,['meta->course_grade_id', '=', (int)$request->course_grade_id]);
     }
 
-    $users =  $request->has('paginate') ? 
-    User::with(['account_status:name,id'])->where($query)
-    ->paginate($request->paginate)              
-    : User::with(['account_status:name,id'])->where($query);
+    if($request->has('account_status_id')){
+      array_push($query,['account_status_id', '=', $request->account_status_id]);
+    }
 
-    $users = $request->has('user_type') ? 
-      $users->role($request->user_type)->get() : $users->get();
+    $users = User::with(['account_status:name,id'])->where($query);
+
+    if($request->has('user_type')) {
+      $users = $users->role($request->user_type);
+    }
+
+    if($request->has('paginate')) {
+      $users = $users->paginate($request->paginate);
+    }else{
+      $users = $users->get();
+    }
 
     return response()->json($users,200);
   }
@@ -40,19 +49,16 @@ class UserController extends Controller
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [
-      ['tenant_id', '=', $tenant_id]
+      ['tenant_id', '=', $tenant_id],
+      ['id', '=', $request->user_id]
     ];
 
     if($request->has('email')){
       array_push($query,['email', '=', $request->email]);
     }
 
-    if($request->has('user_id')){
-      array_push($query,['user_id', '=', $request->user_id]);
-    }
-
-    $user = User::with(['tenant:id,name','account_status:name,id'])
-      ->where($query)->get();
+    $user = User::with(['account_status:name,id'])
+      ->where($query)->first();
 
     return response()->json($user, 200);
   }
@@ -64,14 +70,18 @@ class UserController extends Controller
 
     $user->save($data);
 
-    $user->load(['tenant:id,name','account_status:name,id']);
+    $user->load(['account_status:name,id']);
 
     return response()->json($user,200);
   }
 
-  public function batchUpdate($tenant_id,StoreBatch $request){
+  public function batchUpdate(StoreBatch $request){
     ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->all()[0], $request->type);
 
     return response()->json(['message' => 'your request is being processed'],200);
+  }
+
+  public function getAccountStatuses(){
+    return response()->json(StatusType::get(['id','name']),200);
   }
 }

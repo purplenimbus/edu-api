@@ -73,7 +73,9 @@ class User extends Authenticatable implements JWTSubject
   {
     return [
       'user' => $this->only(['email', 'firstname', 'lastname', 'id']),
-      'tenant' => $this->tenant()->get()->toArray(),
+      'tenant' => $this->tenant()->first(),
+      'role' => $this->type,
+      'permissions' => $this->roles->first()->permissions()->get(['name']),
     ];
   }
 
