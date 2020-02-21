@@ -53,7 +53,7 @@ class CourseController extends Controller
     ->where($query)
     ->get();
     
-    return response()->json(['message' => $message], 204);   
+    return response()->json($courses, 200);   
   }
   
   /**
