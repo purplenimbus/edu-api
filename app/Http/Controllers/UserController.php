@@ -68,7 +68,7 @@ class UserController extends Controller
 
     $user->fill($request->all());
 
-    $user->save($data);
+    $user->save();
 
     $user->load(['account_status:name,id']);
 
