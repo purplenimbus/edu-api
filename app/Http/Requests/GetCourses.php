@@ -25,7 +25,7 @@ class GetCourses extends FormRequest
   {
     return [
       'id' => 'exists:courses,id|integer',
-      'course_grade_id' => 'exists:course_grade_id,id|integer',
+      'course_grade_id' => 'exists:course_grades,id|integer',
       'instructor_id' => 'integer',
       'name' => 'string', 
     ];
