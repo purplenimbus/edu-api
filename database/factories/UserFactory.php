@@ -15,6 +15,7 @@
 
   $factory->define(App\User::class, function (Faker $faker) {
       return [
+          'date_of_birth' => $faker->date,
           'firstname' => $faker->name,
           'lastname' => $faker->name,
           'email' => $faker->email,

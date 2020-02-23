@@ -23,9 +23,11 @@ class UsersTableSeeder extends Seeder
 			$students = factory(App\Student::class, 'student', 10)
 				->create([
 					'tenant_id' =>  $nimbus_edu->tenant->id,
-					'meta' => ['course_grade_id' => $course_grade]
+					'meta' => [
+							'course_grade_id' => $course_grade
+						]
 				])
-				->each(function($student)use($nimbus_edu, $course_grade, $count){
+				->each(function($student) use ($nimbus_edu, $course_grade, $count){
 
 					$nimbus_edu->enrollCoreCourses($student, $course_grade);
 

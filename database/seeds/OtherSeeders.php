@@ -35,6 +35,7 @@ class OtherSeeders extends Seeder
 
 		$account_status_types = [
 			[	'name' => 'created'	],
+			[	'name' => 'unenrolled'	],
 			[	'name' => 'registered'	],
 			[	'name' => 'assigned'	],
 			[	'name' => 'terminated'	],

@@ -19,13 +19,23 @@ class User extends Authenticatable implements JWTSubject
 	
   protected $keyType = "string";
 	
-	protected $primaryKey = 'uuid';
+	//protected $primaryKey = 'uuid';
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = [
+    'date_of_birth',
+  ];
 	/**
    * The attributes that are mass assignable.
    *
    * @var array
    */
   protected $fillable = [
+    'date_of_birth',
     'firstname',
     'lastname',
     'othernames',
@@ -136,6 +146,7 @@ class User extends Authenticatable implements JWTSubject
 			$model->uuid = (string) Uuid::generate(4);
 		});
 	}
+  
   /**
    *  Get user type
   */
@@ -148,7 +159,7 @@ class User extends Authenticatable implements JWTSubject
   /**
    *  generate password
   */
-  private function createDefaultPassword()
+  public function createDefaultPassword()
   {
     return app('hash')->make($this->email);
   }
@@ -161,7 +172,7 @@ class User extends Authenticatable implements JWTSubject
     return $this->belongsTo('App\Tenant');
   }
 
-  function account_status(){
+  function status_type(){
     return $this->belongsTo('App\StatusType','account_status_id');
   }
 }
