@@ -326,7 +326,7 @@ class NimbusEdu
               if(is_int($subject_id)){
                 $subject = Subject::find($subject_id);
 
-                $course = Course::where('code',$this->parseCourseCode($subject->code,$curriculum->grade->name))->first();
+                $course = Course::where('code',$course->parse_course_code($subject->code, $curriculum->grade->name))->first();
 
                 $course_load[$key][] = $course->only(['id','code']);
               }
@@ -341,7 +341,7 @@ class NimbusEdu
     }
   }
 
-  private function parseCourseCode($subject_code, $grade_name){
+  private function parse_course_code($subject_code, $grade_name){
     return strtoupper($subject_code.'-'.str_replace(' ','-',$grade_name));
   }
 
@@ -357,7 +357,7 @@ class NimbusEdu
         if($create_course && isset($core_subject->id) && is_int($core_subject->id)){
           $parsed[] = $core_subject->id;
 
-          $course = $this->createCourse($core_subject,$curriculum); 
+          $course = $this->create_course($core_subject, $curriculum); 
         }
       }
 
@@ -369,17 +369,15 @@ class NimbusEdu
     }
   }
 
-  private function createCourse(Subject $subject, Curriculum $curriculum){
+  private function create_course(Subject $subject, Curriculum $curriculum){
     try{
       $data = [
         'subject_id' => $subject->id,
         'tenant_id' => $this->tenant->id,
         'name' => $subject->name,
-        'code' => $this->parseCourseCode($subject->code,$curriculum->grade->name),
+        'code' => $this->parse_course_code($subject->code, $curriculum->grade->name),
         'course_grade_id' => $curriculum->course_grade_id,
-        'meta' => [
-          'course_schema' =>  $this->default_course_schema
-        ]
+        'schema' =>  $this->default_course_schema
       ];
 
       $course = Course::firstOrNew(array_only($data,['code','tenant_id']));
