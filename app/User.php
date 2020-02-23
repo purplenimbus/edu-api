@@ -19,7 +19,7 @@ class User extends Authenticatable implements JWTSubject
 	
   protected $keyType = "string";
 	
-	//protected $primaryKey = 'uuid';
+	protected $primaryKey = 'id';
 
   /**
    * The attributes that should be mutated to dates.
@@ -65,6 +65,15 @@ class User extends Authenticatable implements JWTSubject
 
 	protected $casts = [
     'meta' => 'object',
+  ];
+
+  /**
+   * The accessors to append to the model's array form.
+   *
+   * @var array
+   */
+  protected $appends = [
+    'type',
   ];
 
 	/**

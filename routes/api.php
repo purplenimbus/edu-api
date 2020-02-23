@@ -47,7 +47,8 @@ Route::group([
 		Route::post('/user', 'UserController@saveUser');
 		/* Instructors */
 		Route::get('/instructors', 'InstructorController@index');
-		Route::post('/instructors', 'InstructorController@assignInstructor');
+		Route::post('/instructors', 'InstructorController@create');
+		Route::post('/instructors/assign', 'InstructorController@assignInstructor');
 		/* Students */
 		Route::get('/students', 'StudentController@index');
 		Route::post('/students', 'StudentController@create');

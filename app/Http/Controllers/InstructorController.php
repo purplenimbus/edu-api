@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Course as Course;
+use App\Course;
 use App\Instructor;
-use App\Http\Requests\AssignInstructor as AssignInstructor;
+use App\Http\Requests\AssignInstructor;
+use App\Http\Requests\StoreInstructor;
+use App\Http\Requests\GetInstructors;
+use Illuminate\Support\Facades\Auth;
+use App\Nimbus\NimbusEdu;
 
 class InstructorController extends Controller
 {
@@ -14,15 +18,23 @@ class InstructorController extends Controller
      *
      * @return void
      */
-  public function index(Request $request) {
+  public function index(GetInstructors $request) {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [
       ['tenant_id', '=', $tenant_id]
     ];
 
+    if($request->has('status')){
+      array_push($query, [
+        'account_status_id',
+        '=',
+        (int)$nimbus_edu->getStatusID($request->status)->id
+      ]);
+    }
+
     $instructors = Instructor::with([
-      'account_status:name,id'
+      'status_type'
     ])->where($query);
 
     if($request->has('paginate')) {
@@ -47,5 +59,22 @@ class InstructorController extends Controller
     $course->save();
 
     return response()->json($course, 200);
+  }
+
+  /**
+   * Create an instructor
+   *
+   * @return void
+   */
+  public function create(StoreInstructor $request) {
+    $tenant = Auth::user()->tenant()->first();
+
+    $nimbus_edu = new NimbusEdu($tenant);
+
+    $student = $nimbus_edu->create_instructor($request);
+
+    $student->load(['status_type:id,name']);
+
+    return response()->json($student, 200);
   }
 }
