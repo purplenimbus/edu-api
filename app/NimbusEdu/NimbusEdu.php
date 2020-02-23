@@ -48,7 +48,7 @@ class NimbusEdu
   public function processUser($data, $payload){
     try{
       $self = $this;
-      $user = User::with(['account_status'])
+      $user = User::with(['status_type'])
         ->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
 
       $created = isset($user->id) ? false : true;
@@ -185,7 +185,7 @@ class NimbusEdu
     }
   }
 
-  public function processCourseGrade($data,$payload){
+  public function processCourseGrade($data, $payload){
     try{
       $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
 
@@ -229,7 +229,7 @@ class NimbusEdu
     }
   }
 
-  public function getUserType($name,$new = false){
+  public function getUserType($name, $new = false){
     return $new ? 
     UserType::firstOrCreate(['name' => strtolower($name)]) : 
     UserType::where(['name' => strtolower($name)])->first();
@@ -249,7 +249,7 @@ class NimbusEdu
 
   public function enrollCoreCourses(Student $student, $course_grade_id){
     try{
-      var_dump('Attempting to enroll '.$student->id);
+      var_dump('Attempting to enroll student: '.$student->id);
 
       $school_term = $this->tenant->getCurrentTerm();
 
@@ -390,6 +390,28 @@ class NimbusEdu
       \Log::info('Course '.$course->id.' updated');
 
       return $course;
+    }catch(Exception $e){
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function create_student($data){
+    try{
+      $data = array_merge($data, [
+        'tenant_id' => $this->tenant->id,
+      ]);
+
+      $student = Student::create($data);
+
+      $student->save();
+
+      $student->ref_id = $student->generateStudentId();
+
+      $student->save();
+
+      \Log::info('Created student '.$student->ref_id.' updated');
+
+      return $student;
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }

@@ -17,12 +17,13 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->uuid('uuid');
             $table->integer('tenant_id');
+            $table->date('date_of_birth');
             $table->string('firstname');
             $table->string('lastname');
             $table->string('othernames')->nullable();
             $table->string('title')->nullable();
             $table->string('password')->nullable();
-            $table->string('email')->unique()->nullable();
+            $table->string('email')->unique();
             $table->string('image')->nullable();
             $table->json('meta')->nullable();
             $table->integer('account_status_id')->default(1);

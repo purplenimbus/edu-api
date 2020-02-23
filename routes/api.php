@@ -50,5 +50,6 @@ Route::group([
 		Route::post('/instructors', 'InstructorController@assignInstructor');
 		/* Students */
 		Route::get('/students', 'StudentController@index');
+		Route::post('/students', 'StudentController@create');
 	});
 });
