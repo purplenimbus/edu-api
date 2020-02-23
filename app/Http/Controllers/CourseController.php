@@ -12,7 +12,7 @@ use App\Http\Requests\UpdateCourse as UpdateCourse;
 use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
-
+use App\Nimbus\NimbusEdu;
 
 class CourseController extends Controller
 {
@@ -21,7 +21,7 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function getCourses(GetCourses $request)
+  public function index(GetCourses $request)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
@@ -57,22 +57,16 @@ class CourseController extends Controller
   }
   
   /**
-     * Create a new course
+     * Update a course
      *
      * @return void
      */
-  public function updateCourse(UpdateCourse $request){
+  public function update(UpdateCourse $request){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    $course = Course::where('tenant_id',$tenant_id)
-    ->where('id',$request->id)
-    ->first();
+    $course = Course::find($request->id);
 
-    $data = $request->all();
-
-    unset($data['id']);
-
-    $course->fill($data);
+    $course->fill($request->all());
 
     $course->save();
     
@@ -84,20 +78,16 @@ class CourseController extends Controller
      *
      * @return void
      */
-  public function createCourse(StoreCourse $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
-    dd($request->all());
-
-    //$data = $request->all();
+  public function create(StoreCourse $request){
+    $tenant = Auth::user()->tenant()->first();
     
-    /*$data['tenant_id'] = $tenant_id;
+    $data = $request->all();
 
-    $data['code'] = $data['class']['name']
-    
+    $data['tenant_id'] = $tenant->id;
+
     $course = Course::create($data);
     
-    return response()->json($course,200)->setCallback($request->input('callback'));*/
+    return response()->json($course, 200);
   }
 
   /**
@@ -105,7 +95,7 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function batchUpdate(StoreBatch $request){
+  public function batch(StoreBatch $request){
     ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->all()[0],$request->type);
 
     return response()->json(['message' => 'your request is being processed'], 200);
@@ -116,7 +106,7 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function generateCourses($tenant_id,Request $request){
+  public function generate($tenant_id, Request $request){
     GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
 
     return response()->json(['message' => 'your request is being processed'], 200);

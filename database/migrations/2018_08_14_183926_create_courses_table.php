@@ -24,6 +24,7 @@ class CreateCoursesTable extends Migration
 			$table->string('code')->nullable();
             $table->string('description')->nullable();
             $table->json('meta')->nullable();
+            $table->json('schema')->nullable();
             $table->timestamps();
         });
     }

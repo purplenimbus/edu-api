@@ -32,7 +32,6 @@ class StoreStudent extends FormRequest
       'lastname'  => 'required|max:255',
       'othernames'  => 'string|max:255',
       'ref_id' => 'integer|unique:users,ref_id',
-      'tenant_id' => 'required|integer|exists:tenants,id',
     ];
   }
 }

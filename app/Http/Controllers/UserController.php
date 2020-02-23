@@ -15,7 +15,7 @@ use App\Nimbus\NimbusEdu;
 
 class UserController extends Controller
 {
-  public function userList(GetUsers $request){
+  public function index(GetUsers $request){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [

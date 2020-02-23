@@ -27,11 +27,11 @@ Route::group([
 		/* Tenants */
 		Route::get('/settings', 'TenantController@getSettings');
 		/* Courses */
-		Route::get('/courses', 'CourseController@getCourses');
-		Route::post('/courses/new', 'CourseController@createCourse');
-		Route::post('/courses/edit', 'CourseController@updateCourse');
-		Route::post('/courses/batch', 'CourseController@batchUpdate');
-		Route::post('/courses/generate', 'CourseController@generateCourses');
+		Route::get('/courses', 'CourseController@index');
+		Route::post('/courses', 'CourseController@create');
+		Route::put('/courses', 'CourseController@update');
+		Route::post('/courses/batch', 'CourseController@batch');
+		Route::post('/courses/generate', 'CourseController@generate');
 		//Route::post('/courses/list', 'CourseController@courseStudentList');
 		/* Lessons */
 		Route::get('/lessons', 'CurriculumController@lessons');
@@ -41,7 +41,7 @@ Route::group([
 		Route::get('/registrations','RegistrationController@registrations');
 		Route::post('/register','RegistrationController@registerStudents');
 		/* Users */
-		Route::get('/users/index', 'UserController@userList');
+		Route::get('/users', 'UserController@index');
 		Route::get('/user', 'UserController@getUser');
 		Route::post('/users/batch', 'UserController@batchUpdate');
 		Route::post('/user', 'UserController@saveUser');

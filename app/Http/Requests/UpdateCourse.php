@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidCourseSchema;
 
 class UpdateCourse extends FormRequest
 {
@@ -24,10 +25,15 @@ class UpdateCourse extends FormRequest
   public function rules()
   {
     return [
-      'id' => 'integer|exists:courses,id'
+      'course_grade_id' => 'integer|exists:course_grades,id',
+      'id' => 'required|integer|exists:courses,id',
       'instructor_id' => 'integer|max:255|exists:users,id',
-      'tenant_id' => 'integer|required|max:255|exists:tenants,id',
-      'name' => 'string|required|max:255'
+      'name' => 'string|max:255',
+      'schema' => 'array',
+      'schema.*.name' => 'required|string|max:255',
+      'schema.*.score' => 'required|integer|max:100',
+      'subject_id' => 'integer|exists:subjects,id',
+      'schema' => new ValidCourseSchema(),
     ];
   }
 }
