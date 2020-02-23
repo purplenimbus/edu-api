@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class GetStudents extends FormRequest
+class GetInstructors extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class GetStudents extends FormRequest
   {
     return [
       'course_grade_id' => 'integer|exists:course_grades,id',
-      'status' => Rule::in(['registered' , 'unenrolled', 'created', 'archived']),
+      'status' => Rule::in(['assigned' , 'terminated', 'created', 'archived']),
     ];
   }
 }

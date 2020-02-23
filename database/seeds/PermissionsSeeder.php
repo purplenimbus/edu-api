@@ -19,7 +19,7 @@ class PermissionsSeeder extends Seeder
     	['name' => 'other'],
     	['name' => 'student'],
     	['name' => 'superadmin'],
-      ['name' => 'teacher'],
+      ['name' => 'instructor'],
     	['name' => 'parent'],
     ];
 
@@ -40,7 +40,7 @@ class PermissionsSeeder extends Seeder
         'courses' => ['view'],
         'registrations' => ['view'],
       ],
-      'teacher' => [
+      'instructor' => [
         'courses' => ['view', 'edit'],
         'users' => ['view'],
         'registrations' => ['view'],

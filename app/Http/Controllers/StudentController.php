@@ -8,10 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
 use App\Http\Requests\StoreStudent;
 use App\Http\Requests\GetStudents;
-use App\Http\Requests\StoreUser as StoreUser;
 
 class StudentController extends Controller
 {
+  /**
+   * List all Students
+   *
+   * @return void
+   */
   public function index(GetStudents $request) {
     $tenant = Auth::user()->tenant()->first();
 
@@ -44,12 +48,17 @@ class StudentController extends Controller
     return response()->json($students, 200);
 	}
 
+  /**
+   * Create a student
+   *
+   * @return void
+   */
   public function create(StoreStudent $request) {
     $tenant = Auth::user()->tenant()->first();
 
     $nimbus_edu = new NimbusEdu($tenant);
 
-    $student = $nimbus_edu->create_student($request->all());
+    $student = $nimbus_edu->create_student($request);
 
     $student->load(['status_type:id,name']);
 

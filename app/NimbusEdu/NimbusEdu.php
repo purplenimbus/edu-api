@@ -5,6 +5,7 @@ namespace App\Nimbus;
 use App\Tenant as Tenant;
 use App\User as User;
 use App\Student;
+use App\Instructor;
 use App\Subject as Subject;
 use App\Course as Course;
 use App\Curriculum as Curriculum;
@@ -395,23 +396,44 @@ class NimbusEdu
     }
   }
 
-  public function create_student($data){
+  public function create_student($request){
     try{
-      $data = array_merge($data, [
+      $data = array_merge($request->all(), [
         'tenant_id' => $this->tenant->id,
+        'meta' => [
+          'course_grade_id' => $request->course_grade_id,
+        ]
       ]);
 
-      $student = Student::create($data);
+      unset($data['course_grade_id']);
 
-      $student->save();
+      $student = Student::create($data);
 
       $student->ref_id = $student->generateStudentId();
 
       $student->save();
 
-      \Log::info('Created student '.$student->ref_id.' updated');
+      \Log::info('Created student '.$student->ref_id);
 
       return $student;
+    }catch(Exception $e){
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function create_instructor($request){
+    try{
+      $data = array_merge($request->all(), [
+        'tenant_id' => $this->tenant->id,
+      ]);
+
+      $instructor = Instructor::create($data);
+
+      $instructor->save();
+
+      \Log::info('Created instructor '.$instructor->id);
+
+      return $instructor;
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }

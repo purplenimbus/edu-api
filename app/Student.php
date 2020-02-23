@@ -14,7 +14,6 @@ class Student extends User
    * @var array
    */
   protected $appends = [
-    'type',
     'grade',
   ];
 
@@ -33,6 +32,10 @@ class Student extends User
   */
   public function getGradeAttribute()
   {
+    if (is_null($this->meta->course_grade_id)) {
+    	return;
+    } 
+
     return CourseGrade::where('id', $this->meta->course_grade_id)
     	->first()
     	->only('id','name','alias');
@@ -46,6 +49,7 @@ class Student extends User
 		parent::boot();
 		self::creating(function ($model) {
 			$model->password = $model->createDefaultPassword();
+			$model->assignRole('student');
 			$status_type = StatusType::where('name', 'unenrolled')->first();
 
 			if (!is_null($status_type)) {
