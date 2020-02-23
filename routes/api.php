@@ -46,6 +46,9 @@ Route::group([
 		Route::post('/users/batch', 'UserController@batchUpdate');
 		Route::post('/user', 'UserController@saveUser');
 		/* Instructors */
+		Route::get('/instructors', 'InstructorController@index');
 		Route::post('/instructors', 'InstructorController@assignInstructor');
+		/* Students */
+		Route::get('/students', 'StudentController@index');
 	});
 });

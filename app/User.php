@@ -133,11 +133,21 @@ class User extends Authenticatable implements JWTSubject
 			$model->uuid = (string) Uuid::generate(4);
 		});
 	}
-
+  /**
+   *  Get user type
+  */
   public function getTypeAttribute()
   {
     return $this->hasAnyRole(Role::all()) ?
       $this->roles->first()->name : '';
+  }
+
+  /**
+   *  generate password
+  */
+  private function createDefaultPassword()
+  {
+    return app('hash')->make($this->email);
   }
 
   /**
