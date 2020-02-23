@@ -4,6 +4,7 @@ namespace App\Nimbus;
 
 use App\Tenant as Tenant;
 use App\User as User;
+use App\Student;
 use App\Subject as Subject;
 use App\Course as Course;
 use App\Curriculum as Curriculum;
@@ -20,6 +21,24 @@ use App\Notifications\BatchProcessed;
 class NimbusEdu
 {
   var $tenant;
+  private $default_course_schema = [
+    [
+      'name' => 'midterm 1',
+      'score' => 20,
+    ],
+    [
+      'name' => 'midterm 2',
+      'score' => 20,
+    ],
+    [
+      'name' => 'midterm 3',
+      'score' => 20,
+    ],
+    [
+      'name' => 'exam',
+      'score' => 40,
+    ]
+  ];
 
   public function __construct(Tenant $tenant)
   {
@@ -37,7 +56,7 @@ class NimbusEdu
       $user_type = $this->getUserType($data['meta']['user_type']);
 
       if(!isset($user->id)){
-        $data['password'] = $this->createDefaultPassword($data['email']);
+        $data['password'] = $user->createDefaultPassword();
       }
 
       $data['user_type_id'] = $user_type->id;
@@ -228,42 +247,43 @@ class NimbusEdu
     StatusType::where(['name' => $name])->first();
   }
 
-  public function getCurrentTerm(){
-    return  SchoolTerm::where(['tenant_id' => $this->tenant->id, 'name' => $this->tenant->meta->current_term ])->first();
-  }
-
-  public function enrollCoreCourses(User $user, $course_grade_id){
+  public function enrollCoreCourses(Student $student, $course_grade_id){
     try{
+      var_dump('Attempting to enroll '.$student->id);
 
-      $school_term = $this->getCurrentTerm();
+      $school_term = $this->tenant->getCurrentTerm();
 
       $billing = Billing::firstOrCreate([
         'tenant_id' => $this->tenant->id,
-        'student_id' => $user->id,
+        'student_id' => $student->id,
         'term_id' => $school_term->id
       ]);
 
       foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 
+        var_dump('Enrolling '.$student->id.' in '.$course['code']);
+
         $registration = Registration::firstOrCreate([
           'tenant_id' => $this->tenant->id ,
-          'user_id' => $user->id ,
+          'user_id' => $student->id ,
           'course_id' => $course['id'],
           'term_id' => $school_term->id,
           'billing_id' => $billing->id
         ]);
 
-        $user->account_status_id = $this->getStatusID('registered')->id;
+        $student->account_status_id = $this->getStatusID('registered')->id;
 
-        if(!$user->ref_id || $user->ref_id == null){
-          $user->ref_id = $this->generateStudentId($user->id);
+        if(!$student->ref_id || $student->ref_id == null){
+          $student->ref_id = $student->generateStudentId();
         }
         
-        $user->assignRole('student');
+        $student->assignRole('student');
 
-        $user->save();
+        $student->save();
 
-        \Log::info('Student '.$user->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
+        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
+
+        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
       }
     }catch(Exception $e){
       throw new Exception($e->getMessage());
@@ -357,13 +377,7 @@ class NimbusEdu
         'code' => $this->parseCourseCode($subject->code,$curriculum->grade->name),
         'course_grade_id' => $curriculum->course_grade_id,
         'meta' => [
-          'course_schema' =>  [
-            'quiz' =>  15,
-            'midterm' => 30,
-            'assignment' => 15,
-            'lab' => 5,
-            'exam' => 35
-          ]
+          'course_schema' =>  $this->default_course_schema
         ]
       ];
 
@@ -379,14 +393,5 @@ class NimbusEdu
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }
-  }  
-
-  private function createDefaultPassword($str = false){
-    return app('hash')->make($str);
   }
-
-  private function generateStudentId($id){
-    $user_id = sprintf("%04d", $id);
-    return date("Y").$user_id;
-  }  
 }
