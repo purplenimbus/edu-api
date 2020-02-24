@@ -57,7 +57,7 @@ class UserController extends Controller
       array_push($query,['email', '=', $request->email]);
     }
 
-    $user = User::with(['account_status:name,id'])
+    $user = User::with(['status_type:name,id'])
       ->where($query)->first();
 
     return response()->json($user, 200);
@@ -70,7 +70,7 @@ class UserController extends Controller
 
     $user->save();
 
-    $user->load(['account_status:name,id']);
+    $user->load(['status_type:name,id']);
 
     return response()->json($user,200);
   }
