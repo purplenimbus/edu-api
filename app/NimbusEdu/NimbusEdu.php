@@ -326,7 +326,7 @@ class NimbusEdu
               if(is_int($subject_id)){
                 $subject = Subject::find($subject_id);
 
-                $course = Course::where('code',$course->parse_course_code($subject->code, $curriculum->grade->name))->first();
+                $course = Course::where('code',$this->parse_course_code($subject->code, $curriculum->grade->name))->first();
 
                 $course_load[$key][] = $course->only(['id','code']);
               }
