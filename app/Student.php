@@ -14,7 +14,7 @@ class Student extends User
    * @var array
    */
   protected $appends = [
-    'grade',
+    'grade', 'type'
   ];
 
   public function newQuery($excludeDeleted = true)
