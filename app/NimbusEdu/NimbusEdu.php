@@ -400,7 +400,7 @@ class NimbusEdu
         'tenant_id' => $this->tenant->id,
         'meta' => [
           'course_grade_id' => $request->course_grade_id,
-          'address' => $request->meta->address,
+          'address' => $request->address,
         ]
       ]);
 
