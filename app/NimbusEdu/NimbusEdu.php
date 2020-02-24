@@ -424,6 +424,9 @@ class NimbusEdu
     try{
       $data = array_merge($request->all(), [
         'tenant_id' => $this->tenant->id,
+        'meta' => [
+          'address' => $request->address,
+        ]
       ]);
 
       $instructor = Instructor::create($data);
