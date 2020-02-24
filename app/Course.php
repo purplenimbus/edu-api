@@ -91,6 +91,10 @@ class Course extends Model
       if (is_null($model->code)) {
         $model->code = $model->parse_course_code();
       }
+      
+      if (is_null($model->schema)) {
+        $model->schema = config('edu.default_course_schema');
+      }
     });
   }
 
