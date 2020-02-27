@@ -169,6 +169,10 @@ class User extends Authenticatable implements JWTSubject
     return app('hash')->make($this->email);
   }
 
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
+  }
   /**
    * Relationships.
    *

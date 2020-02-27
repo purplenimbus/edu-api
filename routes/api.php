@@ -32,6 +32,7 @@ Route::group([
 		Route::put('/courses', 'CourseController@update');
 		Route::post('/courses/batch', 'CourseController@batch');
 		Route::post('/courses/generate', 'CourseController@generate');
+		Route::get('/courses/not_registered','CourseController@not_registered');
 		//Route::post('/courses/list', 'CourseController@courseStudentList');
 		/* Lessons */
 		Route::get('/lessons', 'CurriculumController@lessons');

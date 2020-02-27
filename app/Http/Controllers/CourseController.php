@@ -13,6 +13,8 @@ use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Nimbus\NimbusEdu;
+use App\Student;
+use App\Http\Requests\GetNotRegistered;
 
 class CourseController extends Controller
 {
@@ -110,5 +112,18 @@ class CourseController extends Controller
     GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
 
     return response()->json(['message' => 'your request is being processed'], 200);
+  }
+
+  /**
+   * Unenrolled students
+   *
+   * @return void
+   */
+  public function not_registered(GetNotRegistered $request){
+    $students = $request->has('paginate') ? 
+    Student::ofUnregistered($request->course_id)->paginate($request->paginate) : 
+    Student::ofUnregistered($request->course_id)->get();
+    
+    return response()->json($students, 200);
   }
 }
