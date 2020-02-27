@@ -40,6 +40,7 @@ Route::group([
 		/*  Registrations */
 		Route::get('/registrations','RegistrationController@registrations');
 		Route::post('/register','RegistrationController@registerStudents');
+		Route::get('/not_registered','RegistrationController@not_registered');
 		/* Users */
 		Route::get('/users', 'UserController@index');
 		Route::get('/user', 'UserController@getUser');

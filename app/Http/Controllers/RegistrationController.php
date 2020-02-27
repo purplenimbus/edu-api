@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Registration as Registration;
+use App\Student;
+use App\Http\Requests\GetNotRegistered;
 
 use App\Jobs\RegisterStudents;
 
@@ -51,5 +53,18 @@ class RegistrationController extends Controller
     RegisterStudents::dispatch($tenant_id, $request->all()[0]); // TO DO, investigate whats going on here , what exactly is the second parameter being used for.
 
     return response()->json(['message' => 'your request is being processed'], 200);
+  }
+
+  /**
+   * Unenrolled students
+   *
+   * @return void
+   */
+  public function not_registered(GetNotRegistered $request){
+    $students = $request->has('paginate') ? 
+    Student::ofUnregistered($request->course_id)->paginate($request->paginate) : 
+    Student::ofUnregistered($request->course_id)->get();
+    
+    return response()->json($students, 200);
   }
 }

@@ -57,4 +57,24 @@ class Student extends User
 			}
 		});
 	}
+
+  public function scopeOfCourseGrade($query, $course_grade_id)
+  {
+    return $query->where('meta->course_grade_id', $course_grade_id);
+  }
+
+
+  public function scopeOfUnregistered($query, $course_id)
+  {
+    $course = Course::find($course_id);
+
+    return $query
+      ->leftJoin('registrations', 'users.id' , '=', 'registrations.user_id')
+      ->leftJoin('courses', 'courses.id' , '=', 'registrations.course_id')
+      ->where('users.meta->course_grade_id', $course->course_grade_id)
+      ->where('users.tenant_id', $course->tenant_id)
+      ->whereNull('registrations.id')
+      ->whereNull('courses.id')
+      ->select('users.*');
+  }
 }
