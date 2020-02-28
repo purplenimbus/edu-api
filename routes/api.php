@@ -25,7 +25,8 @@ Route::group([
 		'middleware' => ['jwt.auth']
 	], function() {
 		/* Tenants */
-		Route::get('/settings', 'TenantController@getSettings');
+		Route::get('/settings', 'TenantController@settings');
+		Route::put('/tenants', 'TenantController@update');
 		/* Courses */
 		Route::get('/courses', 'CourseController@index');
 		Route::post('/courses', 'CourseController@create');
@@ -53,5 +54,6 @@ Route::group([
 		/* Students */
 		Route::get('/students', 'StudentController@index');
 		Route::post('/students', 'StudentController@create');
+		Route::put('/students', 'StudentController@edit');
 	});
 });

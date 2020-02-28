@@ -18,7 +18,7 @@ class DemoUsersSeeder extends Seeder
 			->each(function($tenant)use($count){
 					$institution = new Institution($tenant, $tenant->meta->country);
 
-					factory(App\User::class,'admin', 1)->create([
+					factory(App\User::class, 1)->create([
 						'tenant_id' => $tenant->id,
 						'firstname'		=>	'ekama',
 						'lastname'		=>	'akpan',
@@ -29,7 +29,7 @@ class DemoUsersSeeder extends Seeder
 						$admin->assignRole('admin');
 					});
 
-					factory(App\User::class,'superadmin', 1)->create([
+					factory(App\User::class, 1)->create([
 						'tenant_id' => $tenant->id,
 						'firstname'		=>	'anthony',
 						'lastname'		=>	'akpan',

@@ -31,6 +31,7 @@ class User extends Authenticatable implements JWTSubject
    * @var array
    */
   protected $fillable = [
+    'address',
     'date_of_birth',
     'firstname',
     'lastname',
@@ -60,6 +61,7 @@ class User extends Authenticatable implements JWTSubject
    */
 
 	protected $casts = [
+    'address' => 'object',
     'meta' => 'object',
   ];
 

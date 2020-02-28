@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('image')->nullable();
             $table->json('meta')->nullable();
+            $table->json('address')->nullable();
             $table->integer('account_status_id')->default(1);
             $table->string('ref_id')->nullable();
             $table->rememberToken();

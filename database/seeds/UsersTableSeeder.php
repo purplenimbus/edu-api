@@ -24,8 +24,8 @@ class UsersTableSeeder extends Seeder
 				->create([
 					'tenant_id' =>  $nimbus_edu->tenant->id,
 					'meta' => [
-							'course_grade_id' => $course_grade
-						]
+						'course_grade_id' => $course_grade
+					]
 				])
 				->each(function($student) use ($nimbus_edu, $course_grade, $count){
 
