@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTenant extends FormRequest
+class UpdateTenant extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,10 +24,8 @@ class StoreTenant extends FormRequest
   public function rules()
   {
     return [
-      'password'  => 'string|required',
-      'username'  => 'required|unique:tenants|max:255',
-      'email' => 'required|email|unique:tenants,email',
-      'name' => 'string|required',
+      'email' => 'email',
+      'name' => 'string',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
       'address.country' => 'string|required_with:address.street',
