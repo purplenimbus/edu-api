@@ -7,6 +7,7 @@ use App\Student;
 use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
 use App\Http\Requests\StoreStudent;
+use App\Http\Requests\UpdateStudent;
 use App\Http\Requests\GetStudents;
 
 class StudentController extends Controller
@@ -37,7 +38,7 @@ class StudentController extends Controller
       ]);
     }
 
-		$students = Student::with(['status_type'])->where($query);
+		$students = Student::where($query);
 
 		if($request->has('paginate')) {
       $students = $students->paginate($request->paginate);
@@ -60,7 +61,20 @@ class StudentController extends Controller
 
     $student = $nimbus_edu->create_student($request);
 
-    $student->load(['status_type:id,name']);
+    return response()->json($student, 200);
+  }
+
+  /**
+   * Create a student
+   *
+   * @return void
+   */
+  public function edit(UpdateStudent $request) {
+    $tenant = Auth::user()->tenant()->first();
+
+    $student = Student::find($request->id);
+
+    $student->fill($request->all());
 
     return response()->json($student, 200);
   }

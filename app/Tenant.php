@@ -8,7 +8,7 @@ use Webpatser\Uuid\Uuid as Uuid;
 use App\SchoolTerm;
 
 class Tenant extends Model
-  {
+{
   use Notifiable;
   /**
   * The attributes that are mass assignable.
@@ -16,7 +16,7 @@ class Tenant extends Model
   * @var array
   */
   protected $fillable = [
-    'name','meta','username','email'
+    'address','name','meta','username','email'
   ];
 
   /**
@@ -26,8 +26,16 @@ class Tenant extends Model
   */
 
   protected $casts = [
+    'address' => 'object',
     'meta' => 'object',
   ];
+
+  /**
+   * The accessors to append to the model's array form.
+   *
+   * @var array
+   */
+  protected $appends = [];
 
   /**
   * The attributes excluded from the model's JSON form.
@@ -45,14 +53,14 @@ class Tenant extends Model
   {
     parent::boot();
     self::creating(function ($model) {
-    $model->uuid = (string) Uuid::generate(4);
+      $model->uuid = (string) Uuid::generate(4);
     });
   }
 
   public function getCurrentTerm(){
     return  SchoolTerm::where([
-        'tenant_id' => $this->id,
-        'name' => $this->meta->current_term ])
-      ->first();
+      'tenant_id' => $this->id,
+      'name' => $this->meta->current_term ])
+    ->first();
   }
 }

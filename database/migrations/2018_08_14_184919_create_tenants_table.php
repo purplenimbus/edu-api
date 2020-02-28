@@ -6,31 +6,32 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateTenantsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('tenants', function (Blueprint $table) {
-            $table->increments('id');
-			$table->uuid('uuid');
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->string('email')->unique();
-            $table->json('meta')->nullable();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('tenants', function (Blueprint $table) {
+      $table->increments('id');
+      $table->uuid('uuid');
+      $table->string('name');
+      $table->string('username')->unique();
+      $table->string('email')->unique();
+      $table->json('address')->nullable();
+      $table->json('meta')->nullable();
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('tenants');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('tenants');
+  }
 }

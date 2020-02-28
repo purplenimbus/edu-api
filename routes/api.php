@@ -53,5 +53,6 @@ Route::group([
 		/* Students */
 		Route::get('/students', 'StudentController@index');
 		Route::post('/students', 'StudentController@create');
+		Route::put('/students', 'StudentController@edit');
 	});
 });

@@ -50,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
    * @var array
    */
   protected $hidden = [
-    'password','tenant_id','created_at','updated_at','remember_token','account_status_id'
+    'address','password','tenant_id','created_at','updated_at','remember_token','account_status_id'
   ];
 
 	/**
@@ -60,6 +60,7 @@ class User extends Authenticatable implements JWTSubject
    */
 
 	protected $casts = [
+    'address' => 'object',
     'meta' => 'object',
   ];
 
