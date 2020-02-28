@@ -25,13 +25,18 @@ class UpdateStudent extends FormRequest
   {
     return [
       'account_status_id' => 'integer|exists:account_status,id',
-      'course_grade_id' => 'required|integer|exists:course_grades,id',
-      'date_of_birth' => 'required|date',
-      'email'  => 'email|max:255|unique:users,email',
-      'firstname'   => 'required|max:255',
-      'lastname'  => 'required|max:255',
+      'course_grade_id' => 'integer|exists:course_grades,id',
+      'date_of_birth' => 'date',
+      'email'  => 'email',
+      'firstname'   => 'max:255',
+      'id' => 'required|integer|exists:users,id',
+      'lastname'  => 'max:255',
       'othernames'  => 'string|max:255',
       'ref_id' => 'integer|unique:users,ref_id',
+      'address.street' => 'string|required_with:address.city,address.country,address.state',
+      'address.city' => 'string|required_with:address.street',
+      'address.country' => 'string|required_with:address.street',
+      'address.state' => 'string|required_with:address.street',
     ];
   }
 }

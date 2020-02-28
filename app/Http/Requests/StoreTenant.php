@@ -28,6 +28,10 @@ class StoreTenant extends FormRequest
       'username'  => 'required|unique:tenants|max:255',
       'email' => 'required|unique:tenants,email',
       'name' => 'required',
+      'address.street' => 'string|required_with:address.city,address.country,address.state',
+      'address.city' => 'string|required_with:address.street',
+      'address.country' => 'string|required_with:address.street',
+      'address.state' => 'string|required_with:address.street',
     ];
   }
 }
