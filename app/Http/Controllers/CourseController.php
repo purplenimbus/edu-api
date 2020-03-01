@@ -13,8 +13,10 @@ use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Nimbus\NimbusEdu;
+use App\Registration;
 use App\Student;
 use App\Http\Requests\GetNotRegistered;
+use App\Http\Requests\RegisterStudent;
 
 class CourseController extends Controller
 {
@@ -125,5 +127,26 @@ class CourseController extends Controller
     Student::ofUnregistered($request->course_id)->get();
     
     return response()->json($students, 200);
+  }
+
+  /**
+   * Register students
+   *
+   * @return void
+   */
+  public function register_students(RegisterStudent $request){
+    $tenant_id = Auth::user()->tenant()->first()->id;
+    $registrations = [];
+    foreach ($request->student_ids as $id) {
+      array_push( $registrations, Registration::updateOrCreate(
+        [
+          'course_id' => $request->course_id,
+          'user_id' => $id,
+          'tenant_id' => $tenant_id,
+        ]
+      ));
+    }
+
+    return response()->json($registrations, 200);
   }
 }
