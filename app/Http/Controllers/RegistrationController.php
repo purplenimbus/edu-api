@@ -52,5 +52,4 @@ class RegistrationController extends Controller
 
     return response()->json(['message' => 'your request is being processed'], 200);
   }
-
 }
