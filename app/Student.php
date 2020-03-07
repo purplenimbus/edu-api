@@ -74,6 +74,7 @@ class Student extends User
       ->where('users.meta->course_grade_id', $course->course_grade_id)
       ->where('users.tenant_id', $course->tenant_id)
       ->whereNull('registrations.id')
+      ->whereNull('courses.id')
       ->select('users.*');
   }
 }
