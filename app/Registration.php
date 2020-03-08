@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid as Uuid;
+use App\CourseScore;
 
 class Registration extends Model
 {
@@ -13,7 +14,7 @@ class Registration extends Model
    * @var array
    */
   protected $fillable = [
-    'course_id','user_id','meta','course','tenant_id','term_id','billing_id'
+    'course_id','user_id','meta','tenant_id','term_id','billing_id'
   ];
 
   /**
@@ -21,10 +22,7 @@ class Registration extends Model
    *
    * @var array
    */
-  protected $hidden = [
-	//'course_id',
-	//'user_id'
-  ];
+  protected $hidden = [];
 
 	/**
    * Cast meta property to array
@@ -32,9 +30,7 @@ class Registration extends Model
    * @var array
    */
 
-	protected $casts = [
-    'meta' => 'array',
-  ];
+	protected $casts = [];
 
   public function course(){
     return $this->belongsTo('App\Course');
@@ -47,14 +43,30 @@ class Registration extends Model
   public function term(){
     return $this->belongsTo('App\SchoolTerm','term_id');
   }
+
+  public function course_score(){
+    return $this->hasOne('App\CourseScore','id','course_score_id');
+  }
 	/**
 	 *  Setup model event hooks
 	 */
 	public static function boot()
 	{
 		parent::boot();
-		self::creating(function ($model) {
-			$model->uuid = (string) Uuid::generate(4);
+		self::created(function ($model) {
+      if ($model->course->schema) {
+        $course_score = CourseScore::create([
+          'registration_id' => $model->id,
+          'scores' => array_map(function($item) {
+            $item['score'] = 0;
+            return $item;
+          },
+            $model->course->schema,
+          ),
+        ]);
+        $model->course_score_id = $course_score->id;
+        $model->save();
+      }
 		});
 	}
 }
