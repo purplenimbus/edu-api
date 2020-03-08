@@ -14,9 +14,7 @@ class ValidScores implements Rule
    * @return void
    */
   public function __construct()
-  {
-
-  }
+  {}
 
   /**
    * Determine if the validation rule passes.
