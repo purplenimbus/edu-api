@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Registration as Registration;
-
-use App\Jobs\RegisterStudents;
+use App\Http\Requests\GetInstructors;
+use App\Http\Requests\UpdateScores;
 
 class RegistrationController extends Controller
 {
@@ -23,7 +23,7 @@ class RegistrationController extends Controller
       ['tenant_id', '=', $tenant_id]
     ];
 
-    $relationships = ['course','user','course.grade:name,id,alias','course.instructor:id,firstname,lastname,meta','term:name,year'];
+    $relationships = ['course','user','course.grade:name,id,alias','course.instructor:id,firstname,lastname,meta','term:name,year','course_score'];
     
     if($request->has('user_id')){
       array_push($query,['user_id', '=', $request->user_id]);
@@ -51,5 +51,20 @@ class RegistrationController extends Controller
     RegisterStudents::dispatch($tenant_id, $request->all()[0]); // TO DO, investigate whats going on here , what exactly is the second parameter being used for.
 
     return response()->json(['message' => 'your request is being processed'], 200);
+  }
+
+  /**
+   * Update scores
+   *
+   * @return void
+   */
+  public function update_scores(UpdateScores $request){
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
+    $registration = Registration::with('course_score')->find($request->id);
+
+    $registration->course_score->update($request->only('scores'));
+
+    return response()->json($registration, 200);
   }
 }

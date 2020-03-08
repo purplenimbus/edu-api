@@ -14,10 +14,10 @@ use App\Nimbus\NimbusEdu;
 class InstructorController extends Controller
 {
   /**
-     * List all Instructors
-     *
-     * @return void
-     */
+   * List all Instructors
+   *
+   * @return void
+   */
   public function index(GetInstructors $request) {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
@@ -47,10 +47,10 @@ class InstructorController extends Controller
   }
 
   /**
-     * Assign Instructor to a Course
-     *
-     * @return void
-     */
+   * Assign Instructor to a Course
+   *
+   * @return void
+   */
   public function assignInstructor(AssignInstructor $request){
     $course = Course::find($request->course_id);
 
