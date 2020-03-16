@@ -67,14 +67,10 @@ class Student extends User
   public function scopeOfUnregistered($query, $course_id)
   {
     $course = Course::find($course_id);
+    $registrations = Registration::where('course_id', $course_id)->pluck('user_id');
 
     return $query
-      ->leftJoin('registrations', 'users.id' , '=', 'registrations.user_id')
-      ->leftJoin('courses', 'courses.id' , '=', 'registrations.course_id')
-      ->where('users.meta->course_grade_id', $course->course_grade_id)
-      ->where('users.tenant_id', $course->tenant_id)
-      ->whereNull('registrations.id')
-      ->whereNull('courses.id')
-      ->select('users.*');
+      ->where('meta->course_grade_id', $course->course_grade_id)
+      ->whereNotIn('id', $registrations);
   }
 }
