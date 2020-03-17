@@ -26,6 +26,7 @@ class UpdateScores extends FormRequest
   public function rules()
   {
     return [
+      'comment' => 'nullable|string|max:255',
       'id' => 'required|integer|exists:registrations,id',
       'scores' => ['required','array', new ValidScores()],
       'scores.*.name' => 'required|string|max:255',

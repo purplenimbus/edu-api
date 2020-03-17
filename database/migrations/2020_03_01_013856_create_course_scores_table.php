@@ -17,6 +17,7 @@ class CreateCourseScoresTable extends Migration
       $table->increments('id');
       $table->integer('registration_id');
       $table->json('scores');
+      $table->mediumText('comment')->nullable();
       $table->timestamps();
       $table->softDeletes();
     });

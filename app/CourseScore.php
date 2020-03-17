@@ -15,7 +15,8 @@ class CourseScore extends Model
    */
   protected $fillable = [
   	'registration_id',
-    'scores'
+    'scores',
+    'comment'
   ];
 
   /**
