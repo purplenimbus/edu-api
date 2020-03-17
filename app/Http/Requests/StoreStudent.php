@@ -30,7 +30,7 @@ class StoreStudent extends FormRequest
       'email'  => 'required|email|max:255|unique:users,email',
       'firstname'   => 'required|max:255',
       'lastname'  => 'required|max:255',
-      'othernames'  => 'string|max:255',
+      'othernames'  => 'nullable|string|max:255',
       'ref_id' => 'integer|unique:users,ref_id',
     ];
   }

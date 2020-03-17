@@ -22,6 +22,7 @@ class CreateRegistrationsTable extends Migration
       $table->integer('billing_id')->nullable();
       $table->integer('course_score_id')->nullable();
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

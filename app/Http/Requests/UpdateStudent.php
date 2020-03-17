@@ -31,7 +31,7 @@ class UpdateStudent extends FormRequest
       'firstname'   => 'max:255',
       'id' => 'required|integer|exists:users,id',
       'lastname'  => 'max:255',
-      'othernames'  => 'string|max:255',
+      'othernames'  => 'nullable|string|max:255',
       'ref_id' => 'integer|unique:users,ref_id',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
