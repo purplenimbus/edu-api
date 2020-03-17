@@ -27,6 +27,7 @@ Route::group([
 		/* Tenants */
 		Route::get('/settings', 'TenantController@settings');
 		Route::put('/tenants', 'TenantController@update');
+
 		/* Courses */
 		Route::group([
 			'prefix' => '/courses'
@@ -44,8 +45,8 @@ Route::group([
 		Route::get('/lessons', 'CurriculumController@lessons');
 		/*  Curriculum */
 		Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
+
 		/*  Registrations */
-		/* Courses */
 		Route::group([
 			'prefix' => '/registrations'
 		], function() {
@@ -53,19 +54,30 @@ Route::group([
 			Route::put('/scores','RegistrationController@update_scores');
 			Route::delete('/','RegistrationController@delete');
 		});
+
 		/* Users */
 		Route::get('/users', 'UserController@index');
 		Route::get('/user', 'UserController@getUser');
 		Route::post('/users/batch', 'UserController@batchUpdate');
 		Route::post('/user', 'UserController@saveUser');
+
 		/* Instructors */
-		Route::get('/instructors', 'InstructorController@index');
-		Route::post('/instructors', 'InstructorController@create');
-		Route::post('/instructors/assign', 'InstructorController@assignInstructor');
-		Route::put('/instructors', 'InstructorController@edit');
+		Route::group([
+			'prefix' => '/instructors'
+		], function() {
+			Route::get('/', 'InstructorController@index');
+			Route::post('/', 'InstructorController@create');
+			Route::post('/assign', 'InstructorController@assignInstructor');
+			Route::put('/', 'InstructorController@edit');
+		});
+
 		/* Students */
-		Route::get('/students', 'StudentController@index');
-		Route::post('/students', 'StudentController@create');
-		Route::put('/students', 'StudentController@edit');
+		Route::group([
+			'prefix' => '/students'
+		], function() {
+			Route::get('/', 'StudentController@index');
+			Route::post('/', 'StudentController@create');
+			Route::put('/', 'StudentController@edit');
+		});
 	});
 });
