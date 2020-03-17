@@ -11,73 +11,72 @@ use Illuminate\Http\Request;
 |
 */
 Route::group([
-	'middleware' => ['cors'],
-	'prefix' => 'v'.env('API_VERSION',1),
+  'middleware' => ['cors'],
+  'prefix' => 'v'.env('API_VERSION',1),
 ], function() {
-	Route::post('/login','Auth\LoginController@authenticate');
-	Route::post('/logout','Auth\LoginController@logout');
-	Route::get('/subjects', 'CurriculumController@subjects');
-	Route::get('/grades/list', 'CurriculumController@listClasses');
-	Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad');
-	Route::get('/account_status/index','UserController@getAccountStatuses');
+  Route::post('/login','Auth\LoginController@authenticate');
+  Route::post('/logout','Auth\LoginController@logout');
+  Route::get('/subjects', 'CurriculumController@subjects');
+  Route::get('/grades/list', 'CurriculumController@listClasses');
+  Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad');
+  Route::get('/account_status/index','UserController@getAccountStatuses');
 
-	Route::group([
-		'middleware' => ['jwt.auth']
-	], function() {
-		/* Tenants */
-		Route::get('/settings', 'TenantController@settings');
-		Route::put('/tenants', 'TenantController@update');
+  Route::group([
+    'middleware' => ['jwt.auth']
+  ], function() {
+    /* Tenants */
+    Route::get('/settings', 'TenantController@settings');
+    Route::put('/tenants', 'TenantController@update');
 
-		/* Courses */
-		Route::group([
-			'prefix' => '/courses'
-		], function() {
-			Route::get('', 'CourseController@index');
-			Route::post('', 'CourseController@create');
-			Route::put('', 'CourseController@update');
-			Route::post('/batch', 'CourseController@batch');
-			Route::post('/generate', 'CourseController@generate');
-			Route::get('/not_registered','CourseController@not_registered');
-			Route::post('/register','CourseController@register_students');
-		});
-		//Route::post('/courses/list', 'CourseController@courseStudentList');
-		/* Lessons */
-		Route::get('/lessons', 'CurriculumController@lessons');
-		/*  Curriculum */
-		Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
+    /* Courses */
+    Route::group([
+      'prefix' => '/courses'
+    ], function() {
+      Route::get('', 'CourseController@index');
+      Route::post('', 'CourseController@create');
+      Route::put('', 'CourseController@update');
+      Route::post('/batch', 'CourseController@batch');
+      Route::post('/generate', 'CourseController@generate');
+      Route::get('/not_registered','CourseController@not_registered');
+      Route::post('/register','CourseController@register_students');
+    });
+    /* Lessons */
+    Route::get('/lessons', 'CurriculumController@lessons');
+    /*  Curriculum */
+    Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
 
-		/*  Registrations */
-		Route::group([
-			'prefix' => '/registrations'
-		], function() {
-			Route::get('/','RegistrationController@index');
-			Route::put('/scores','RegistrationController@update_scores');
-			Route::delete('/','RegistrationController@delete');
-		});
+    /*  Registrations */
+    Route::group([
+      'prefix' => '/registrations'
+    ], function() {
+      Route::get('/','RegistrationController@index');
+      Route::put('/scores','RegistrationController@update_scores');
+      Route::delete('/','RegistrationController@delete');
+    });
 
-		/* Users */
-		Route::get('/users', 'UserController@index');
-		Route::get('/user', 'UserController@getUser');
-		Route::post('/users/batch', 'UserController@batchUpdate');
-		Route::post('/user', 'UserController@saveUser');
+    /* Users */
+    Route::get('/users', 'UserController@index');
+    Route::get('/user', 'UserController@getUser');
+    Route::post('/users/batch', 'UserController@batchUpdate');
+    Route::post('/user', 'UserController@saveUser');
 
-		/* Instructors */
-		Route::group([
-			'prefix' => '/instructors'
-		], function() {
-			Route::get('/', 'InstructorController@index');
-			Route::post('/', 'InstructorController@create');
-			Route::post('/assign', 'InstructorController@assignInstructor');
-			Route::put('/', 'InstructorController@edit');
-		});
+    /* Instructors */
+    Route::group([
+      'prefix' => '/instructors'
+    ], function() {
+      Route::get('/', 'InstructorController@index');
+      Route::post('/', 'InstructorController@create');
+      Route::post('/assign', 'InstructorController@assignInstructor');
+      Route::put('/', 'InstructorController@edit');
+    });
 
-		/* Students */
-		Route::group([
-			'prefix' => '/students'
-		], function() {
-			Route::get('/', 'StudentController@index');
-			Route::post('/', 'StudentController@create');
-			Route::put('/', 'StudentController@edit');
-		});
-	});
+    /* Students */
+    Route::group([
+      'prefix' => '/students'
+    ], function() {
+      Route::get('/', 'StudentController@index');
+      Route::post('/', 'StudentController@create');
+      Route::put('/', 'StudentController@edit');
+    });
+  });
 });
