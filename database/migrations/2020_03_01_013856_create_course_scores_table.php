@@ -18,6 +18,7 @@ class CreateCourseScoresTable extends Migration
       $table->integer('registration_id');
       $table->json('scores');
       $table->timestamps();
+      $table->softDeletes();
     });
   }
 

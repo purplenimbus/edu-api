@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Registration as Registration;
 use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateScores;
+use App\Http\Requests\DeleteRegistration;
 
 class RegistrationController extends Controller
 {
@@ -15,7 +16,7 @@ class RegistrationController extends Controller
    *
    * @return void
    */
-  public function registrations(Request $request)
+  public function index(Request $request)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
@@ -66,5 +67,18 @@ class RegistrationController extends Controller
     $registration->course_score->update($request->only('scores'));
 
     return response()->json($registration, 200);
+  }
+
+  /**
+   * Delete registrations
+   *
+   * @return void
+   */
+  public function delete(DeleteRegistration $request){
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
+    Registration::destroy($request->registration_ids);
+
+    return response()->json(true, 200);
   }
 }

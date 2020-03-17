@@ -45,8 +45,14 @@ Route::group([
 		/*  Curriculum */
 		Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
 		/*  Registrations */
-		Route::get('/registrations','RegistrationController@registrations');
-		Route::put('/registrations/scores','RegistrationController@update_scores');
+		/* Courses */
+		Route::group([
+			'prefix' => '/registrations'
+		], function() {
+			Route::get('/','RegistrationController@index');
+			Route::put('/scores','RegistrationController@update_scores');
+			Route::delete('/','RegistrationController@delete');
+		});
 		/* Users */
 		Route::get('/users', 'UserController@index');
 		Route::get('/user', 'UserController@getUser');

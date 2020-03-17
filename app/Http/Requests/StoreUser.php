@@ -27,7 +27,7 @@ class StoreUser extends FormRequest
       'email'  => 'email',
       'firstname'   => 'required|string|max:255',
       'lastname'  => 'required|string|max:255',
-      'othernames'  => 'string|string|max:255',
+      'othernames'  => 'nullable|string|max:255',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
       'address.country' => 'string|required_with:address.street',

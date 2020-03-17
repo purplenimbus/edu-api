@@ -5,9 +5,11 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Webpatser\Uuid\Uuid as Uuid;
 use App\CourseScore;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Registration extends Model
 {
+  use SoftDeletes;
   /**
    * The attributes that are mass assignable.
    *
@@ -68,5 +70,11 @@ class Registration extends Model
         $model->save();
       }
 		});
+
+    self::deleting(function ($model) {
+      if ($model->course_score) {
+        $model->course_score->delete();
+      }
+    });
 	}
 }
