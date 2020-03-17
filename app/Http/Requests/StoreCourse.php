@@ -27,7 +27,7 @@ class StoreCourse extends FormRequest
     return [
       'course_grade_id' => 'required|integer|exists:course_grades,id',
       'instructor_id' => 'integer|exists:users,id',
-      'name' => 'string|max:255',
+      'name' => 'nullable|string|max:255',
       'schema' => 'array',
       'schema.*.name' => 'required|string|max:255',
       'schema.*.score' => 'required|integer|max:100',
