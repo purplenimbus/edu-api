@@ -60,8 +60,6 @@ class RegistrationController extends Controller
    * @return void
    */
   public function update_scores(UpdateScores $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
     $registration = Registration::with('course_score')->find($request->id);
 
     $registration->course_score->update($request->only('scores'));
@@ -75,8 +73,6 @@ class RegistrationController extends Controller
    * @return void
    */
   public function delete(DeleteRegistration $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
     Registration::destroy($request->registration_ids);
 
     return response()->json(true, 200);
