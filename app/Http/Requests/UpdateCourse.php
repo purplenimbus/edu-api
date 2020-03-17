@@ -25,6 +25,7 @@ class UpdateCourse extends FormRequest
   public function rules()
   {
     return [
+      'comment' => 'string|max:255',
       'course_grade_id' => 'integer|exists:course_grades,id',
       'id' => 'required|integer|exists:courses,id',
       'instructor_id' => 'integer|max:255|exists:users,id',
@@ -34,6 +35,7 @@ class UpdateCourse extends FormRequest
       'schema.*.score' => 'required|integer|max:100',
       'subject_id' => 'integer|exists:subjects,id',
       'schema' => new ValidCourseSchema(),
+      'status_id' => 'integer|exists:course_statuses,id',
     ];
   }
 }
