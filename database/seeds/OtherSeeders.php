@@ -58,5 +58,16 @@ class OtherSeeders extends Seeder
 		foreach($billing_status_types as $billing_status_type){
 			App\BillingStatus::create($billing_status_type);
 		}
-    }
+
+		$course_statuses = [
+			[	'name' => 'in progress' ],
+			[	'name' => 'complete' ],
+			[	'name' => 'archived'	],
+		];
+		
+		//Create Course Statues
+		foreach($course_statuses as $course_status){
+			App\CourseStatus::create($course_status);
+		}
+  }
 }

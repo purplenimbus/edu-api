@@ -20,6 +20,7 @@ Route::group([
   Route::get('/grades/list', 'CurriculumController@listClasses');
   Route::get('/curriculum/{course_grade_id}','CurriculumController@getCourseLoad');
   Route::get('/account_status/index','UserController@getAccountStatuses');
+  Route::get('/course_status/index','CourseCOntroller@course_statuses');
 
   Route::group([
     'middleware' => ['jwt.auth']
