@@ -13,7 +13,16 @@ class Course extends Model
    * @var array
    */
   protected $fillable = [
-    'name','description', 'meta','tenant_id','instructor_id','subject_id','code','course_grade_id', 'schema'
+    'name',
+    'description',
+    'meta',
+    'tenant_id',
+    'instructor_id',
+    'subject_id',
+    'code',
+    'course_grade_id',
+    'schema',
+    'status_id'
   ];
 
   /**
@@ -74,6 +83,16 @@ class Course extends Model
   public function registrations()
   {
     return $this->hasMany('App\Registration');
+  }
+
+  /**
+   * Get course status
+   *
+   * @var array
+   */
+  public function status()
+  {
+    return $this->belongsTo('App\CourseStatus');
   }
 
   /**

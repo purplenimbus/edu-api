@@ -15,6 +15,7 @@ use App\Jobs\GenerateCourses;
 use App\Nimbus\NimbusEdu;
 use App\Registration;
 use App\Student;
+use App\CourseStatus;
 use App\Http\Requests\GetNotRegistered;
 use App\Http\Requests\RegisterStudent;
 
@@ -45,8 +46,17 @@ class CourseController extends Controller
     if($request->has('instructor_id')){
       $query[] = ['instructor_id', '=', $request->instructor_id];
     }
+    if($request->has('status_id')){
+      $query[] = ['status_id', '=', $request->status_id];
+    }
 
-    $relationships = ['registrations','registrations.user','grade:id,name','instructor:id,firstname,lastname,meta'];
+    $relationships = [
+      'registrations',
+      'registrations.user',
+      'grade:id,name',
+      'instructor:id,firstname,lastname,meta',
+      'status:id,name'
+    ];
     
     $courses = $request->has('paginate') ? 
     Course::with($relationships)
@@ -148,5 +158,14 @@ class CourseController extends Controller
     }
 
     return response()->json($registrations, 200);
+  }
+
+  /**
+   * Get course statuses
+   *
+   * @return void
+   */
+  public function course_statuses(){
+    return response()->json(CourseStatus::all(), 200);
   }
 }

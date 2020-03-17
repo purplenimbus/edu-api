@@ -24,10 +24,11 @@ class GetCourses extends FormRequest
   public function rules()
   {
     return [
-      'id' => 'exists:courses,id|integer',
-      'course_grade_id' => 'exists:course_grades,id|integer',
-      'instructor_id' => 'integer',
-      'name' => 'string', 
+      'id' => 'integer|exists:courses,id',
+      'course_grade_id' => 'integer|exists:course_grades,id',
+      'instructor_id' => 'integer|exists:users,id',
+      'name' => 'string',
+      'status_id' => 'integer|exists:course_statuses,id',
     ];
   }
 }
