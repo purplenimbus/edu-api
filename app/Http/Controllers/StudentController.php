@@ -75,6 +75,8 @@ class StudentController extends Controller
     $student = Student::find($request->id);
 
     $student->fill($request->all());
+	  
+		$student->save();
 
     return response()->json($student, 200);
   }
