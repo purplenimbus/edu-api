@@ -8,6 +8,7 @@ use App\Instructor;
 use App\Http\Requests\AssignInstructor;
 use App\Http\Requests\StoreInstructor;
 use App\Http\Requests\GetInstructors;
+use App\Http\Requests\UpdateInstructor;
 use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
 
@@ -76,5 +77,20 @@ class InstructorController extends Controller
     $student->load(['status_type:id,name']);
 
     return response()->json($student, 200);
+  }
+
+  /**
+   * Edit an instructor
+   *
+   * @return void
+   */
+  public function edit(UpdateInstructor $request) {
+    $instructor = Instructor::find($request->id);
+
+    $instructor->fill($request->all());
+    
+    $instructor->save();
+
+    return response()->json($instructor, 200);
   }
 }

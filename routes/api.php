@@ -62,6 +62,7 @@ Route::group([
 		Route::get('/instructors', 'InstructorController@index');
 		Route::post('/instructors', 'InstructorController@create');
 		Route::post('/instructors/assign', 'InstructorController@assignInstructor');
+		Route::put('/instructors', 'InstructorController@edit');
 		/* Students */
 		Route::get('/students', 'StudentController@index');
 		Route::post('/students', 'StudentController@create');
