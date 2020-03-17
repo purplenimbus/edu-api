@@ -38,16 +38,16 @@ class StudentController extends Controller
       ]);
     }
 
-		$students = Student::where($query);
+    $students = Student::where($query);
 
-		if($request->has('paginate')) {
+    if($request->has('paginate')) {
       $students = $students->paginate($request->paginate);
     }else{
       $students = $students->get();
     }
 
     return response()->json($students, 200);
-	}
+  }
 
   /**
    * Create a student
@@ -65,18 +65,16 @@ class StudentController extends Controller
   }
 
   /**
-   * Create a student
+   * Edit a student
    *
    * @return void
    */
   public function edit(UpdateStudent $request) {
-    $tenant = Auth::user()->tenant()->first();
-
     $student = Student::find($request->id);
 
     $student->fill($request->all());
-	  
-		$student->save();
+    
+    $student->save();
 
     return response()->json($student, 200);
   }
