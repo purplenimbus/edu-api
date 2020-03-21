@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Student;
+use App\Registration;
 use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
 use App\Http\Requests\StoreStudent;
 use App\Http\Requests\UpdateStudent;
 use App\Http\Requests\GetStudents;
+use App\Http\Requests\GetTranscript;
 
 class StudentController extends Controller
 {
@@ -77,5 +79,16 @@ class StudentController extends Controller
     $student->save();
 
     return response()->json($student, 200);
+  }
+
+  /**
+   * Get a students transcripts
+   *
+   * @return void
+   */
+  public function transcripts(GetTranscript $request) {
+    $transcripts = Student::find($request->student_id)->getTranscripts();
+
+    return response()->json($transcripts, 200);
   }
 }

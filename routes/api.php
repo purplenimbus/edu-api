@@ -78,6 +78,7 @@ Route::group([
       Route::get('/', 'StudentController@index');
       Route::post('/', 'StudentController@create');
       Route::put('/', 'StudentController@edit');
+      Route::get('/transcripts', 'StudentController@transcripts');
     });
   });
 });
