@@ -5,6 +5,7 @@ namespace App;
 use App\User;
 use App\StatusType;
 use App\CourseGrade;
+use App\Registration;
 
 class Student extends User
 {
@@ -39,6 +40,20 @@ class Student extends User
     return CourseGrade::where('id', $this->meta->course_grade_id)
     	->first()
     	->only('id','name','alias');
+  }
+
+  /**
+   *  Get course grade type
+  */
+  public function getTranscripts() {
+    if (is_null($this->id)) {
+      return;
+    }
+
+    return Registration::with('course','course_score','term')
+      ->where('user_id', $this->id)
+      ->get()
+      ->groupBy('term_id');
   }
 
   /**

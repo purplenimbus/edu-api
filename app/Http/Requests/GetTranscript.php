@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidTeacher;
+use App\Rules\ValidStudent;
 
-class AssignInstructor extends FormRequest
+class GetTranscript extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,12 +25,12 @@ class AssignInstructor extends FormRequest
   public function rules()
   {
     return [
-      'instructor_id' => [
+      'student_id' => [
         'required',
         'exists:users,id',
-        new ValidTeacher()
+        new ValidStudent()
       ],
-      'course_id' => 'required|exists:courses,id'
+      'term_id' => 'nullable|integer|exists:school_terms,id'
     ];
   }
 }

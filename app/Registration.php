@@ -43,7 +43,7 @@ class Registration extends Model
   }
 
   public function term(){
-    return $this->belongsTo('App\SchoolTerm','term_id');
+    return $this->belongsTo('App\SchoolTerm','term_id', 'id');
   }
 
   public function course_score(){
