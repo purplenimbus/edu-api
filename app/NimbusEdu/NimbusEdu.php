@@ -397,11 +397,11 @@ class NimbusEdu
   public function create_student($request){
     try{
       $data = array_merge($request->all(), [
-        'tenant_id' => $this->tenant->id,
+        'address' => $request->address,
         'meta' => [
           'course_grade_id' => $request->course_grade_id,
-          'address' => $request->address,
-        ]
+        ],
+        'tenant_id' => $this->tenant->id,
       ]);
 
       unset($data['course_grade_id']);
@@ -423,10 +423,8 @@ class NimbusEdu
   public function create_instructor($request){
     try{
       $data = array_merge($request->all(), [
+        'address' => $request->address,
         'tenant_id' => $this->tenant->id,
-        'meta' => [
-          'address' => $request->address,
-        ]
       ]);
 
       $instructor = Instructor::create($data);
