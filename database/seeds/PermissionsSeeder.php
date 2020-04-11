@@ -16,11 +16,11 @@ class PermissionsSeeder extends Seeder
       [
         'name' => 'admin',
         'permissions' => [
-          'bills' => ['view', 'edit', 'delete'],
-          'courses' => ['view', 'edit', 'delete'],
-          'users' => ['view', 'edit', 'delete'],
-          'registrations' => ['view', 'edit', 'delete'],
-          'tenants' => ['view', 'edit'],
+          'bills' => ['create', 'view', 'edit', 'delete'],
+          'courses' => ['create', 'view', 'edit', 'delete'],
+          'users' => ['create', 'view', 'edit', 'delete'],
+          'registrations' => ['create', 'view', 'edit', 'delete'],
+          'tenants' => ['create', 'view', 'edit'],
         ],
       ],
       [
@@ -45,11 +45,11 @@ class PermissionsSeeder extends Seeder
       [
         'name' => 'superadmin',
         'permissions' => [
-          'bills' => ['view', 'edit', 'delete'],
-          'courses' => ['view', 'edit', 'delete'],
-          'users' => ['view', 'edit', 'delete'],
-          'registrations' => ['view', 'edit', 'delete'],
-          'tenants' => ['view', 'edit', 'delete'],
+          'bills' => ['create','view', 'edit', 'delete'],
+          'courses' => ['create','view', 'edit', 'delete'],
+          'users' => ['create','view', 'edit', 'delete'],
+          'registrations' => ['create','view', 'edit', 'delete'],
+          'tenants' => ['create','view', 'edit', 'delete'],
         ],
       ],
       [
