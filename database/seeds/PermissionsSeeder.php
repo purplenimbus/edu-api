@@ -45,17 +45,17 @@ class PermissionsSeeder extends Seeder
       [
         'name' => 'superadmin',
         'permissions' => [
-          'bills' => ['create','view', 'edit', 'delete'],
-          'courses' => ['create','view', 'edit', 'delete'],
-          'users' => ['create','view', 'edit', 'delete'],
-          'registrations' => ['create','view', 'edit', 'delete'],
-          'tenants' => ['create','view', 'edit', 'delete'],
+          'bills' => ['create', 'view', 'edit', 'delete'],
+          'courses' => ['create', 'view', 'edit', 'delete'],
+          'users' => ['create', 'view', 'edit', 'delete'],
+          'registrations' => ['create', 'view', 'edit', 'delete'],
+          'tenants' => ['create', 'view', 'edit', 'delete'],
         ],
       ],
       [
         'name' => 'instructor',
         'permissions' => [
-          'courses' => ['view', 'edit'],
+          'courses' => ['view'],
           'users' => ['view'],
           'registrations' => ['view'],
         ],
@@ -71,11 +71,11 @@ class PermissionsSeeder extends Seeder
     ];
 
     $permissions = [
-      'bills' => ['create','view','edit','delete'],
-      'courses' => ['create','view','edit','delete'],
-      'users' => ['create','view','edit','delete'],
-      'registrations' => ['create','view','edit','delete'],
-      'tenants' => ['create','view','edit','delete'],
+      'bills' => ['create', 'view', 'edit', 'delete'],
+      'courses' => ['create', 'view', 'edit', 'delete'],
+      'users' => ['create', 'view', 'edit', 'delete'],
+      'registrations' => ['create', 'view', 'edit', 'delete'],
+      'tenants' => ['create', 'view', 'edit', 'delete'],
     ];
 
     $this->create_permissions($permissions);

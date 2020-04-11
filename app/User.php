@@ -94,7 +94,7 @@ class User extends Authenticatable implements JWTSubject
       'user' => $this->only(['email', 'firstname', 'lastname', 'id']),
       'tenant' => $this->tenant()->first(),
       'role' => $this->type,
-      'permissions' => $this->getAbilities(),
+      'permissions' => $this->getAbilities()->pluck('name'),
     ];
   }
 
