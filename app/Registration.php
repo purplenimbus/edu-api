@@ -69,12 +69,17 @@ class Registration extends Model
         $model->course_score_id = $course_score->id;
         $model->save();
       }
+
+      $model->user->allow('view', $model);
+      $model->user->allow('view', $model->course);
 		});
 
     self::deleting(function ($model) {
       if ($model->course_score) {
         $model->course_score->delete();
       }
+
+      $model->user->disallow('view', $model->course);
     });
 	}
 }

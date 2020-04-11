@@ -4,14 +4,13 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Webpatser\Uuid\Uuid as Uuid;
-use Spatie\Permission\Models\Role as Role;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable implements JWTSubject
 {
-  use HasRoles, Notifiable;
+  use Notifiable, HasRolesAndAbilities;
 
   public $table = "users";
 
@@ -95,7 +94,7 @@ class User extends Authenticatable implements JWTSubject
       'user' => $this->only(['email', 'firstname', 'lastname', 'id']),
       'tenant' => $this->tenant()->first(),
       'role' => $this->type,
-      'permissions' => $this->roles->first()->permissions()->get(['name']),
+      'permissions' => $this->getAbilities()->pluck('name'),
     ];
   }
 
@@ -159,7 +158,7 @@ class User extends Authenticatable implements JWTSubject
   */
   public function getTypeAttribute()
   {
-    return $this->hasAnyRole(Role::all()) ?
+    return !is_null($this->roles->first()) ?
       $this->roles->first()->name : '';
   }
 

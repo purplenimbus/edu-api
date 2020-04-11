@@ -6,6 +6,7 @@ use App\User;
 use App\StatusType;
 use App\CourseGrade;
 use App\Registration;
+use Bouncer;
 
 class Student extends User
 {
@@ -19,12 +20,12 @@ class Student extends User
   ];
 
   public function newQuery($excludeDeleted = true)
-	{
-	  return parent::newQuery($excludeDeleted)
-	  	->role('student');
-	}
+  {
+    return parent::newQuery($excludeDeleted)
+      ->whereIs('student');
+  }
 
-	public function generateStudentId() {
+  public function generateStudentId() {
     return date("Y").sprintf("%04d", $this->id);
   }
 
@@ -34,12 +35,12 @@ class Student extends User
   public function getGradeAttribute()
   {
     if (is_null($this->meta->course_grade_id)) {
-    	return;
+      return;
     } 
 
     return CourseGrade::where('id', $this->meta->course_grade_id)
-    	->first()
-    	->only('id','name','alias');
+      ->first()
+      ->only('id','name','alias');
   }
 
   /**
@@ -57,21 +58,25 @@ class Student extends User
   }
 
   /**
-	 *  Setup model event hooks
+   *  Setup model event hooks
   */
-	public static function boot()
-	{
-		parent::boot();
-		self::creating(function ($model) {
-			$model->password = $model->createDefaultPassword();
-			$model->assignRole('student');
-			$status_type = StatusType::where('name', 'unenrolled')->first();
+  public static function boot()
+  {
+    parent::boot();
+    self::creating(function ($model) {
+      $model->password = $model->createDefaultPassword();
 
-			if (!is_null($status_type)) {
-				$model->account_status_id = $status_type->id;
-			}
-		});
-	}
+      $status_type = StatusType::where('name', 'unenrolled')->first();
+
+      if (!is_null($status_type)) {
+        $model->account_status_id = $status_type->id;
+      }      
+    });
+
+    self::created(function ($model) {
+      $model->assign('student');     
+    });
+  }
 
   public function scopeOfCourseGrade($query, $course_grade_id)
   {
