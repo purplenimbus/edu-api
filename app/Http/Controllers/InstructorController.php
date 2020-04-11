@@ -55,11 +55,12 @@ class InstructorController extends Controller
   public function assignInstructor(AssignInstructor $request){
     $course = Course::find($request->course_id);
 
-    $course->fill($request->only('instructor_id'));
+    $instructor = Instructor::find($request->instructor_id);
 
-    $course->save();
-
-    return response()->json($course, 200);
+    return response()->json(
+      $instructor->assignInstructor($course),
+      200
+    );
   }
 
   /**

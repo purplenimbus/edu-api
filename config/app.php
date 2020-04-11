@@ -151,7 +151,6 @@ return [
          * Package Service Providers...
          */
 		Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        Spatie\Permission\PermissionServiceProvider::class,
         /*
          * Application Service Providers...
          */
@@ -160,7 +159,7 @@ return [
         App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-		
+		Silber\Bouncer\BouncerServiceProvider::class
     ],
 
     /*
@@ -210,7 +209,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 		'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
-		'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+		'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Bouncer' => Silber\Bouncer\BouncerFacade::class,
     ],
 
 ];

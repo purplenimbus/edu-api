@@ -26,7 +26,7 @@ class DemoUsersSeeder extends Seeder
 						'password'	=>	app('hash')->make('info@showersedu.com'),
 					])->each(function($admin)use($count){ 
 						$count++; 
-						$admin->assignRole('admin');
+						$admin->assign('admin');
 					});
 
 					factory(App\User::class, 1)->create([
@@ -37,7 +37,7 @@ class DemoUsersSeeder extends Seeder
 						'password'	=>	app('hash')->make('easier'),
 					])->each(function($superadmin)use($count){ 
 						$count++;
-						$superadmin->assignRole('superadmin');
+						$superadmin->assign('superadmin');
 					});
 			});
 

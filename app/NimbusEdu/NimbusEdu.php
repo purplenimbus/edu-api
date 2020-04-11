@@ -277,8 +277,6 @@ class NimbusEdu
         if(!$student->ref_id || $student->ref_id == null){
           $student->ref_id = $student->generateStudentId();
         }
-        
-        $student->assignRole('student');
 
         $student->save();
 
@@ -300,8 +298,6 @@ class NimbusEdu
       \Log::info('Instructor '.$instructor->id.' Assigned to '.$course->code);
 
       $instructor->account_status_id = $this->getStatusID('assigned')->id;
-
-      $instructor->assignRole('teacher');
 
       $instructor->save();
 

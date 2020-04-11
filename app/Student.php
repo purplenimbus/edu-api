@@ -6,6 +6,7 @@ use App\User;
 use App\StatusType;
 use App\CourseGrade;
 use App\Registration;
+use Bouncer;
 
 class Student extends User
 {
@@ -21,7 +22,7 @@ class Student extends User
   public function newQuery($excludeDeleted = true)
 	{
 	  return parent::newQuery($excludeDeleted)
-	  	->role('student');
+	  	->whereIs('student');
 	}
 
 	public function generateStudentId() {
@@ -64,12 +65,16 @@ class Student extends User
 		parent::boot();
 		self::creating(function ($model) {
 			$model->password = $model->createDefaultPassword();
-			$model->assignRole('student');
+
 			$status_type = StatusType::where('name', 'unenrolled')->first();
 
 			if (!is_null($status_type)) {
 				$model->account_status_id = $status_type->id;
-			}
+			}      
+		});
+
+		self::created(function ($model) {
+			$model->assign('student');     
 		});
 	}
 
