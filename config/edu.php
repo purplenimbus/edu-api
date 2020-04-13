@@ -18,5 +18,6 @@ return [
       'name' => 'exam',
       'score' => 40,
     ]
-  ]
+  ],
+  'pagination' => 10
 ];

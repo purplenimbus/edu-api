@@ -117,7 +117,22 @@ class Course extends Model
     });
   }
 
-  private function parse_course_code(){
+  public function scopeOfCourseGrade($query, $course_grade_id)
+  {
+    return $query
+      ->where('course_grade_id', $course_grade_id);
+  }
+
+  public function scopeValidCourses($query, Student $student)
+  {
+    $course_ids = Registration::where('user_id', $student->id)->pluck('course_id');
+
+    return $query
+      ->ofCourseGrade($student->grade['id'])
+      ->whereNotIn('id', $course_ids);
+  }
+
+  private function parse_course_code() {
     return strtoupper($this->subject->code.'-'.str_replace(' ','-',$this->grade->name));
   }
 }

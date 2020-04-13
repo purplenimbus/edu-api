@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Course;
 use App\Student;
 use App\Registration;
 use Illuminate\Support\Facades\Auth;
@@ -10,7 +11,11 @@ use App\Nimbus\NimbusEdu;
 use App\Http\Requests\StoreStudent;
 use App\Http\Requests\UpdateStudent;
 use App\Http\Requests\GetStudents;
+use App\Http\Requests\GetStudent;
 use App\Http\Requests\GetTranscript;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder as Builder;
 
 class StudentController extends Controller
 {
@@ -24,29 +29,65 @@ class StudentController extends Controller
 
     $nimbus_edu = new NimbusEdu($tenant);
 
-    $query = [
-      ['tenant_id', '=', $tenant->id]
-    ];
-
-    if($request->has('course_grade_id')){
-      array_push($query, ['meta->course_grade_id', '=', (int)$request->course_grade_id]);
-    }
-
-    if($request->has('status')){
-      array_push($query, [
-        'account_status_id',
-        '=',
-        (int)$nimbus_edu->getStatusID($request->status)->id
-      ]);
-    }
-
-    $students = Student::where($query);
-
-    if($request->has('paginate')) {
-      $students = $students->paginate($request->paginate);
-    }else{
-      $students = $students->get();
-    }
+    $students = QueryBuilder::for(Student::class)
+      ->defaultSort('firstname')
+      ->allowedSorts(
+        'created_at',
+        'date_of_birth',
+        'firstname',
+        'id',
+        'lastname',
+        'ref_id',
+        'updated_at',
+      )
+      ->allowedFilters([
+        'firstname',
+        'email',
+        'lastname',
+        'ref_id',
+        AllowedFilter::callback('has_image', function (Builder $query, $value) {
+            return $value ?
+              $query->whereNotNull('image') :
+              $query->whereNull('image');
+        }),
+        AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
+            $query->where(
+              'meta->course_grade_id',
+              '=',
+              (int)$value
+            );
+        }),
+        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
+            $query->where(
+              'account_status_id',
+              '=',
+              (int)$nimbus_edu->getStatusID($value)->id
+            );
+        }),
+      ])
+      ->allowedAppends([
+        'grade',
+        'type'
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id'
+      ])
+      ->allowedIncludes(
+        'status_type',
+      )
+      ->where([
+        ['tenant_id', '=', $tenant->id]
+      ])
+      ->paginate($request->paginate ?? config('edu.pagination'));
 
     return response()->json($students, 200);
   }
@@ -90,5 +131,27 @@ class StudentController extends Controller
     $transcripts = Student::find($request->student_id)->getTranscripts();
 
     return response()->json($transcripts, 200);
+  }
+
+  /**
+   * Get a students eligible courses they are not registered in
+   *
+   * @return void
+   */
+  public function valid_courses(GetStudent $request) {
+    $student = Student::find($request->student_id);
+
+    $courses = QueryBuilder::for(Course::class)
+      ->validCourses($student)
+      ->defaultSort('name')
+      ->allowedSorts(
+        'created_at',
+        'id',
+        'name',
+        'updated_at',
+      )
+      ->paginate($request->paginate ?? config('edu.pagination'));
+
+    return response()->json($courses, 200);
   }
 }

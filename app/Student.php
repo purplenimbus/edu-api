@@ -16,7 +16,7 @@ class Student extends User
    * @var array
    */
   protected $appends = [
-    'grade', 'type'
+    'grade'
   ];
 
   public function newQuery($excludeDeleted = true)
@@ -34,7 +34,7 @@ class Student extends User
   */
   public function getGradeAttribute()
   {
-    if (is_null($this->meta->course_grade_id)) {
+    if (is_null($this->meta) && is_null($this->meta->course_grade_id)) {
       return;
     } 
 

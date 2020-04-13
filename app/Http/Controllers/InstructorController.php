@@ -11,6 +11,9 @@ use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateInstructor;
 use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder as Builder;
 
 class InstructorController extends Controller
 {
@@ -20,29 +23,61 @@ class InstructorController extends Controller
    * @return void
    */
   public function index(GetInstructors $request) {
-    $tenant_id = Auth::user()->tenant()->first()->id;
+    $tenant = Auth::user()->tenant()->first();
 
-    $query = [
-      ['tenant_id', '=', $tenant_id]
-    ];
+    $nimbus_edu = new NimbusEdu($tenant);
 
-    if($request->has('status')){
-      array_push($query, [
-        'account_status_id',
-        '=',
-        (int)$nimbus_edu->getStatusID($request->status)->id
-      ]);
-    }
-
-    $instructors = Instructor::with([
-      'status_type'
-    ])->where($query);
-
-    if($request->has('paginate')) {
-      $instructors = $instructors->paginate($request->paginate);
-    }else{
-      $instructors = $instructors->get();
-    }
+    $instructors = QueryBuilder::for(Instructor::class)
+      ->defaultSort('firstname')
+      ->allowedSorts(
+        'created_at',
+        'date_of_birth',
+        'firstname',
+        'id',
+        'lastname',
+        'ref_id',
+        'updated_at',
+      )
+      ->allowedFilters([
+        'firstname',
+        'email',
+        'lastname',
+        'ref_id',
+        AllowedFilter::callback('has_image', function (Builder $query, $value) {
+            return $value ?
+              $query->whereNotNull('image') :
+              $query->whereNull('image');
+        }),
+        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
+            $query->where(
+              'account_status_id',
+              '=',
+              (int)$nimbus_edu->getStatusID($value)->id
+            );
+        }),
+      ])
+      ->allowedAppends([
+        'type'
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id',
+      ])
+      ->allowedIncludes(
+        'status_type',
+      )
+      ->where([
+        ['tenant_id', '=', $tenant->id]
+      ])
+      ->paginate($request->paginate ?? config('edu.pagination'));
 
     return response()->json($instructors, 200);
   }

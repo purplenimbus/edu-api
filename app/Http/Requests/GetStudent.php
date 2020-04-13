@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\ValidStudent;
 
-class GetUser extends FormRequest
+class GetStudent extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,8 +25,7 @@ class GetUser extends FormRequest
   public function rules()
   {
     return [
-      'email' => 'email|exists:users,email',
-      'user_id' => 'required|integer|exists:users,id',
+      'student_id' => ['exists:users,id', new ValidStudent()]
     ];
   }
 }

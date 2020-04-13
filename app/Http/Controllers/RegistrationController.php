@@ -8,6 +8,9 @@ use App\Registration as Registration;
 use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateScores;
 use App\Http\Requests\DeleteRegistration;
+use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class RegistrationController extends Controller
 {
@@ -33,18 +36,28 @@ class RegistrationController extends Controller
       'course_score',
       'course.status:id,name',
     ];
-    
-    if($request->has('user_id')){
-      array_push($query,['user_id', '=', $request->user_id]);
-    }
 
-    if($request->has('course_id')){
-      array_push($query,['course_id', '=', $request->course_id]);
-    }     
-
-    $registrations = $request->has('paginate') ? 
-    Registration::with($relationships)->where($query)->paginate($request->paginate) : 
-    Registration::with($relationships)->where($query)->get();
+    $registrations = QueryBuilder::for(Registration::class)
+      ->defaultSort('created_at'),
+      ->allowedSorts(
+        'created_at',
+        'updated_at',
+      )
+      ->allowedFilters([
+        'course_id',
+        'user_id',
+      ])
+      ->allowedFields([])
+      ->allowedIncludes(
+        'course',
+        'course_score',
+        'term',
+        'user',
+      )
+      ->where([
+        ['tenant_id', '=', $tenant_id]
+      ])
+      ->paginate($request->paginate ?? config('edu.pagination'))
     
     return response()->json($registrations, 200);
   }

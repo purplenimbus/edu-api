@@ -18,6 +18,9 @@ use App\Student;
 use App\CourseStatus;
 use App\Http\Requests\GetNotRegistered;
 use App\Http\Requests\RegisterStudent;
+use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as Builder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class CourseController extends Controller
 {
@@ -30,26 +33,6 @@ class CourseController extends Controller
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    $query = [
-      ['tenant_id', '=', $tenant_id]
-    ];
-
-    if($request->has('course_id')){
-      $query[] = ['id', '=', $request->course_id];
-    } 
-    if($request->has('course_grade_id')){
-      $query[] = ['course_grade_id', '=', $request->course_grade_id];
-    } 
-    if($request->has('name')){
-      $query[] = ['name', '=', $request->name];
-    } 
-    if($request->has('instructor_id')){
-      $query[] = ['instructor_id', '=', $request->instructor_id];
-    }
-    if($request->has('status_id')){
-      $query[] = ['status_id', '=', $request->status_id];
-    }
-
     $relationships = [
       'registrations',
       'registrations.user',
@@ -57,15 +40,37 @@ class CourseController extends Controller
       'instructor:id,firstname,lastname,meta',
       'status:id,name'
     ];
-    
-    $courses = $request->has('paginate') ? 
-    Course::with($relationships)
-    ->where($query)
-    ->paginate($request->paginate) 
 
-    : Course::with($relationships)
-    ->where($query)
-    ->get();
+    $courses = QueryBuilder::for(Course::class)
+      ->defaultSort('name')
+      ->allowedSorts(
+        'name',
+        'created_at',
+        'updated_at',
+      )
+      ->allowedFilters([
+        'course_grade_id',
+        'course_id',
+        'name',
+        'instructor_id',
+        'status_id',
+        AllowedFilter::callback('has_instructor', function (Builder $query, $value) {
+            return $value ?
+              $query->whereNotNull('instructor_id') :
+              $query->whereNull('instructor_id');
+        }),
+      ])
+      ->allowedFields([])
+      ->allowedIncludes(
+        'grade',
+        'instructor',
+        'registrations',
+        'status',
+      )
+      ->where([
+        ['tenant_id', '=', $tenant_id]
+      ])
+      ->paginate($request->paginate ?? config('edu.pagination'));
     
     return response()->json($courses, 200);   
   }

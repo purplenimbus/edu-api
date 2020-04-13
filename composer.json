@@ -12,6 +12,7 @@
         "laravel/tinker": "^1.0",
         "pusher/pusher-php-server": "~3.0",
         "silber/bouncer": "v1.0.0-rc.3",
+        "spatie/laravel-query-builder": "^2.8",
         "tymon/jwt-auth": "dev-develop",
         "webpatser/laravel-uuid": "^3.0"
     },
