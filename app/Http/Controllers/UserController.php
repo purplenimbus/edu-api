@@ -12,37 +12,80 @@ use App\Http\Requests\StoreUser as StoreUser;
 use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Nimbus\NimbusEdu;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Builder as Builder;
 
 class UserController extends Controller
 {
-  public function index(GetUsers $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
+  public function index(GetUsers $request) {
+    $tenant = Auth::user()->tenant()->first();
 
-    $query = [
-      ['tenant_id', '=', $tenant_id]
-    ];
+    $nimbus_edu = new NimbusEdu($tenant);
 
-    if($request->has('course_grade_id')){
-      array_push($query,['meta->course_grade_id', '=', (int)$request->course_grade_id]);
-    }
+    $users = QueryBuilder::for(User::class)
+      ->defaultSort('firstname')
+      ->allowedSorts(
+        'created_at',
+        'date_of_birth',
+        'firstname',
+        'id',
+        'lastname',
+        'ref_id',
+        'updated_at',
+      )
+      ->allowedFilters([
+        'firstname',
+        'email',
+        'lastname',
+        'ref_id',
+        AllowedFilter::callback('user_type', function (Builder $query, $value) {
+            return $query->role($request->value);
+        }),
+        AllowedFilter::callback('has_image', function (Builder $query, $value) {
+            return $value ?
+              $query->whereNotNull('image') :
+              $query->whereNull('image');
+        }),
+        AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
+            $query->where(
+              'meta->course_grade_id',
+              '=',
+              (int)$value
+            );
+        }),
+        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
+            $query->where(
+              'account_status_id',
+              '=',
+              (int)$nimbus_edu->getStatusID($value)->id
+            );
+        }),
+      ])
+      ->allowedAppends([
+        'type'
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id'
+      ])
+      ->allowedIncludes(
+        'status_type',
+      )
+      ->where([
+        ['tenant_id', '=', $tenant->id]
+      ])
+      ->paginate($request->paginate ?? config('edu.pagination'));
 
-    if($request->has('account_status_id')){
-      array_push($query,['account_status_id', '=', $request->account_status_id]);
-    }
-
-    $users = User::with(['account_status:name,id'])->where($query);
-
-    if($request->has('user_type')) {
-      $users = $users->role($request->user_type);
-    }
-
-    if($request->has('paginate')) {
-      $users = $users->paginate($request->paginate);
-    }else{
-      $users = $users->get();
-    }
-
-    return response()->json($users,200);
+    return response()->json($users, 200);
   }
 
   public function getUser(GetUser $request){
