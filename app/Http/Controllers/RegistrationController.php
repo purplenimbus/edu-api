@@ -38,7 +38,7 @@ class RegistrationController extends Controller
     ];
 
     $registrations = QueryBuilder::for(Registration::class)
-      ->defaultSort('created_at'),
+      ->defaultSort('created_at')
       ->allowedSorts(
         'created_at',
         'updated_at',
