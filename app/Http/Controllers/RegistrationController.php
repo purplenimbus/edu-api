@@ -57,7 +57,7 @@ class RegistrationController extends Controller
       ->where([
         ['tenant_id', '=', $tenant_id]
       ])
-      ->paginate($request->paginate ?? config('edu.pagination'))
+      ->paginate($request->paginate ?? config('edu.pagination'));
     
     return response()->json($registrations, 200);
   }
