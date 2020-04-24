@@ -60,7 +60,7 @@ class CourseController extends Controller
               $query->whereNull('instructor_id');
         }),
       ])
-      ->allowedFields([])
+      //->allowedFields([])
       ->allowedIncludes(
         'grade',
         'instructor',
