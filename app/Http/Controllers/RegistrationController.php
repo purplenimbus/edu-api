@@ -76,9 +76,9 @@ class RegistrationController extends Controller
    * @return void
    */
   public function update_scores(UpdateScores $request){
-    $registration = Registration::with('course_score')->find($request->id);
+    $registration = Registration::with('score')->find($request->id);
 
-    $registration->course_score->update($request->only(['scores','comment']));
+    $registration->score->update($request->only(['scores','comment']));
 
     return response()->json($registration, 200);
   }
