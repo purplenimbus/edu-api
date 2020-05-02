@@ -46,7 +46,7 @@ class Course extends Model
   ];
 
   /**
-   * Get course registrations
+   * Get course grade
    *
    * @var array
    */
@@ -56,7 +56,7 @@ class Course extends Model
   }
 
   /**
-   * Get course registrations
+   * Get course instructor
    *
    * @var array
    */

@@ -33,13 +33,13 @@ class CourseController extends Controller
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    $relationships = [
-      'registrations',
-      'registrations.user',
-      'grade:id,name',
-      'instructor:id,firstname,lastname,meta',
-      'status:id,name'
-    ];
+    // $relationships = [
+    //   'registrations',
+    //   'registrations.user',
+    //   'grade:id,name',
+    //   'instructor:id,firstname,lastname,meta',
+    //   'status:id,name'
+    // ];
 
     $courses = QueryBuilder::for(Course::class)
       ->defaultSort('name')
@@ -50,10 +50,12 @@ class CourseController extends Controller
       )
       ->allowedFilters([
         'course_grade_id',
-        'course_id',
-        'name',
         'instructor_id',
+        'name',
         'status_id',
+        AllowedFilter::callback('course_id', function (Builder $query, $value) {
+            return $query->where('id', $value);
+        }),
         AllowedFilter::callback('has_instructor', function (Builder $query, $value) {
             return $value ?
               $query->whereNotNull('instructor_id') :
@@ -76,10 +78,10 @@ class CourseController extends Controller
   }
   
   /**
-     * Update a course
-     *
-     * @return void
-     */
+   * Update a course
+   *
+   * @return void
+   */
   public function update(UpdateCourse $request){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
@@ -93,10 +95,10 @@ class CourseController extends Controller
   }
 
   /**
-     * Create a new course
-     *
-     * @return void
-     */
+   * Create a new course
+   *
+   * @return void
+   */
   public function create(StoreCourse $request){
     $tenant = Auth::user()->tenant()->first();
     
