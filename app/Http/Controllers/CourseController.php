@@ -33,14 +33,6 @@ class CourseController extends Controller
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    // $relationships = [
-    //   'registrations',
-    //   'registrations.user',
-    //   'grade:id,name',
-    //   'instructor:id,firstname,lastname,meta',
-    //   'status:id,name'
-    // ];
-
     $courses = QueryBuilder::for(Course::class)
       ->defaultSort('name')
       ->allowedSorts(
@@ -68,7 +60,7 @@ class CourseController extends Controller
       ->allowedIncludes(
         'grade',
         'instructor',
-        'registrations',
+        'registrations','registrations.user',
         'status',
       )
       ->where([
@@ -141,10 +133,8 @@ class CourseController extends Controller
    * @return void
    */
   public function not_registered(GetNotRegistered $request){
-    $students = $request->has('paginate') ? 
-    Student::ofUnregistered($request->course_id)->paginate($request->paginate) : 
-    Student::ofUnregistered($request->course_id)->get();
-    
+    $students = Student::ofUnregistered($request->course_id)->paginate($request->paginate ?? config('edu.pagination')); 
+
     return response()->json($students, 200);
   }
 

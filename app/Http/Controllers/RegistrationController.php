@@ -27,16 +27,6 @@ class RegistrationController extends Controller
       ['tenant_id', '=', $tenant_id]
     ];
 
-    // $relationships = [
-    //   'course',
-    //   'user',
-    //   'course.grade:name,id,alias',
-    //   'course.instructor:id,firstname,lastname,meta',
-    //   'term:name,year',
-    //   'course_score',
-    //   'course.status:id,name',
-    // ];
-
     $registrations = QueryBuilder::for(Registration::class)
       ->defaultSort('created_at')
       ->allowedSorts(
@@ -53,7 +43,8 @@ class RegistrationController extends Controller
       ])
       ->allowedFields([])
       ->allowedIncludes(
-        'course',
+        'course','course.grade','course.instructor',
+        'course.statue',
         'course_score',
         'term',
         'user',
