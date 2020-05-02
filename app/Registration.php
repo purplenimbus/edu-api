@@ -46,7 +46,7 @@ class Registration extends Model
     return $this->belongsTo('App\SchoolTerm','term_id', 'id');
   }
 
-  public function course_score(){
+  public function score(){
     return $this->hasOne('App\CourseScore','id','course_score_id');
   }
   /**
