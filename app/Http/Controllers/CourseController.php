@@ -49,12 +49,14 @@ class CourseController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'course_grade_id',
         'instructor_id',
         'name',
         'status_id',
+        AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
+            return $query->where('course_grade_id', '=', (int)$value);
+        }),
         AllowedFilter::callback('course_id', function (Builder $query, $value) {
-            return $query->where('id', $value);
+            return $query->where('course_id', '=', (int)$value);
         }),
         AllowedFilter::callback('has_instructor', function (Builder $query, $value) {
             return $value ?
@@ -62,7 +64,7 @@ class CourseController extends Controller
               $query->whereNull('instructor_id');
         }),
       ])
-      //->allowedFields([])
+      ->allowedFields([])
       ->allowedIncludes(
         'grade',
         'instructor',

@@ -27,15 +27,15 @@ class RegistrationController extends Controller
       ['tenant_id', '=', $tenant_id]
     ];
 
-    $relationships = [
-      'course',
-      'user',
-      'course.grade:name,id,alias',
-      'course.instructor:id,firstname,lastname,meta',
-      'term:name,year',
-      'course_score',
-      'course.status:id,name',
-    ];
+    // $relationships = [
+    //   'course',
+    //   'user',
+    //   'course.grade:name,id,alias',
+    //   'course.instructor:id,firstname,lastname,meta',
+    //   'term:name,year',
+    //   'course_score',
+    //   'course.status:id,name',
+    // ];
 
     $registrations = QueryBuilder::for(Registration::class)
       ->defaultSort('created_at')
@@ -44,8 +44,10 @@ class RegistrationController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'course_id',
         'user_id',
+        AllowedFilter::callback('course_id', function (Builder $query, $value) {
+            return $query->where('course_id', '=', (int)$value);
+        }),
       ])
       ->allowedFields([])
       ->allowedIncludes(
