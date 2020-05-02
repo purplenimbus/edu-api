@@ -44,7 +44,9 @@ class RegistrationController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'user_id',
+        AllowedFilter::callback('user_id', function (Builder $query, $value) {
+            return $query->where('user_id', '=', (int)$value);
+        }),
         AllowedFilter::callback('course_id', function (Builder $query, $value) {
             return $query->where('course_id', '=', (int)$value);
         }),
