@@ -44,7 +44,7 @@ class RegistrationController extends Controller
       ->allowedIncludes(
         'course','course.grade','course.instructor',
         'course.subject',
-        'course.statue',
+        'course.status',
         'score',
         'term',
         'user',
