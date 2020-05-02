@@ -41,9 +41,9 @@ class RegistrationController extends Controller
             return $query->where('course_id', '=', (int)$value);
         }),
       ])
-      ->allowedFields([])
       ->allowedIncludes(
         'course','course.grade','course.instructor',
+        'course.subject',
         'course.statue',
         'course_score',
         'term',

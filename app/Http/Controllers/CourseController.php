@@ -13,6 +13,7 @@ use App\Http\Requests\StoreBatch as StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Nimbus\NimbusEdu;
+use App\Nimbus\Enrollment;
 use App\Registration;
 use App\Student;
 use App\CourseStatus;
@@ -56,11 +57,11 @@ class CourseController extends Controller
               $query->whereNull('instructor_id');
         }),
       ])
-      ->allowedFields([])
       ->allowedIncludes(
         'grade',
         'instructor',
         'registrations','registrations.user',
+        'subject',
         'status',
       )
       ->where([
@@ -144,17 +145,12 @@ class CourseController extends Controller
    * @return void
    */
   public function register_students(RegisterStudent $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-    $registrations = [];
-    foreach ($request->student_ids as $id) {
-      array_push( $registrations, Registration::updateOrCreate(
-        [
-          'course_id' => $request->course_id,
-          'user_id' => $id,
-          'tenant_id' => $tenant_id,
-        ]
-      ));
-    }
+    $tenant = Auth::user()->tenant()->first();
+
+    $enrollmentService = new Enrollment($tenant);
+
+    $registrations = $enrollmentService
+      ->enrollStudents($request->student_ids, $request->course_id);
 
     return response()->json($registrations, 200);
   }

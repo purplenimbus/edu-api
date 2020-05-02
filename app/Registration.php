@@ -26,13 +26,13 @@ class Registration extends Model
    */
   protected $hidden = [];
 
-	/**
+  /**
    * Cast meta property to array
    *
    * @var array
    */
 
-	protected $casts = [];
+  protected $casts = [];
 
   public function course(){
     return $this->belongsTo('App\Course');
@@ -49,13 +49,13 @@ class Registration extends Model
   public function course_score(){
     return $this->hasOne('App\CourseScore','id','course_score_id');
   }
-	/**
-	 *  Setup model event hooks
-	 */
-	public static function boot()
-	{
-		parent::boot();
-		self::created(function ($model) {
+  /**
+   *  Setup model event hooks
+   */
+  public static function boot()
+  {
+    parent::boot();
+    self::created(function ($model) {
       if ($model->course->schema) {
         $course_score = CourseScore::create([
           'registration_id' => $model->id,
@@ -72,7 +72,7 @@ class Registration extends Model
 
       $model->user->allow('view', $model);
       $model->user->allow('view', $model->course);
-		});
+    });
 
     self::deleting(function ($model) {
       if ($model->course_score) {
@@ -81,5 +81,5 @@ class Registration extends Model
 
       $model->user->disallow('view', $model->course);
     });
-	}
+  }
 }
