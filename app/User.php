@@ -182,7 +182,7 @@ class User extends Authenticatable implements JWTSubject
     return $this->belongsTo('App\Tenant');
   }
 
-  function status_type(){
+  function status(){
     return $this->belongsTo('App\StatusType','account_status_id');
   }
 }

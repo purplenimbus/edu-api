@@ -72,7 +72,7 @@ class InstructorController extends Controller
         'ref_id',
       ])
       ->allowedIncludes(
-        'status_type',
+        'status',
       )
       ->where([
         ['tenant_id', '=', $tenant->id]

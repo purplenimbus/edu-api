@@ -41,6 +41,6 @@ class ValidRegistration implements Rule
    */
   public function message()
   {
-    return ":attribute is not allowed to register for {$this->course->code} because of their grade";
+    return "only {$this->course->grade->name} students are allowed to register for {$this->course->code}";
   }
 }
