@@ -76,10 +76,11 @@ class InstructorController extends Controller
       )
       ->where([
         ['tenant_id', '=', $tenant->id]
-      ])
-      ->paginate($request->paginate ?? config('edu.pagination'));
+      ]);
 
-    return response()->json($instructors, 200);
+    $data = isset($request->paginate) ? $instructors->paginate($request->paginate) : $instructors->get();
+
+    return response()->json($data, 200);
   }
 
   /**
