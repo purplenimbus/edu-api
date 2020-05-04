@@ -42,9 +42,18 @@ class CourseController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'instructor_id',
         'name',
-        'status_id',
+        AllowedFilter::callback('instructor_id', function (Builder $query, $value) {
+            return $query->where('instructor_id', '=', (int)$value);
+        }),
+        AllowedFilter::callback('status', function (Builder $query, $value) {
+            $status = CourseStatus::where('name', $value)->first();
+
+            return $query->where('status_id', '=', isset($status->id) ? (int)$status->id: false);
+        }),
+        AllowedFilter::callback('status_id', function (Builder $query, $value) {
+            return $query->where('status_id', '=', (int)$value);
+        }),
         AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
             return $query->where('course_grade_id', '=', (int)$value);
         }),
