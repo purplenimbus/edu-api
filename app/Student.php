@@ -51,7 +51,7 @@ class Student extends User
       return;
     }
 
-    return Registration::with('course','course_score','term')
+    return Registration::with('course', 'score', 'term')
       ->where('user_id', $this->id)
       ->get()
       ->groupBy('term_id');
