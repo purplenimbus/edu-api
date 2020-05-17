@@ -30,6 +30,15 @@ Route::group([
     Route::put('/tenants', 'TenantController@update');
     Route::post('/tenants/term', 'TenantController@updateTerm');
 
+    /* Terms */
+    Route::group([
+      'prefix' => '/terms'
+    ], function() {
+      Route::get('', 'TermController@index');
+      Route::get('/show', 'TermController@show');
+      Route::put('', 'TermController@update');
+    });
+
     /* Courses */
     Route::group([
       'prefix' => '/courses'
