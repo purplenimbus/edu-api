@@ -238,7 +238,6 @@ class NimbusEdu
 
       $billing = Billing::firstOrCreate([
         'tenant_id' => $this->tenant->id,
-        'student_id' => $student->id,
         'term_id' => $school_term->id
       ]);
 
