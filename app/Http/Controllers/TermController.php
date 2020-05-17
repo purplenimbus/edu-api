@@ -46,6 +46,9 @@ class TermController extends Controller
         AllowedInclude::count('instructorsCount'),
         AllowedInclude::count('studentsCount')
       ])
+      ->allowedAppends([
+        'courses_completed',
+      ])
       ->where([
         ['tenant_id', '=', $tenant->id]
       ])

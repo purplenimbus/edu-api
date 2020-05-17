@@ -67,4 +67,12 @@ class SchoolTerm extends Model
       ->unique()
       ->count();
   }
+
+  public function courses_completed() {
+    return $this->registrations()
+      ->with('course')
+      ->get()
+      ->pluck('course.status_id')
+      ->every(function ($value) { return $value === 2; });
+  }
 }
