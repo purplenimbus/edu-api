@@ -37,15 +37,13 @@ class TermController extends Controller
       ])
       ->allowedFields([
         'courses',
-        'instructors',
         'registrations',
-        'students',
       ])
       ->allowedIncludes([
         'courses',
-        'instructors',
         'registrations',
-        'students',
+        AllowedInclude::count('instructorsCount'),
+        AllowedInclude::count('studentsCount')
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]
