@@ -36,10 +36,16 @@ class TermController extends Controller
         }),
     	])
       ->allowedFields([
+      	'courses',
+      	'instructors',
         'registrations',
+        'students',
       ])
       ->allowedIncludes([
+      	'courses',
+      	'instructors',
         'registrations',
+        'students',
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]

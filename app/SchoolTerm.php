@@ -36,4 +36,31 @@ class SchoolTerm extends Model
   public function registrations() {
     return $this->hasMany('App\Registration', 'term_id');
   }
+
+  public function courses() {
+    return $this->hasManyThrough(
+      'App\Course',
+      'App\Registration',
+      'term_id',
+      'id',
+    );
+  }
+
+  public function students() {
+    return $this->registrations()
+      ->pluck('user_id')
+      ->filter(function ($value) { return !is_null($value); })
+      ->unique()
+      ->count();
+  }
+
+  public function instructors() {
+    return $this->registrations()
+      ->with('course')
+      ->get()
+      ->pluck('course.instructor_id')
+      ->filter(function ($value) { return !is_null($value); })
+      ->unique()
+      ->count();
+  }
 }
