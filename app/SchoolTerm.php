@@ -34,7 +34,7 @@ class SchoolTerm extends Model
   ];
   
   public function status() {
-    return return $this->belongsTo('App\SchoolTermStatus');
+    return $this->belongsTo('App\SchoolTermStatus');
   }
 
   public function registrations() {
