@@ -68,7 +68,7 @@ class SchoolTerm extends Model
       ->count();
   }
 
-  public function courses_completed() {
+  public function getCoursesCompletedAttribute() {
     return $this->registrations()
       ->with('course')
       ->get()
