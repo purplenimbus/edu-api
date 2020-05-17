@@ -56,7 +56,7 @@ class Student extends User
       'registrations' => function($query) {
         $query->whereUserId($this->id);
       }
-    ]);
+    ])->get();
   }
 
   /**
