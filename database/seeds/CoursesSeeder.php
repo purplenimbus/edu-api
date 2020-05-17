@@ -39,15 +39,7 @@ class CoursesSeeder extends Seeder
 						'name' => $course['name'],
 						'code' => $course['code'],
 						'tenant_id' => 1,
-						'meta'	=>	[
-							'course_schema' =>	[
-								'quiz' =>  15,
-								'midterm' => 30,
-								'assignment' => 15,
-								'lab' => 5,
-								'exam' => 35
-							]
-						]
+						'schema'	=>	config('edu.default.course_schema')
 					])
 					->each(function($course){
 						factory(App\Lesson::class,5)->create([

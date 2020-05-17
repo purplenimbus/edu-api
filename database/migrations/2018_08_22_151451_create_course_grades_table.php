@@ -6,31 +6,30 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCourseGradesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('course_grades', function (Blueprint $table) {
-            $table->increments('id');
-            $table->uuid('uuid');
-            $table->string('name');
-            $table->json('meta')->nullable();
-            $table->string('alias')->nullable();
-            $table->string('description')->nullable();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('course_grades', function (Blueprint $table) {
+      $table->increments('id');
+      $table->string('name');
+      $table->json('meta')->nullable();
+      $table->string('alias')->nullable();
+      $table->string('description')->nullable();
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('course_grades');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('course_grades');
+  }
 }

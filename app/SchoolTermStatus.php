@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StatusType extends Model
+class SchoolTermStatus extends Model
 {
   /**
    * The attributes that are mass assignable.

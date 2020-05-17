@@ -15,12 +15,12 @@ class CreateTenantsTable extends Migration
   {
     Schema::create('tenants', function (Blueprint $table) {
       $table->increments('id');
-      $table->uuid('uuid');
       $table->string('name');
       $table->string('username')->unique();
       $table->string('email')->unique();
       $table->json('address')->nullable();
       $table->json('meta')->nullable();
+      $table->string('country')->default(config('edu.default.country'));
       $table->timestamps();
     });
   }

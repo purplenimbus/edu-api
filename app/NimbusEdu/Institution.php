@@ -4,29 +4,31 @@ namespace App\Nimbus;
 
 use App\Tenant as Tenant;
 use App\SchoolTerm as SchoolTerm;
-
+use Carbon\Carbon;
 use App\Jobs\ProcessBatch;
 
 class Institution extends NimbusEdu
 {
   var $tenant;
-  var $country_name;
 
-  public function __construct(Tenant $tenant,$country_name)
+  public function __construct(Tenant $tenant)
   {
     $this->tenant = $tenant;
 
-    $this->country_name = $country_name;
-
-    switch($this->country_name){
-      default :   $subjects = $this->generate('subjects.json','subject');
-      $course_grades = $this->generate('course_grades.json','coursegrade');
-      $curricula = $this->generate('curricula.json','curriculum');
+    switch($this->tenant->country) {
+      default :   $subjects = $this->generate('subjects.json', 'subject');
+      $course_grades = $this->generate('course_grades.json', 'coursegrade');
+      $curricula = $this->generate('curricula.json', 'curriculum');
 
       break;
     }
 
-    $school_term =  SchoolTerm::create(['tenant_id' => $this->tenant->id,'name' => 'first','year' => 2019]); // need to set this some how , perhaps pass it in the request?
+    $school_term =  SchoolTerm::firstOrcreate([
+      'end_date' => Carbon::now()->addMonths(4),
+      'name' => 'first term',
+      'start_date' => Carbon::now(),
+      'tenant_id' => $this->tenant->id,
+    ]); // need to set this some how , perhaps pass it in the request?
   }
 
   private function readJson($path){
@@ -37,7 +39,7 @@ class Institution extends NimbusEdu
     }
   }
 
-  public function generate($path,$type){
+  public function generate($path, $type){
     try{
       echo 'Generating new '.$type.' for tenant : '.$this->tenant->name."\r\n";
 

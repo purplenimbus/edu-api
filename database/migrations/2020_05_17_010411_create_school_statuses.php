@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateBillingsTable extends Migration
+class CreateSchoolStatuses extends Migration
 {
   /**
    * Run the migrations.
@@ -13,13 +13,10 @@ class CreateBillingsTable extends Migration
    */
   public function up()
   {
-    Schema::create('billings', function (Blueprint $table) {
+    Schema::create('school_term_statuses', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('status_id')->default(1);
-      $table->json('details')->nullable();
-      $table->integer('tenant_id');
-      $table->integer('student_id');
-      $table->integer('term_id')->nullable();
+      $table->string('name');
+      $table->string('description')->nullable();
       $table->timestamps();
     });
   }
@@ -31,6 +28,6 @@ class CreateBillingsTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists('billings');
+    Schema::dropIfExists('school_term_statuses');
   }
 }

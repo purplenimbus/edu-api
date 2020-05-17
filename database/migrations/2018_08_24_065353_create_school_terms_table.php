@@ -6,31 +6,33 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateSchoolTermsTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('school_terms', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('tenant_id');
-            $table->string('name');
-            $table->year('year');
-            $table->json('meta')->nullable();
-            $table->string('description')->nullable();
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('school_terms', function (Blueprint $table) {
+      $table->increments('id');
+      $table->integer('tenant_id');
+      $table->string('name');
+      $table->json('meta')->nullable();
+      $table->string('description')->nullable();
+      $table->timestamps();
+      $table->dateTime('start_date');
+      $table->integer('status_id')->default(1);
+      $table->dateTime('end_date');
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('school_terms');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('school_terms');
+  }
 }

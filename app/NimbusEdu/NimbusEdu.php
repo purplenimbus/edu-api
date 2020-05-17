@@ -22,24 +22,6 @@ use App\Notifications\BatchProcessed;
 class NimbusEdu
 {
   var $tenant;
-  private $default_course_schema = [
-    [
-      'name' => 'midterm 1',
-      'score' => 20,
-    ],
-    [
-      'name' => 'midterm 2',
-      'score' => 20,
-    ],
-    [
-      'name' => 'midterm 3',
-      'score' => 20,
-    ],
-    [
-      'name' => 'exam',
-      'score' => 40,
-    ]
-  ];
 
   public function __construct(Tenant $tenant)
   {
@@ -238,8 +220,8 @@ class NimbusEdu
 
   public function getCurriculumType($new = false){
     return $new ? 
-    CurriculumType::firstOrCreate(['country' => $this->tenant->meta->country]) : 
-    CurriculumType::where(['country' => $this->tenant->meta->country])->first();
+    CurriculumType::firstOrCreate(['country' => $this->tenant->country]) : 
+    CurriculumType::where(['country' => $this->tenant->country])->first();
   }
 
   public function getStatusID($name,$new = false){
@@ -280,9 +262,9 @@ class NimbusEdu
 
         $student->save();
 
-        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
+        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID'.$registration->id);
 
-        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration UUID'.$registration->uuid);
+        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID'.$registration->id);
       }
     }catch(Exception $e){
       throw new Exception($e->getMessage());
@@ -373,7 +355,7 @@ class NimbusEdu
         'name' => $subject->name,
         'code' => $this->parse_course_code($subject->code, $curriculum->grade->name),
         'course_grade_id' => $curriculum->course_grade_id,
-        'schema' =>  $this->default_course_schema
+        'schema' =>  config('edu.default.course_schema')
       ];
 
       $course = Course::firstOrNew(array_only($data,['code','tenant_id']));

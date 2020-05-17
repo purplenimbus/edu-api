@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use Webpatser\Uuid\Uuid as Uuid;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class User extends Authenticatable implements JWTSubject
@@ -148,9 +147,6 @@ class User extends Authenticatable implements JWTSubject
 	public static function boot()
 	{
 		parent::boot();
-		self::creating(function ($model) {
-			$model->uuid = (string) Uuid::generate(4);
-		});
 	}
   
   /**

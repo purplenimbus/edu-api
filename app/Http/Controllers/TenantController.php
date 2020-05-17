@@ -8,14 +8,15 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User as User;
-use App\Activity as Activity;
-use App\Tenant as Tenant;
-use App\Transaction as Transaction;
-use App\Service as Service;
+use App\User;
+use App\Activity;
+use App\Tenant;
+use App\SchoolTerm;
 use App\Http\Requests\UpdateTenant;
 use App\Http\Requests\GetTenant;
 use App\Nimbus\NimbusEdu as NimbusEdu;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedInclude;
 
 class TenantController extends BaseController
 {
@@ -40,5 +41,19 @@ class TenantController extends BaseController
     $tenant = Auth::user()->tenant()->first();
 
     return response()->json($tenant->meta->settings, 200);
+  }
+
+  public function stats(GetTenant $request){
+    $tenant = Auth::user()->tenant()->first();
+
+    $terms = QueryBuilder::for(SchoolTerm::class)
+      ->allowedFields([
+        'registrations'
+      ])
+      ->allowedIncludes([
+        'registrations',
+      ]);
+
+    return response()->json($terms, 200);
   }
 }

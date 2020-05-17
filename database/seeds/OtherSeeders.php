@@ -69,5 +69,16 @@ class OtherSeeders extends Seeder
     foreach($course_statuses as $course_status){
       App\CourseStatus::create($course_status);
     }
+
+    $term_status_types = [
+      [ 'name' => 'in progress' ],
+      [ 'name' => 'complete'  ],
+      [ 'name' => 'archived'  ],
+    ];
+
+    //Create School Term Status Types
+    foreach($term_status_types as $status_type){
+      App\SchoolTermStatus::create($status_type);
+    }
   }
 }

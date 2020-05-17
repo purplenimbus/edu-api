@@ -60,15 +60,7 @@ class GenerateCourses implements ShouldQueue
                 'name' => $subject->name,
                 'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
                 'course_grade_id' => $curriculum->course_grade_id,
-                'meta' => [
-                  'course_schema' =>  [
-                    'quiz' =>  15,
-                    'midterm' => 30,
-                    'assignment' => 15,
-                    'lab' => 5,
-                    'exam' => 35
-                  ]
-                ]
+                'schema' => config('edu.default.course_schema')
               ];
 
               $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));

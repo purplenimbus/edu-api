@@ -12,16 +12,28 @@ class SchoolTerm extends Model
      * @var array
      */
   protected $fillable = [
-    'name','meta','description','meta','year','tenant_id'
+    'description',
+    'end_date',
+    'name',
+    'meta',
+    'start_date',
+    'status_id',
+    'tenant_id'
   ];
   
   /**
-     * Cast meta property to array
-     *
-     * @var object
-     */
+   * Cast meta property to array
+   *
+   * @var object
+   */
 
   protected $casts = [
+    'end_date' => 'date',
     'meta' => 'object',
+    'start_date' => 'date',
   ];
+
+  public function registrations() {
+    return $this->hasMany('App\Registration', 'term_id');
+  }
 }
