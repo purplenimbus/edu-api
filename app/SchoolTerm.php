@@ -32,6 +32,10 @@ class SchoolTerm extends Model
     'meta' => 'object',
     'start_date' => 'date',
   ];
+  
+  public function status() {
+    return return $this->belongsTo('App\SchoolTermStatus');
+  }
 
   public function registrations() {
     return $this->hasMany('App\Registration', 'term_id');
