@@ -34,7 +34,9 @@ class Tenant extends Model
    *
    * @var array
    */
-  protected $appends = [];
+  protected $appends = [
+    'current_term'
+  ];
 
   /**
   * The attributes excluded from the model's JSON form.
@@ -53,7 +55,7 @@ class Tenant extends Model
     parent::boot();
   }
 
-  public function getCurrentTerm(){
+  public function getCurrentTermAttribute(){
     return  SchoolTerm::where([
       'tenant_id' => $this->id,
       'status_id' => 1 ])

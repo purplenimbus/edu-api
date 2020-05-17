@@ -17,6 +17,7 @@ use App\Http\Requests\GetTenant;
 use App\Nimbus\NimbusEdu as NimbusEdu;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedInclude;
+use App\Jobs\CompleteTerm;
 
 class TenantController extends BaseController
 {
@@ -55,5 +56,15 @@ class TenantController extends BaseController
       ]);
 
     return response()->json($terms, 200);
+  }
+
+  public function updateTerm(UpdateTerm $request){
+    $tenant = Auth::user()->tenant()->first();
+
+    if ($request->status_id === 2) {
+      CompleteTerm::dispatch($tenant);
+    }
+
+    return response()->json(['message' => 'your request is being processed'],200);
   }
 }

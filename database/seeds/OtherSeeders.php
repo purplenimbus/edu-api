@@ -50,7 +50,7 @@ class OtherSeeders extends Seeder
     $billing_status_types = [
       [ 'name' => 'pending' ],
       [ 'name' => 'paid'  ],
-      [ 'name' => 'cancelled' ],
+      [ 'name' => 'voided' ],
       [ 'name' => 'archived'  ],
     ];
     

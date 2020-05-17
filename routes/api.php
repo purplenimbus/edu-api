@@ -28,6 +28,7 @@ Route::group([
     /* Tenants */
     Route::get('/settings', 'TenantController@settings');
     Route::put('/tenants', 'TenantController@update');
+    Route::post('/tenants/term', 'TenantController@updateTerm');
 
     /* Courses */
     Route::group([

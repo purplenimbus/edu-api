@@ -234,7 +234,7 @@ class NimbusEdu
     try{
       var_dump('Attempting to enroll student: '.$student->id);
 
-      $school_term = $this->tenant->getCurrentTerm();
+      $school_term = $this->tenant->current_term;
 
       $billing = Billing::firstOrCreate([
         'tenant_id' => $this->tenant->id,
@@ -262,9 +262,9 @@ class NimbusEdu
 
         $student->save();
 
-        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID'.$registration->id);
+        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
 
-        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID'.$registration->id);
+        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
       }
     }catch(Exception $e){
       throw new Exception($e->getMessage());
