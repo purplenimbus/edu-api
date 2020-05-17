@@ -12,6 +12,7 @@ use App\Http\Requests\UpdateTerm;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Database\Eloquent\Builder as Builder;
 
 class TermController extends Controller
 {
