@@ -25,8 +25,8 @@ class TermController extends Controller
     $tenant = Auth::user()->tenant()->first();
 
     $terms = QueryBuilder::for(SchoolTerm::class)
-    	->allowedFilters([
-    		AllowedFilter::callback('status', function (Builder $query, $value) {
+      ->allowedFilters([
+        AllowedFilter::callback('status', function (Builder $query, $value) {
             $status = SchoolTermStatus::where('name', $value)->first();
 
             return $query->where('status_id', '=', isset($status->id) ? (int)$status->id: false);
@@ -34,12 +34,18 @@ class TermController extends Controller
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
             return $query->where('status_id', '=', (int)$value);
         }),
-    	])
+      ])
       ->allowedFields([
+        'courses',
+        'instructors',
         'registrations',
+        'students',
       ])
       ->allowedIncludes([
+        'courses',
+        'instructors',
         'registrations',
+        'students',
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]
@@ -75,7 +81,7 @@ class TermController extends Controller
     }
 
     return response()->json([
-    	'message' => 'your request is being processed'
+      'message' => 'your request is being processed'
     ], 200);
   }
 }
