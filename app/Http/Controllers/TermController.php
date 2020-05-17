@@ -42,6 +42,7 @@ class TermController extends Controller
       ->allowedIncludes([
         'courses',
         'registrations',
+        'status',
         AllowedInclude::count('instructorsCount'),
         AllowedInclude::count('studentsCount')
       ])
