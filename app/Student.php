@@ -53,7 +53,7 @@ class Student extends User
     }
 
     return SchoolTerm::with([
-      'registrations' => function($query) {
+      'registrations.course' => function($query) {
         $query->whereUserId($this->id);
       }
     ])->get();
