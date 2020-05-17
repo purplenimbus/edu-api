@@ -6,13 +6,11 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class BatchProcessed extends Notification implements ShouldBroadcast
+class TermComplete extends Notification
 {
   use Queueable;
-  
+
   var $payload;
   /**
    * Create a new notification instance.
@@ -44,10 +42,11 @@ class BatchProcessed extends Notification implements ShouldBroadcast
   public function toMail($notifiable)
   {
     return (new MailMessage)
-      ->line('The introduction to the notification.')
-      ->action('Notification Action', url('/'))
-      ->line('Thank you for using our application!');
+    ->line('The introduction to the notification.')
+    ->action('Notification Action', url('/'))
+    ->line('Thank you for using our application!');
   }
+
   /**
    * Get the array representation of the notification.
    *
@@ -60,24 +59,12 @@ class BatchProcessed extends Notification implements ShouldBroadcast
   }
 
   /**
-   * Get the broadcastable representation of the notification.
-   *
-   * @param  mixed  $notifiable
-   * @return BroadcastMessage
-   */
-  public function toBroadcast($notifiable)
-  {
-    return new BroadcastMessage($this->payload);
-  }
-
-  /**
    * The event's broadcast name.
    *
    * @return string
    */
   public function broadcastAs()
   {
-    return 'batch.processed';
+    return 'term.complete';
   }
-
 }

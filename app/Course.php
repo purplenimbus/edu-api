@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Webpatser\Uuid\Uuid as Uuid;
 
 class Course extends Model
 {
@@ -102,7 +101,6 @@ class Course extends Model
   {
     parent::boot();
     self::creating(function ($model) {
-      $model->uuid = (string) Uuid::generate(4);
       if (is_null($model->name)) {
         $model->name = $model->subject->name;
       }
@@ -112,7 +110,7 @@ class Course extends Model
       }
       
       if (is_null($model->schema)) {
-        $model->schema = config('edu.default_course_schema');
+        $model->schema = config('edu.default.course_schema');
       }
     });
   }

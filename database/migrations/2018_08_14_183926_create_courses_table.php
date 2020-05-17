@@ -6,37 +6,36 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCoursesTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-    public function up()
-    {
-        Schema::create('courses', function (Blueprint $table) {
-            $table->increments('id');
-            $table->uuid('uuid');
-            $table->integer('tenant_id');
-            $table->integer('instructor_id')->nullable();
-            $table->integer('course_grade_id')->nullable();
-            $table->integer('subject_id')->nullable();
-            $table->string('name')->nullable();
-			$table->string('code')->nullable();
-            $table->string('description')->nullable();
-            $table->json('meta')->nullable();
-            $table->json('schema')->nullable();
-            $table->integer('status_id')->default(1);
-            $table->timestamps();
-        });
-    }
+  /**
+   * Run the migrations.
+   *
+   * @return void
+   */
+  public function up()
+  {
+    Schema::create('courses', function (Blueprint $table) {
+      $table->increments('id');
+      $table->integer('tenant_id');
+      $table->integer('instructor_id')->nullable();
+      $table->integer('course_grade_id')->nullable();
+      $table->integer('subject_id')->nullable();
+      $table->string('name')->nullable();
+      $table->string('code')->nullable();
+      $table->string('description')->nullable();
+      $table->json('meta')->nullable();
+      $table->json('schema')->nullable();
+      $table->integer('status_id')->default(1);
+      $table->timestamps();
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
-    public function down()
-    {
-        Schema::dropIfExists('courses');
-    }
+  /**
+   * Reverse the migrations.
+   *
+   * @return void
+   */
+  public function down()
+  {
+    Schema::dropIfExists('courses');
+  }
 }

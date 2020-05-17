@@ -6,6 +6,7 @@ use App\User;
 use App\StatusType;
 use App\CourseGrade;
 use App\Registration;
+use App\SchoolTerm;
 use Bouncer;
 
 class Student extends User
@@ -51,10 +52,11 @@ class Student extends User
       return;
     }
 
-    return Registration::with('course', 'score', 'term')
-      ->where('user_id', $this->id)
-      ->get()
-      ->groupBy('term_id');
+    return SchoolTerm::with([
+      'registrations' => function($query) {
+        $query->whereUserId($this->id);
+      }
+    ]);
   }
 
   /**

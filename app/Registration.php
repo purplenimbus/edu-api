@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Webpatser\Uuid\Uuid as Uuid;
 use App\CourseScore;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

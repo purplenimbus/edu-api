@@ -32,7 +32,7 @@ class Enrollment
   }
 
   public function enroll(Student $student, $course_id) {
-    $school_term = $this->tenant->getCurrentTerm();
+    $school_term = $this->tenant->current_term;
 
     $billing = Billing::firstOrCreate([
       'tenant_id' => $this->tenant->id,

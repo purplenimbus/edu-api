@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
-use Webpatser\Uuid\Uuid as Uuid;
 use App\SchoolTerm;
 
 class Tenant extends Model
@@ -16,7 +15,7 @@ class Tenant extends Model
   * @var array
   */
   protected $fillable = [
-    'address','name','meta','username','email'
+    'address', 'name', 'meta', 'username', 'email'
   ];
 
   /**
@@ -35,7 +34,9 @@ class Tenant extends Model
    *
    * @var array
    */
-  protected $appends = [];
+  protected $appends = [
+    'current_term'
+  ];
 
   /**
   * The attributes excluded from the model's JSON form.
@@ -43,7 +44,7 @@ class Tenant extends Model
   * @var array
   */
   protected $hidden = [
-    'created_at','updated_at'
+    'created_at', 'updated_at'
   ];
 
   /**
@@ -52,15 +53,12 @@ class Tenant extends Model
   public static function boot()
   {
     parent::boot();
-    self::creating(function ($model) {
-      $model->uuid = (string) Uuid::generate(4);
-    });
   }
 
-  public function getCurrentTerm(){
+  public function getCurrentTermAttribute(){
     return  SchoolTerm::where([
       'tenant_id' => $this->id,
-      'name' => $this->meta->current_term ])
+      'status_id' => 1 ])
     ->first();
   }
 }
