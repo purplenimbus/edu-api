@@ -28,8 +28,7 @@ class UpdateTerm extends FormRequest
       'status_id'  => [
         'number',
         'required',
-        'exists:school_term_statuses,id',
-        new TermComplete(),
+        'exists:school_term_statuses,id'
       ],
     ];
   }
