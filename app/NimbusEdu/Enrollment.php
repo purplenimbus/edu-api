@@ -6,6 +6,7 @@ use App\Registration;
 use App\Billing;
 use App\Student;
 use App\Tenant;
+use App\Guardian;
 
 class Enrollment
 {

@@ -243,7 +243,7 @@ class NimbusEdu
 
       foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 
-        var_dump('Enrolling '.$student->id.' in '.$course['code']);
+        var_dump('Enrolling '.$student->ref_id.' in '.$course['code']);
 
         $registration = Registration::firstOrCreate([
           'tenant_id' => $this->tenant->id ,
@@ -254,10 +254,6 @@ class NimbusEdu
         ]);
 
         $student->account_status_id = $this->getStatusID('registered')->id;
-
-        if(!$student->ref_id || $student->ref_id == null){
-          $student->ref_id = $student->generateStudentId();
-        }
 
         $student->save();
 
@@ -384,8 +380,6 @@ class NimbusEdu
       unset($data['course_grade_id']);
 
       $student = Student::create($data);
-
-      $student->ref_id = $student->generateStudentId();
 
       $student->save();
 

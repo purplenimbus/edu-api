@@ -34,3 +34,7 @@ $factory->defineAs(App\Student::class, 'student', function (Faker $faker) use ($
 $factory->defineAs(App\Instructor::class, 'teacher', function (Faker $faker) use ($factory) {
   return $factory->raw(App\User::class);
 });
+
+$factory->defineAs(App\Guardian::class, 'parent', function (Faker $faker) use ($factory) {
+  return $factory->raw(App\User::class);
+});

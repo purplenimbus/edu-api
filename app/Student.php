@@ -7,6 +7,7 @@ use App\StatusType;
 use App\CourseGrade;
 use App\Registration;
 use App\SchoolTerm;
+use App\UserGroup;
 use Bouncer;
 
 class Student extends User
@@ -74,11 +75,17 @@ class Student extends User
 
       if (!is_null($status_type)) {
         $model->account_status_id = $status_type->id;
-      }      
+      }
     });
 
     self::created(function ($model) {
-      $model->assign('student');     
+      $model->assign('student');
+
+      if (is_null($model->ref_id)) {
+        $model->ref_id = $model->generateStudentId();
+
+        $model->save();
+      }
     });
   }
 
