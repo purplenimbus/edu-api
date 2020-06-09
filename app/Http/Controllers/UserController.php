@@ -100,7 +100,7 @@ class UserController extends Controller
       array_push($query,['email', '=', $request->email]);
     }
 
-    $user = User::with(['status_type:name,id'])
+    $user = User::with(['status:name,id'])
       ->where($query)->first();
 
     return response()->json($user, 200);
