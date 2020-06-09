@@ -113,7 +113,7 @@ class UserController extends Controller
 
     $user->save();
 
-    $user->load(['status_type:name,id']);
+    $user->load(['status:name,id']);
 
     return response()->json($user,200);
   }
