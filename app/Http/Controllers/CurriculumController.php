@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\ProcessBatch;
-use App\Http\Requests\GetCourses as GetCourses;
-use App\Http\Requests\GetSubjects as GetSubjects;
+use App\Http\Requests\GetCourses;
+use App\Http\Requests\GetCourseGrade;
+use App\Http\Requests\GetSubjects;
 use App\Lesson as Lesson;
 use App\Subject as Subject;
 use App\Curriculum as Curriculum;
@@ -95,7 +96,7 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function getCourseLoad($course_grade_id){
+  public function getCourseLoad(GetCourseGrade $request, $course_grade_id){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $course_load = QueryBuilder::for(Curriculum::class)
