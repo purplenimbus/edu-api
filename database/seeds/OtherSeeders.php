@@ -94,7 +94,7 @@ class OtherSeeders extends Seeder
 
     $user_group_types = [
       [ 'name' => 'family' ],
-      [ 'name' => 'other'  ],
+      [ 'name' => 'class list' ],
     ];
 
     //Create User Group Types

@@ -92,5 +92,28 @@ Route::group([
       Route::get('/transcripts', 'StudentController@transcripts');
       Route::get('/valid_courses', 'StudentController@valid_courses');
     });
+
+    Route::group([
+      'prefix' => '/guardians'
+    ], function() {
+      Route::get('/', 'GuardianController@index');
+      Route::post('/', 'GuardianController@create');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('/', 'GuardianController@show');
+        Route::put('/', 'GuardianController@update');
+        Route::delete('/', 'GuardianController@destroy');
+
+        Route::group([
+          'prefix' => '/wards'
+        ], function() {
+          Route::get('/', 'WardController@index');
+          Route::put('/', 'WardController@update');
+          Route::delete('/', 'WardController@destroy');
+        });
+      });
+    });
   });
 });

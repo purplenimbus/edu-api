@@ -8,6 +8,7 @@ use App\CourseGrade;
 use App\Registration;
 use App\SchoolTerm;
 use App\UserGroup;
+use App\UserGroupMember;
 use Bouncer;
 
 class Student extends User
@@ -29,6 +30,19 @@ class Student extends User
 
   public function generateStudentId() {
     return date("Y").sprintf("%04d", $this->id);
+  }
+
+    /**
+   *  Get course grade type
+  */
+  public function getGuardianAttribute()
+  {
+    $member = UserGroupMember::whereHas('group', function($query) { $query->where('type_id', 1);
+      })
+      ->where('user_id', $this->id)
+      ->first();
+
+    return !is_null($member) ? $member->group->owner : $member;
   }
 
   /**

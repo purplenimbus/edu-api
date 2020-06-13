@@ -41,9 +41,9 @@ class StudentController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'firstname',
+        AllowedFilter::partial('firstname'),
         'email',
-        'lastname',
+        AllowedFilter::partial('lastname'),
         'ref_id',
         AllowedFilter::callback('has_image', function (Builder $query, $value) {
             return $value ?
@@ -67,6 +67,7 @@ class StudentController extends Controller
       ])
       ->allowedAppends([
         'grade',
+        'guardian',
         'type'
       ])
       ->allowedFields([

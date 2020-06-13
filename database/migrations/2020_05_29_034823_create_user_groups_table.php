@@ -15,7 +15,7 @@ class CreateUserGroupsTable extends Migration
   {
     Schema::create('user_groups', function (Blueprint $table) {
       $table->increments('id');
-      $table->integer('owner_id');
+      $table->integer('owner_id')->nullable();
       $table->integer('tenant_id');
       $table->integer('type_id');
       $table->mediumText('description')->nullable();

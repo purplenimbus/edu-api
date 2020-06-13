@@ -25,4 +25,17 @@ class UserGroup extends Model
   public function owner() {
   	return $this->belongsTo('App\User', 'owner_id');
   }
+
+  public function scopeOfGuardians($query, $owner_id = false)
+  {
+    $params = [
+      ['type_id', '=', 1],
+    ];
+
+    if ($owner_id) {
+    	array_push($params, ['owner_id', '=', $owner_id]);
+    }
+
+    return $query->where($params);
+  }
 }
