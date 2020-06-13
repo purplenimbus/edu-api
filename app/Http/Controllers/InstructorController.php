@@ -111,7 +111,7 @@ class InstructorController extends Controller
 
     $student = $nimbus_edu->create_instructor($request);
 
-    $student->load(['status_type:id,name']);
+    $student->load(['status:id,name']);
 
     return response()->json($student, 200);
   }
