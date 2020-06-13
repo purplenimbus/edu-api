@@ -15,20 +15,24 @@ class Institution extends NimbusEdu
   {
     $this->tenant = $tenant;
 
-    switch($this->tenant->country) {
-      default :   $subjects = $this->generate('subjects.json', 'subject');
-      $course_grades = $this->generate('course_grades.json', 'coursegrade');
-      $curricula = $this->generate('curricula.json', 'curriculum');
-
-      break;
-    }
-
     $school_term =  SchoolTerm::firstOrcreate([
       'end_date' => Carbon::now()->addMonths(4),
       'name' => 'first term',
       'start_date' => Carbon::now(),
       'tenant_id' => $this->tenant->id,
     ]); // need to set this some how , perhaps pass it in the request?
+  }
+
+  public function generateSubjects() {
+    $this->generate('subjects.json', 'subject');
+  }
+
+  public function generateClasses() {
+    $this->generate('course_grades.json', 'coursegrade');
+  }
+
+  public function generateCurriculum() {
+    $this->generate('curricula.json', 'curriculum');;
   }
 
   private function readJson($path){
@@ -39,7 +43,7 @@ class Institution extends NimbusEdu
     }
   }
 
-  public function generate($path, $type){
+  private function generate($path, $type){
     try{
       echo 'Generating new '.$type.' for tenant : '.$this->tenant->name."\r\n";
 

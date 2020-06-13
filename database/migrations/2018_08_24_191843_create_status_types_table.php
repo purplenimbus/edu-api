@@ -16,7 +16,7 @@ class CreateStatusTypesTable extends Migration
     Schema::create('status_types', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
-      $table->string('description')->nullable();
+      $table->mediumText('description')->nullable();
       $table->timestamps();
     });
   }

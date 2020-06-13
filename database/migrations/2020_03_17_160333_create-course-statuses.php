@@ -16,7 +16,7 @@ class CreateCourseStatuses extends Migration
     Schema::create('course_statuses', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
-      $table->string('description')->nullable();
+      $table->mediumText('description')->nullable();
       $table->timestamps();
     });
   }

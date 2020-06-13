@@ -12,8 +12,9 @@ use App\Notifications\BatchProcessed;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Tenant as Tenant;
-use App\Nimbus\NimbusEdu as NimbusEdu;
+use App\Tenant;
+use App\Nimbus\NimbusEdu;
+use App\Nimbus\Syllabus;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -24,6 +25,7 @@ class ProcessBatch implements ShouldQueue
   var $tenant;
   var $payload;
   var $NimbusEdu;
+  var $Syllabus;
   var $author;
   /**
    * Create a new job instance.
@@ -35,6 +37,7 @@ class ProcessBatch implements ShouldQueue
     
     $this->tenant = $tenant;
     $this->NimbusEdu = new NimbusEdu($this->tenant);
+    $this->Syllabus = new Syllabus($this->tenant);
     $this->data = $data;
     $this->type = $type; //TO DO : Validate this in StoreBatch
     $this->payload = [
@@ -64,7 +67,7 @@ class ProcessBatch implements ShouldQueue
         case 'user' : $this->payload = $self->NimbusEdu->processUser($data, $this->payload); break;
         case 'subject' : $this->payload = $self->NimbusEdu->processSubject($data, $this->payload); break;
         case 'coursegrade' : $this->payload = $self->NimbusEdu->processCourseGrade($data, $this->payload); break;
-        case 'curriculum' : $this->payload = $self->NimbusEdu->processCurriculum($data, $this->payload); break;
+        case 'curriculum' : $this->payload = $self->Syllabus->processCurriculum($data, $this->payload); break;
         case 'results' : $this->payload = $self->NimbusEdu->processResults($data, $this->payload); 
 
         $resource =  isset($this->payload['resource']) ? 
@@ -81,7 +84,11 @@ class ProcessBatch implements ShouldQueue
     }
 
     $payload['batch_type'] = $this->type;
-    $payload['author'] = $this->author->only(['id','firstname','lastname']);
+
+    if ($this->author) {
+      $payload['author'] = $this->author->only(['id','firstname','lastname']);
+    }
+
     $payload['resource'] = $resource;
 
     $this->tenant->notify(new BatchProcessed($payload));

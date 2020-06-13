@@ -15,7 +15,6 @@ class Curriculum extends Model
   
 	protected $casts = [
     'meta' => 'array',
-    'course_load' => 'array',
   ];
 
   /**
@@ -24,7 +23,7 @@ class Curriculum extends Model
    * @var array
    */
   protected $fillable = [
-    'course_grade_id','description','meta','course_load','type_id',
+    'course_grade_id','description','meta','type_id',
   ];
 
   /**
@@ -35,14 +34,20 @@ class Curriculum extends Model
   protected $hidden = [
   ];
 
-  /**
-   * Get course registrations
-   *
-   * @var array
-   */
+  public function scopeOfCourseGrade($query, $course_grade_id)
+  {
+    return $query->where('course_grade_id', $course_grade_id);
+  }
+
   public function grade()
   {
     return $this->belongsTo('App\CourseGrade','course_grade_id');
+  }
+
+  public function subjects()
+  {
+    return $this->hasMany('App\CurriculumCourseLoad')
+      ->orderBy('name');
   }
   /**
  *  Setup model event hooks

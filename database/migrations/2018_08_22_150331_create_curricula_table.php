@@ -18,7 +18,6 @@ class CreateCurriculaTable extends Migration
       $table->integer('course_grade_id');
       $table->integer('type_id');
       $table->json('meta')->nullable();
-      $table->json('course_load');
       $table->string('description')->nullable();
       $table->timestamps();
     });
