@@ -18,7 +18,7 @@ class Institution extends NimbusEdu
     switch($this->tenant->country) {
       default :   $subjects = $this->generate('subjects.json', 'subject');
       $course_grades = $this->generate('course_grades.json', 'coursegrade');
-      $curricula = $this->generate('curricula.json', 'curriculum');
+      //$curricula = $this->generate('curricula.json', 'curriculum');
 
       break;
     }

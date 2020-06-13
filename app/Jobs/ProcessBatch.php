@@ -12,8 +12,8 @@ use App\Notifications\BatchProcessed;
 
 use Illuminate\Support\Facades\Auth;
 
-use App\Tenant as Tenant;
-use App\Nimbus\NimbusEdu as NimbusEdu;
+use App\Tenant;
+use App\Nimbus\NimbusEdu;
 
 class ProcessBatch implements ShouldQueue
 {
@@ -81,7 +81,11 @@ class ProcessBatch implements ShouldQueue
     }
 
     $payload['batch_type'] = $this->type;
-    $payload['author'] = $this->author->only(['id','firstname','lastname']);
+
+    if ($this->author) {
+      $payload['author'] = $this->author->only(['id','firstname','lastname']);
+    }
+
     $payload['resource'] = $resource;
 
     $this->tenant->notify(new BatchProcessed($payload));

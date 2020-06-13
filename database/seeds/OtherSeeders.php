@@ -80,5 +80,16 @@ class OtherSeeders extends Seeder
     foreach($term_status_types as $status_type){
       App\SchoolTermStatus::create($status_type);
     }
+
+    $course_load_types = [
+      [ 'name' => 'core' ],
+      [ 'name' => 'elective'  ],
+      [ 'name' => 'optional'  ],
+    ];
+
+    //Create Curriculum Course Load Types
+    foreach($course_load_types as $type){
+      App\CurriculumCourseLoadType::create($type);
+    }
   }
 }
