@@ -26,10 +26,10 @@ class DemoUsersSeeder extends Seeder
 
           factory(App\User::class, 1)->create([
             'tenant_id' => $tenant->id,
-            'firstname'   =>  'ekama',
-            'lastname'    =>  'akpan',
-            'email'   =>  'info@showersedu.com',
-            'password'  =>  app('hash')->make('info@showersedu.com'),
+            'firstname' => 'ekama',
+            'lastname' => 'akpan',
+            'email' => 'info@showersedu.com',
+            'password' => app('hash')->make('info@showersedu.com'),
           ])->each(function($admin)use($count){ 
             $count++; 
             $admin->assign('admin');
@@ -37,10 +37,10 @@ class DemoUsersSeeder extends Seeder
 
           factory(App\User::class, 1)->create([
             'tenant_id' => $tenant->id,
-            'firstname'   =>  'anthony',
-            'lastname'    =>  'akpan',
-            'email'   =>  'anthony.akpan@hotmail.com',
-            'password'  =>  app('hash')->make('easier'),
+            'firstname' => 'anthony',
+            'lastname'  => 'akpan',
+            'email' => 'anthony.akpan@hotmail.com',
+            'password' => app('hash')->make('easier'),
           ])->each(function($superadmin)use($count){ 
             $count++;
             $superadmin->assign('superadmin');
