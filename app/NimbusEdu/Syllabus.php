@@ -8,76 +8,61 @@ use App\Curriculum;
 use App\CurriculumType;
 use App\CurriculumCourseLoadType;
 use App\Subject;
-use NimbusEdu;
 
 class Syllabus
 {
   public $tenant;
-  private $nimbus_edu;
   public $curriculum_type;
-  public $processed;
+  public $payload;
 
   public function __construct(Tenant $tenant)
   {
     $this->tenant = $tenant;
-    $this->nimbus_edu = new NimbusEdu($this->tenant);
     $this->curriculum_type = $this->getCurriculumType();
-    $this->processed = [];
   }
 
-  public function processCurriculum($data, $payload){
-    try{
-      $course_load = [
-        'core' => [],
-        'optional' => [],
-        'elective' => [],
-      ];
+  public function processCurriculum($course_load, $payload) {
+  	$this->payload = $payload;
 
-      foreach ($data as $course_load) {
-      	$course_grade_id = $course_load->course_grade_id;
+  	$course_grade_id = $course_load['course_grade_id'];
 
-      	if ($course_grade_id) {
-		      $query = [
-      			'course_grade_id' => $course_grade_id,
-      			'type_id' => $this->curriculum_type->id,
-      		];
+  	if ($course_grade_id) {
+      $query = [
+  			'course_grade_id' => $course_grade_id,
+  			'type_id' => $this->curriculum_type->id,
+  		];
 
-		      $curriculum = Curriculum::firstOrCreate($query);
+      $curriculum = Curriculum::firstOrCreate($query);
 
-	      	if(isset($course_load->core_subjects_code)) {
-		      	$this->processSubjects(
-		      		$course_load->core_subjects_code,
-		      		$course_grade_id,
-		      		'core',
-		      		$curriculum,
-		      	);
-		      }
-
-		      if(isset($course_load->elective_subjects_code)) {
-		      	$this->processSubjects(
-		      		$course_load->core_subjects_code,
-		      		$course_grade_id,
-		      		'elective',
-		      		$curriculum,
-		      	);
-		      }
-
-		      if(isset($course_load->optional_subjects_code)) {
-		      	$this->processSubjects(
-		      		$course_load->core_subjects_code,
-		      		$course_grade_id,
-		      		'optional',
-		      		$curriculum,
-		      	);
-		      }
-      	}
+    	if(isset($course_load['core_subjects_code'])) {
+      	$this->processSubjects(
+      		$course_load['core_subjects_code'],
+      		$course_grade_id,
+      		'core',
+      		$curriculum,
+      	);
       }
 
-      return $this->processed;
+      if(isset($course_load['elective_subjects_code'])) {
+      	$this->processSubjects(
+      		$course_load['core_subjects_code'],
+      		$course_grade_id,
+      		'elective',
+      		$curriculum,
+      	);
+      }
 
-    }catch(Exception $e){
-      throw new Exception($e->getMessage());
-    }
+      if(isset($course_load['optional_subjects_code'])) {
+      	$this->processSubjects(
+      		$course_load['core_subjects_code'],
+      		$course_grade_id,
+      		'optional',
+      		$curriculum,
+      	);
+      }
+  	}
+
+    return $this->payload;
   }
 
   public function getCurriculumType($new = false){
@@ -98,7 +83,7 @@ class Syllabus
     	$curriculum_course_load_type = $this->getCurriculumCourseLoadType($type);
 
     	if ($subject && $curriculum_course_load_type) {
-    		$this->processed[] = $curriculum
+    		$this->payload['created'][] = $curriculum
     			->subjects()
     			->firstOrCreate([
 	    			'subject_id' => $subject->id,
@@ -107,9 +92,11 @@ class Syllabus
 	    		->toArray();
     	}
     }
+
+    return $this->payload;
   }
 
-  private function getCurriculumCourseLoadType($name){
+  public function getCurriculumCourseLoadType($name){
     return CurriculumCourseLoadType::where('name', $name)
     	->first();
   }

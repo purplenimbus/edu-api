@@ -8,13 +8,15 @@ use App\Jobs\ProcessBatch;
 use App\Http\Requests\GetCourses;
 use App\Http\Requests\GetCourseGrade;
 use App\Http\Requests\GetSubjects;
-use App\Lesson as Lesson;
-use App\Subject as Subject;
-use App\Curriculum as Curriculum;
-use App\CourseGrade as CourseGrade;
+use App\Lesson;
+use App\Subject;
+use App\Curriculum;
+use App\CurriculumCourseLoad;
+use App\CourseGrade;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Builder as Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
+use App\Nimbus\Syllabus;
 
 class CurriculumController extends Controller
 {
@@ -97,44 +99,35 @@ class CurriculumController extends Controller
    * @return void
    */
   public function getCourseLoad(GetCourseGrade $request, $course_grade_id){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
-    $course_load = QueryBuilder::for(Curriculum::class)
+    $tenant = Auth::user()->tenant()->first();
+    $nimbus_syllabus = new Syllabus($tenant);
+    $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
       //->allowedSorts()
       ->allowedIncludes(
-        'grade',
-        'has_students'
+        'curriculum',
+        'curriculum.grade',
+        'subject',
+        'type',
+        'curriculum.has_students'
       )
       //->allowedFields()
-      ->allowedFilters([])
-      ->where('course_grade_id', $course_grade_id)
+      ->allowedFilters([
+        AllowedFilter::callback('type_id', function (Builder $query, $value) {
+            $query->where('type_id', $value);
+        }),
+        AllowedFilter::callback('type', function (Builder $query, $value) use ($nimbus_syllabus) {
+            $query->where(
+              'type_id',
+              (int)$nimbus_syllabus
+                ->getCurriculumCourseLoadType($value)
+                ->id
+            );
+        })
+      ])
+      ->whereHas('curriculum', function($query) use ($course_grade_id){
+        $query->where('course_grade_id', $course_grade_id);
+      })
       ->paginate($request->paginate ?? config('edu.pagination'));
-
-    //dd($courses)
-    // $curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
-
-    // $course_load = [];
-
-    // if(isset($curriculum->course_load)){
-    //   foreach ($curriculum->course_load as $key => $section) {
-    //     //var_dump($section);
-    //     $course_load[$key] = [];
-
-    //     if(sizeof($section)){
-    //       foreach ($section as $subject_id) {
-    //         if(is_int($subject_id)){
-    //           $subject = Subject::find($subject_id);
-
-    //           $course_load[$key][] = $subject->only(['name','code','id','group']);
-    //         }
-    //       }
-    //     }
-    //   }
-
-    //   $curriculum = $curriculum->toArray();
-
-    //   $curriculum['course_load'] = $course_load;
-    // }
 
     return response()->json($course_load, 200);
   }

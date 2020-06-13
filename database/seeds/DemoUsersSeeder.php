@@ -20,6 +20,9 @@ class DemoUsersSeeder extends Seeder
 			])
 			->each(function($tenant)use($count){
 					$institution = new Institution($tenant);
+					$institution->generateSubjects();
+					$institution->generateClasses();
+					$institution->generateCurriculum();
 
 					factory(App\User::class, 1)->create([
 						'tenant_id' => $tenant->id,
