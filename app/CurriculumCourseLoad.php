@@ -14,6 +14,7 @@ class CurriculumCourseLoad extends Model
   protected $hidden = [
     'created_at','updated_at'
   ];
+
   /**
    * The attributes that are mass assignable.
    *
@@ -24,11 +25,7 @@ class CurriculumCourseLoad extends Model
     'subject_id',
     'type_id',
   ];
-  /**
-   * Get course registrations
-   *
-   * @var array
-   */
+
   public function curriculum()
   {
     return $this->belongsTo('App\Curriculum');
@@ -40,13 +37,16 @@ class CurriculumCourseLoad extends Model
       ->orderBy('group');
   }
 
-  /**
-   * Get course registrations
-   *
-   * @var array
-   */
   public function type()
   {
     return $this->hasOne('App\CurriculumCourseLoadType', 'id', 'type_id');
+  }
+
+  public function getHasCourseAttribute()
+  {
+    return Course::where([
+      ['course_grade_id', $this->curriculum->grade->id],
+      ['subject_id', $this->subject->id],
+    ])->first() ? true : false;
   }
 }

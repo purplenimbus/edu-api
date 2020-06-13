@@ -34,6 +34,11 @@ class Curriculum extends Model
   protected $hidden = [
   ];
 
+  public function scopeOfCourseGrade($query, $course_grade_id)
+  {
+    return $query->where('course_grade_id', $course_grade_id);
+  }
+
   public function grade()
   {
     return $this->belongsTo('App\CourseGrade','course_grade_id');
@@ -42,11 +47,6 @@ class Curriculum extends Model
   public function subjects()
   {
     return $this->hasMany('App\CurriculumCourseLoad');
-  }
-
-  public function getHasStudentsAttribute()
-  {
-    return false;
   }
   /**
  *  Setup model event hooks

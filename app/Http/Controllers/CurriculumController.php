@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\ProcessBatch;
 use App\Http\Requests\GetCourses;
-use App\Http\Requests\GetCourseGrade;
+use App\Http\Requests\GetCurriculum;
 use App\Http\Requests\GetSubjects;
 use App\Lesson;
 use App\Subject;
@@ -98,7 +98,7 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function getCourseLoad(GetCourseGrade $request, $course_grade_id){
+  public function getCourseLoad(GetCurriculum $request, $course_grade_id){
     $tenant = Auth::user()->tenant()->first();
     $nimbus_syllabus = new Syllabus($tenant);
     $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
@@ -113,23 +113,24 @@ class CurriculumController extends Controller
         'curriculum.grade',
         'subject',
         'type',
-        'curriculum.has_students'
+        'has_course'
       )
+      ->allowedAppends(['has_course'])
       ->allowedFilters([
         AllowedFilter::callback('type_id', function (Builder $query, $value) {
             $query->where('type_id', $value);
         }),
         AllowedFilter::callback('type', function (Builder $query, $value) use ($nimbus_syllabus) {
+            $type = $nimbus_syllabus
+                ->getCurriculumCourseLoadType($value);
             $query->where(
               'type_id',
-              (int)$nimbus_syllabus
-                ->getCurriculumCourseLoadType($value)
-                ->id
+              isset($type->id) ? (int)$type->id : false
             );
         })
       ])
       ->whereHas('curriculum', function($query) use ($course_grade_id){
-        $query->where('course_grade_id', $course_grade_id);
+        $query->ofCourseGrade($course_grade_id);
       })
       ->paginate($request->paginate ?? config('edu.pagination'));
 
