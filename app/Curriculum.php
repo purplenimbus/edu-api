@@ -46,8 +46,7 @@ class Curriculum extends Model
 
   public function subjects()
   {
-    return $this->hasMany('App\CurriculumCourseLoad')
-      ->orderBy('name');
+    return $this->hasMany('App\CurriculumCourseLoad');
   }
   /**
  *  Setup model event hooks
