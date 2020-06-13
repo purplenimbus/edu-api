@@ -102,15 +102,19 @@ class CurriculumController extends Controller
     $tenant = Auth::user()->tenant()->first();
     $nimbus_syllabus = new Syllabus($tenant);
     $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
-      //->allowedSorts()
-      ->allowedIncludes(
-        'curriculum',
+      ->allowedFields(
+        'curriculum.id',
         'curriculum.grade',
         'subject',
         'type',
         'curriculum.has_students'
       )
-      //->allowedFields()
+      ->allowedIncludes(
+        'curriculum.grade',
+        'subject',
+        'type',
+        'curriculum.has_students'
+      )
       ->allowedFilters([
         AllowedFilter::callback('type_id', function (Builder $query, $value) {
             $query->where('type_id', $value);

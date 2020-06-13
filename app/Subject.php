@@ -21,9 +21,8 @@ class Subject extends Model
    * @var array
    */
   protected $hidden = [
-
+    'created_at','updated_at'
   ];
-  
   /**
    * Cast meta property to array
    *

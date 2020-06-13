@@ -15,7 +15,6 @@ class Curriculum extends Model
   
 	protected $casts = [
     'meta' => 'array',
-    'course_load' => 'array',
   ];
 
   /**
@@ -24,7 +23,7 @@ class Curriculum extends Model
    * @var array
    */
   protected $fillable = [
-    'course_grade_id','description','meta','course_load','type_id',
+    'course_grade_id','description','meta','type_id',
   ];
 
   /**

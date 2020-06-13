@@ -27,12 +27,10 @@ class Syllabus
   	$course_grade_id = $course_load['course_grade_id'];
 
   	if ($course_grade_id) {
-      $query = [
-  			'course_grade_id' => $course_grade_id,
-  			'type_id' => $this->curriculum_type->id,
-  		];
-
-      $curriculum = Curriculum::firstOrCreate($query);
+      $curriculum = Curriculum::firstOrCreate([
+        'course_grade_id' => $course_grade_id,
+        'type_id' => $this->curriculum_type->id,
+      ]);
 
     	if(isset($course_load['core_subjects_code'])) {
       	$this->processSubjects(
@@ -45,7 +43,7 @@ class Syllabus
 
       if(isset($course_load['elective_subjects_code'])) {
       	$this->processSubjects(
-      		$course_load['core_subjects_code'],
+      		$course_load['elective_subjects_code'],
       		$course_grade_id,
       		'elective',
       		$curriculum,
@@ -54,7 +52,7 @@ class Syllabus
 
       if(isset($course_load['optional_subjects_code'])) {
       	$this->processSubjects(
-      		$course_load['core_subjects_code'],
+      		$course_load['optional_subjects_code'],
       		$course_grade_id,
       		'optional',
       		$curriculum,
