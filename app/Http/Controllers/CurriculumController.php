@@ -94,7 +94,7 @@ class CurriculumController extends Controller
   }
 
   /**
-   * Batch create subjects
+   * Get curriculum course load
    *
    * @return void
    */
