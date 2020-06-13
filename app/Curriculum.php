@@ -35,14 +35,14 @@ class Curriculum extends Model
   protected $hidden = [
   ];
 
-  /**
-   * Get course registrations
-   *
-   * @var array
-   */
   public function grade()
   {
     return $this->belongsTo('App\CourseGrade','course_grade_id');
+  }
+
+  public function subjects()
+  {
+    return $this->hasMany('App\CurriculumCourseLoad');
   }
 
   public function getHasStudentsAttribute()
