@@ -44,6 +44,11 @@ class Curriculum extends Model
   {
     return $this->belongsTo('App\CourseGrade','course_grade_id');
   }
+
+  public function getHasStudentsAttribute()
+  {
+    return false;
+  }
   /**
  *  Setup model event hooks
  */
