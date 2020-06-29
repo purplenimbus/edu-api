@@ -100,7 +100,7 @@ class RegistrationController extends Controller
    *
    * @return void
    */
-  public function bulk(StoreCourse $request) {
+  public function batch(StoreCourse $request) {
     $tenant = Auth::user()->tenant()->first();
     
     $enrollmentService = new Enrollment($tenant);

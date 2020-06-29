@@ -63,7 +63,7 @@ Route::group([
       Route::get('/','RegistrationController@index');
       Route::put('/scores','RegistrationController@update_scores');
       Route::delete('/','RegistrationController@delete');
-      Route::post('/bulk', 'CourseController@bulk');
+      Route::post('/batch', 'CourseController@batch');
     });
 
     /* Users */
