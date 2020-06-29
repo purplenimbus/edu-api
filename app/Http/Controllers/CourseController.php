@@ -121,7 +121,7 @@ class CourseController extends Controller
    * @return void
    */
   public function batch(StoreBatch $request){
-    ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->data, $request->type);
+    ProcessBatch::dispatch(Auth::user()->tenant()->first(), [$request->data], $request->type);
 
     return response()->json(['message' => 'your request is being processed'], 200);
   }
