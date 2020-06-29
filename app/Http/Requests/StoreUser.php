@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUser extends FormRequest
 {
@@ -24,7 +25,8 @@ class StoreUser extends FormRequest
   public function rules()
   {
     return [
-      'email'  => 'email',
+      'date_of_birth' => 'required|date',
+      'email'  => 'required|email|unique:users,email',
       'firstname'   => 'required|string|max:255',
       'lastname'  => 'required|string|max:255',
       'othernames'  => 'nullable|string|max:255',
@@ -32,6 +34,7 @@ class StoreUser extends FormRequest
       'address.city' => 'string|required_with:address.street',
       'address.country' => 'string|required_with:address.street',
       'address.state' => 'string|required_with:address.street',
+      'tenant_id' => 'required|integer|exists:tenants,id',
     ];
   }
 }

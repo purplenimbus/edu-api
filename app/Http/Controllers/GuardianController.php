@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Guardian;
 use App\UserGroup;
+use App\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 
-use App\Http\Requests\StoreUser;
+use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
 
 class GuardianController extends Controller
@@ -100,11 +101,13 @@ class GuardianController extends Controller
    * @param  \App\Guardian  $guardian
    * @return \Illuminate\Http\Response
    */
-  public function create(StoreUser $request)
+  public function create(StoreGuardian $request)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    $guardian = Guardian::create($request->all());
+    $guardian = Guardian::create($request->except('ward_ids'));
+
+    $guardian->assignWards(Student::find($request->ward_ids));
 
     return response()->json($guardian, 200);
   }
@@ -116,7 +119,7 @@ class GuardianController extends Controller
    * @param  \App\Guardian  $guardian
    * @return \Illuminate\Http\Response
    */
-  public function update(StoreUser $request, $id)
+  public function update(StoreGuardian $request, $id)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 

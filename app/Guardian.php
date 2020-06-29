@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
 use App\User;
 use App\UserGroup;
 use App\UserGroupMember;
@@ -25,19 +26,19 @@ class Guardian extends User
     ->get();
   }
 
-  public function assignWard(Student $student) {
-    $group = UserGroup::firstOrCreate([ 
-      'owner_id' => $this->id,
-      'tenant_id' => $this->tenant->id,
-      'type_id' => 1
-    ]);
-
-    UserGroupMember::firstOrCreate([
-      'group_id' => $group->id,
-      'user_id' => $student->id,
-    ]);
-
-    return $group;
+  public function assignWards(Collection $students) {
+    return $students->map(function($student){
+      $group = UserGroup::firstOrCreate([ 
+        'owner_id' => $this->id,
+        'tenant_id' => $this->tenant->id,
+        'type_id' => 1
+      ]);
+  
+      UserGroupMember::firstOrCreate([
+        'group_id' => $group->id,
+        'user_id' => $student->id,
+      ]);
+    });
   }
 
   /**

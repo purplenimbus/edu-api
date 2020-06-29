@@ -16,6 +16,7 @@ class UserGroup extends Model
   	'name',
     'owner_id',
     'type_id',
+    'tenant_id',
   ];
 
   public function members() {
