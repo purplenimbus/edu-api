@@ -2,10 +2,21 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
+use App\Http\Requests\StoreCourse; 
+use App\Course;
 
 class StoreBatch extends FormRequest
 {
+  const types = [
+    [
+      'name' => 'course',
+      'model' => Course::class,
+      'validation' => StoreCourse::class,
+    ],
+  ];
   /**
    * Determine if the user is authorized to make this request.
    *
@@ -23,8 +34,30 @@ class StoreBatch extends FormRequest
    */
   public function rules()
   {
-    return [
-      'type'  => 'required|max:255'
-    ];
+    return array_merge([
+      'type'  => [
+        'required',
+        Rule::in(Arr::pluck(self::types, 'name'))
+      ],
+      'data'  => 'required|array',
+    ], $this->getRule());
+  }
+
+  private function getRule() {
+    $rules = [];
+
+    $validation = Arr::first(self::types, function ($value) {
+      return $value['name'] === $this->type;
+    });
+
+    $validation = new $validation['validation']();
+
+    $validation_rules = $validation->rules();
+
+    foreach(array_keys($validation_rules) as $key) {
+      $rules["data.*.{$key}"] = is_string($validation_rules[$key]) ? $validation_rules[$key]."|distinct" : $validation_rules[$key];
+    }
+
+    return $rules;
   }
 }

@@ -11,6 +11,7 @@ use App\Http\Requests\DeleteRegistration;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
+use App\Nimbus\Enrollment;
 
 class RegistrationController extends Controller
 {
@@ -92,5 +93,21 @@ class RegistrationController extends Controller
     Registration::destroy($request->registration_ids);
 
     return response()->json(true, 200);
+  }
+
+    /**
+   * Create a bulk course
+   *
+   * @return void
+   */
+  public function batch(StoreCourse $request) {
+    $tenant = Auth::user()->tenant()->first();
+    
+    $enrollmentService = new Enrollment($tenant);
+
+    $courses = $enrollmentService
+      ->enrollStudents($request->student_ids, $request->course_id);
+    
+    return response()->json($courses, 200);
   }
 }

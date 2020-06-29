@@ -68,7 +68,8 @@ class ProcessBatch implements ShouldQueue
         case 'subject' : $this->payload = $self->NimbusEdu->processSubject($data, $this->payload); break;
         case 'coursegrade' : $this->payload = $self->NimbusEdu->processCourseGrade($data, $this->payload); break;
         case 'curriculum' : $this->payload = $self->Syllabus->processCurriculum($data, $this->payload); break;
-        case 'results' : $this->payload = $self->NimbusEdu->processResults($data, $this->payload); 
+        case 'results' : $this->payload = $self->NimbusEdu->processResults($data, $this->payload); break;
+        case 'course' : $this->payload = $self->Syllabus->processCourses($data); break;
 
         $resource =  isset($this->payload['resource']) ? 
         $this->payload['resource'] 

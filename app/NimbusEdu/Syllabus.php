@@ -3,17 +3,23 @@
 namespace App\Nimbus;
 
 use App\Tenant;
+use App\Course;
 use App\CourseGrade;
 use App\Curriculum;
 use App\CurriculumType;
 use App\CurriculumCourseLoadType;
 use App\Subject;
 
+use Illuminate\Support\Arr;
+
 class Syllabus
 {
   public $tenant;
   public $curriculum_type;
-  public $payload;
+  public $payload = [
+    'created' => [],
+    'updated' => [],
+  ];
 
   public function __construct(Tenant $tenant)
   {
@@ -67,6 +73,25 @@ class Syllabus
     return $new ? 
     CurriculumType::firstOrCreate(['country' => $this->tenant->country]) : 
     CurriculumType::where(['country' => $this->tenant->country])->first();
+  }
+
+  public function processCourses($data): array {
+    foreach($data as $item) {
+      if (is_array($item)) {
+        $item['tenant_id'] = $this->tenant->id;
+        $course = Course::firstOrNew($item);
+
+        if ($course->id) {
+          $this->payload['updated'][] = $course;
+        } else {
+          $this->payload['created'][] = $course;
+        }
+
+        $course->save();
+      }
+    }
+
+    return $this->payload;
   }
 
   private function processSubjects(
