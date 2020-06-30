@@ -24,15 +24,11 @@ class RegistrationController extends Controller
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    $query = [
-      ['tenant_id', '=', $tenant_id]
-    ];
-
     $registrations = QueryBuilder::for(Registration::class)
       ->defaultSort('created_at')
       ->allowedSorts(
         'created_at',
-        'updated_at',
+        'updated_at'
       )
       ->allowedFilters([
         AllowedFilter::callback('user_id', function (Builder $query, $value) {
@@ -47,9 +43,27 @@ class RegistrationController extends Controller
         'course.subject',
         'course.status',
         'score',
+      )
+      ->allowedFields(
+        'course.grade',
+        'course.instructor.id',
+        'course.instructor.name',
+        'course.subject',
+        'course_score',
+        'user.id',
+        'user.firstname',
+        'user.lastname',
+        'user.othernames',
+      )
+      ->allowedIncludes([
+        'course',
+        'course.instructor',
+        'course_score',
+        'course.grade',
+        'course.subject',
         'term',
         'user',
-      )
+      ])
       ->where([
         ['tenant_id', '=', $tenant_id]
       ])
