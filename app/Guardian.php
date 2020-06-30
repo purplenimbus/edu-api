@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Collection;
 use App\User;
 use App\UserGroup;
 use App\UserGroupMember;
+use App\Student;
 
 class Guardian extends User
 {

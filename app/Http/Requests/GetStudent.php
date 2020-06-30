@@ -25,7 +25,11 @@ class GetStudent extends FormRequest
   public function rules()
   {
     return [
-      'student_id' => ['exists:users,id', new ValidStudent()]
+      'id' => ['exists:users,id', new ValidStudent()]
     ];
+  }
+
+  public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
   }
 }

@@ -58,7 +58,7 @@ class GuardianController extends Controller
   }
 
   /**
-   * Create the specified resource in storage.
+   * Show the specified resource in storage.
    *
    * @param  \Illuminate\Http\Request  $request
    * @param  \App\Guardian  $guardian

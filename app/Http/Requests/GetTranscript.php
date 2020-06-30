@@ -25,12 +25,16 @@ class GetTranscript extends FormRequest
   public function rules()
   {
     return [
-      'student_id' => [
+      'id' => [
         'required',
         'exists:users,id',
         new ValidStudent()
       ],
       'term_id' => 'nullable|integer|exists:school_terms,id'
     ];
+  }
+
+  public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
   }
 }

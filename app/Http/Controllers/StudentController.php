@@ -109,6 +109,45 @@ class StudentController extends Controller
   }
 
   /**
+   * Show the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\Guardian  $guardian
+   * @return \Illuminate\Http\Response
+   */
+  public function show(GetStudent $request)
+  {
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
+    $student = QueryBuilder::for(Student::class)
+      ->allowedAppends([
+        'roles',
+        'type',
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id',
+        'wards.members',
+        'roles',
+      ])
+      ->allowedIncludes(
+        'status',
+      )
+      ->where('id', $request->id)
+      ->first();
+
+    return response()->json($student, 200);
+  }
+
+  /**
    * Edit a student
    *
    * @return void
@@ -129,7 +168,7 @@ class StudentController extends Controller
    * @return void
    */
   public function transcripts(GetTranscript $request) {
-    $transcripts = Student::find($request->student_id)->getTranscripts();
+    $transcripts = Student::find($request->id)->getTranscripts();
 
     return response()->json($transcripts, 200);
   }
@@ -140,7 +179,7 @@ class StudentController extends Controller
    * @return void
    */
   public function valid_courses(GetStudent $request) {
-    $student = Student::find($request->student_id);
+    $student = Student::find($request->id);
 
     $courses = QueryBuilder::for(Course::class)
       ->validCourses($student)

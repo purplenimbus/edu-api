@@ -88,9 +88,15 @@ Route::group([
     ], function() {
       Route::get('/', 'StudentController@index');
       Route::post('/', 'StudentController@create');
-      Route::put('/', 'StudentController@edit');
-      Route::get('/transcripts', 'StudentController@transcripts');
-      Route::get('/valid_courses', 'StudentController@valid_courses');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('/', 'StudentController@show');
+        Route::put('/', 'StudentController@edit');
+        Route::get('/transcripts', 'StudentController@transcripts');
+        Route::get('/valid_courses', 'StudentController@valid_courses');
+      });
     });
 
     Route::group([
