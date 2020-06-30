@@ -16,17 +16,14 @@ class Guardian extends User
       ->whereIs('guardian');
   }
 
-  public function getWardsAttribute() {
-    return UserGroup::where([
-    	['owner_id', $this->id],
-    	['type_id', 1],
-    ])
-    ->first()
-    ->members()
-    ->get();
+  public function wards() {
+    return $this->hasMany('App\UserGroup','owner_id','id')
+      ->where('type_id', 1);
   }
 
-  public function assignWards(Collection $students) {
+  public function assignWards($student_ids) {
+    $students = Student::find($student_ids);
+
     return $students->map(function($student){
       $group = UserGroup::firstOrCreate([ 
         'owner_id' => $this->id,

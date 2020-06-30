@@ -71,7 +71,8 @@ class GuardianController extends Controller
     $guardian = QueryBuilder::for(Guardian::class)
       ->allowedAppends([
         'roles',
-        'type'
+        'type',
+        'wards.members.user',
       ])
       ->allowedFields([
         'address',
@@ -83,7 +84,8 @@ class GuardianController extends Controller
         'meta',
         'password',
         'image',
-        'ref_id'
+        'ref_id',
+        'wards.members'
       ])
       ->allowedIncludes(
         'status',
@@ -107,7 +109,9 @@ class GuardianController extends Controller
 
     $guardian = Guardian::create($request->except('ward_ids'));
 
-    $guardian->assignWards(Student::find($request->ward_ids));
+    $guardian->assignWards($request->ward_ids);
+
+    $guardian->load('wards.members.user');
 
     return response()->json($guardian, 200);
   }
