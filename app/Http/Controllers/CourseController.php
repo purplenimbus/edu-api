@@ -41,8 +41,8 @@ class CourseController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'course_grade_id',
-        'id',
+//         'course_grade_id',
+//         'id',
         'name',
         AllowedFilter::callback('instructor_id', function (Builder $query, $value) {
             return $query->where('instructor_id', '=', (int)$value);
