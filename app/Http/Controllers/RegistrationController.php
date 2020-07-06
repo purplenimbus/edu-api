@@ -57,6 +57,7 @@ class RegistrationController extends Controller
         'course.grade',
         'course.subject',
         'course.status',
+        'score',
         'term',
         'user',
       ])
