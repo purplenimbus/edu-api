@@ -67,13 +67,13 @@ class CourseController extends Controller
               $query->whereNull('instructor_id');
         }),
       ])
-      ->allowedFields([
-        'registrations',
-        'registrations.user',
-        'grade:id,name',
-        'instructor:id,firstname,lastname,meta',
-        'status:id,name'
-      ])
+//       ->allowedFields([
+//         'registrations',
+//         'registrations.user',
+//         'grade:id,name',
+//         'instructor:id,firstname,lastname,meta',
+//         'status:id,name'
+//       ])
       ->allowedIncludes(
         'grade',
         'instructor',
