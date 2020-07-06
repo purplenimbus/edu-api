@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidRegistration;
 use App\Rules\ValidStudent;
+use App\Rules\ValidCourse;
 
 class RegisterStudent extends FormRequest
 {
@@ -26,12 +27,17 @@ class RegisterStudent extends FormRequest
   public function rules()
   {
     return [
-      'course_id' => 'required|integer|exists:courses,id',
-      'student_ids' => 'required|array',
+      'course_grade_id' => 'required|integer|exists:course_grades,id',
+      'course_ids' => 'required|array|max:10',
+      'course_ids.*' => [
+        'required','integer','distinct','exists:courses,id',
+        new ValidCourse($this->input('course_grade_id'))
+      ],
+      'student_ids' => 'required|array|max:10',
       'student_ids.*' => [
-        'required','integer', 'exists:users,id',
+        'required','integer','distinct','exists:users,id',
         new ValidStudent(),
-        new ValidRegistration($this->input('course_id'))
+        new ValidRegistration($this->input('course_grade_id'))
       ],
     ];
   }

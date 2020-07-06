@@ -8,6 +8,7 @@ use App\Registration as Registration;
 use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateScores;
 use App\Http\Requests\DeleteRegistration;
+use App\Http\Requests\RegisterStudent;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -73,16 +74,19 @@ class RegistrationController extends Controller
   }
 
   /**
-   * Register students
+   * Register many students in many courses
    *
    * @return void
    */
-  public function registerStudents(Request $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
+  public function batch(RegisterStudent $request){
+    $tenant = Auth::user()->tenant()->first();
 
-    RegisterStudents::dispatch($tenant_id, $request->all()[0]); // TO DO, investigate whats going on here , what exactly is the second parameter being used for.
+    $enrollmentService = new Enrollment($tenant);
 
-    return response()->json(['message' => 'your request is being processed'], 200);
+    $registrations = $enrollmentService
+      ->enrollStudents($request->student_ids, $request->course_ids);
+
+    return response()->json($registrations, 200);
   }
 
   /**
@@ -107,21 +111,5 @@ class RegistrationController extends Controller
     Registration::destroy($request->registration_ids);
 
     return response()->json(true, 200);
-  }
-
-    /**
-   * Create a bulk course
-   *
-   * @return void
-   */
-  public function batch(StoreCourse $request) {
-    $tenant = Auth::user()->tenant()->first();
-    
-    $enrollmentService = new Enrollment($tenant);
-
-    $courses = $enrollmentService
-      ->enrollStudents($request->student_ids, $request->course_id);
-    
-    return response()->json($courses, 200);
   }
 }

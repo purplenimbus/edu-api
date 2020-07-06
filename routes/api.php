@@ -49,7 +49,6 @@ Route::group([
       Route::post('/batch', 'CourseController@batch');
       Route::post('/generate', 'CourseController@generate');
       Route::get('/not_registered','CourseController@not_registered');
-      Route::post('/register','CourseController@register_students');
     });
     /* Lessons */
     Route::get('/lessons', 'CurriculumController@lessons');
@@ -63,7 +62,7 @@ Route::group([
       Route::get('/','RegistrationController@index');
       Route::put('/scores','RegistrationController@update_scores');
       Route::delete('/','RegistrationController@delete');
-      Route::post('/batch', 'CourseController@batch');
+      Route::post('/batch', 'RegistrationController@batch');
     });
 
     /* Users */

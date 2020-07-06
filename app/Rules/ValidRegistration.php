@@ -4,20 +4,20 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use App\Student;
-use App\Course;
+use App\CourseGrade;
 use App\Http\Requests\RegisterStudent;
 
 class ValidRegistration implements Rule
 {
-  public $course;
+  public $course_grade;
   /**
    * Create a new rule instance.
    *
    * @return void
    */
-  public function __construct($id)
+  public function __construct($course_grade_id)
   {
-    $this->course = Course::find($id);
+    $this->course_grade = CourseGrade::find($course_grade_id);
   }
 
   /**
@@ -27,11 +27,11 @@ class ValidRegistration implements Rule
    * @param  mixed  $value
    * @return bool
    */
-  public function passes($attribute, $id)
+  public function passes($attribute, $student_id)
   {
-    $student = Student::find($id);
+    $student = Student::find($student_id);
 
-    return isset($student->meta->course_grade_id) && $student->meta->course_grade_id === $this->course->grade->id;
+    return $student && $student->grade && $student->grade['id'] == $this->course_grade->id;
   }
 
   /**
@@ -41,6 +41,6 @@ class ValidRegistration implements Rule
    */
   public function message()
   {
-    return "only {$this->course->grade->name} students are allowed to register for {$this->course->code}";
+    return ":attribute is not a {$this->course_grade->name} student";
   }
 }
