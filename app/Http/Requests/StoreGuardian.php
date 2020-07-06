@@ -3,9 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\StoreUser;
 use App\Rules\ValidStudent;
 
-class GetStudent extends FormRequest
+class StoreGuardian extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -24,12 +25,13 @@ class GetStudent extends FormRequest
    */
   public function rules()
   {
-    return [
-      'id' => ['exists:users,id', new ValidStudent()]
-    ];
-  }
+    $userValidation = new StoreUser();
 
-  public function validationData(){
-    return array_merge($this->all(), $this->route()->parameters());
+    return array_merge([
+      'ward_ids'  => [
+        'array',
+      ],
+      'ward_ids.*'  => ['required_with:ward_ids','integer',new ValidStudent()],
+    ], $userValidation->rules());
   }
 }

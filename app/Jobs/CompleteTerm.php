@@ -39,9 +39,9 @@ class CompleteTerm implements ShouldQueue
       ->pluck('course_id')
       ->unique()->values()->all();
 
-    $courses => Course::find($course_ids)->update('status_id', 2);
+    $courses = Course::find($course_ids)->update('status_id', 2);
 
-    $this->tenant->current_term->update(['status_id' = 2]);
+    $this->tenant->current_term->update('status_id', 2);
 
     //kick off job to notify all parents with results here?
 

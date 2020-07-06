@@ -3,8 +3,9 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
+use App\Guardian;
 
-class CompleteTerm implements Rule
+class ValidGuardian implements Rule
 {
   /**
    * Create a new rule instance.
@@ -25,7 +26,7 @@ class CompleteTerm implements Rule
    */
   public function passes($attribute, $value)
   {
-    return $value !== 2;
+    return !is_null(Guardian::find($value));
   }
 
   /**
@@ -35,6 +36,6 @@ class CompleteTerm implements Rule
    */
   public function message()
   {
-    return 'This term has already been completed';
+     return ':attribute is an invalid guardian';
   }
 }

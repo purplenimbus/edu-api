@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidStudent;
+use App\Rules\ValidGuardian;
 
-class GetStudent extends FormRequest
+class GetGuardian extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class GetStudent extends FormRequest
   public function rules()
   {
     return [
-      'id' => ['exists:users,id', new ValidStudent()]
+      'id' => ['exists:users,id', new ValidGuardian()]
     ];
   }
 

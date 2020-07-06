@@ -35,9 +35,9 @@ class UserController extends Controller
         'updated_at',
       )
       ->allowedFilters([
-        'firstname',
+        AllowedFilter::partial('firstname'),
         'email',
-        'lastname',
+        AllowedFilter::partial('lastname'),
         'ref_id',
         AllowedFilter::callback('user_type', function (Builder $query, $value) {
             return $query->role($request->value);

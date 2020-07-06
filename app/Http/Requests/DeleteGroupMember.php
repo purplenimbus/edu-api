@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidStudent;
 
-class GetStudent extends FormRequest
+class DeleteGroupMember extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,11 +24,12 @@ class GetStudent extends FormRequest
   public function rules()
   {
     return [
-      'id' => ['exists:users,id', new ValidStudent()]
+      'member_ids' => 'array|required',
+      'member_ids.*' => [
+        'required',
+        'integer',
+        'exists:user_group_members, id',
+      ],
     ];
-  }
-
-  public function validationData(){
-    return array_merge($this->all(), $this->route()->parameters());
   }
 }

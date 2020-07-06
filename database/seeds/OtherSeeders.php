@@ -77,7 +77,7 @@ class OtherSeeders extends Seeder
     ];
 
     //Create School Term Status Types
-    foreach($term_status_types as $status_type){
+    foreach($term_status_types as $status_type) {
       App\SchoolTermStatus::create($status_type);
     }
 
@@ -90,6 +90,16 @@ class OtherSeeders extends Seeder
     //Create Curriculum Course Load Types
     foreach($course_load_types as $type){
       App\CurriculumCourseLoadType::create($type);
+    }
+
+    $user_group_types = [
+      [ 'name' => 'family' ],
+      [ 'name' => 'class list' ],
+    ];
+
+    //Create User Group Types
+    foreach($user_group_types as $type){
+      App\UserGroupType::create($type);
     }
   }
 }

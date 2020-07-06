@@ -61,7 +61,7 @@ class PermissionsSeeder extends Seeder
         ],
       ],
       [
-        'name' => 'parent',
+        'name' => 'guardian',
         'permissions' => [
           'bills' => ['view'],
           'courses' => ['view'],

@@ -6,32 +6,30 @@ use App\Registration;
 use App\Billing;
 use App\Student;
 use App\Tenant;
+use App\Guardian;
+use App\Course;
 
 class Enrollment
 {
   public $tenant;
-  private $registrations;
 
   public function __construct(Tenant $tenant)
   {
     $this->tenant = $tenant;
-    $this->registrations = [];
   }
 
-  public function getRegistrations() {
-    return $this->registrations;
-  }
-
-  public function enrollStudents($student_ids, $course_id) {
+  public function enrollStudents(Array $student_ids,Array $course_ids) {
     $students = Student::find($student_ids);
-    foreach ($students as $student) {
-      array_push($this->registrations, $this->enroll($student, $course_id));
-    }
+    $courses = Course::find($course_ids);
 
-    return $this->getRegistrations();
+    return $students->map(function($student) use ($courses) {
+      return $courses->map(function($course) use ($student) {
+        return $this->enroll($student, $course->id);
+      });
+    });
   }
 
-  public function enroll(Student $student, $course_id) {
+  private function enroll(Student $student, Int $course_id) {
     $school_term = $this->tenant->current_term;
 
     $billing = Billing::firstOrCreate([

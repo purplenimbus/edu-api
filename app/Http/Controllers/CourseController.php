@@ -6,10 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Course as Course;
 use App\Curriculum as Curriculum;
-use App\Http\Requests\GetCourses as GetCourses;
-use App\Http\Requests\StoreCourse as StoreCourse;
-use App\Http\Requests\UpdateCourse as UpdateCourse;
-use App\Http\Requests\StoreBatch as StoreBatch;
+use App\Http\Requests\GetCourses;
+use App\Http\Requests\StoreCourse;
+use App\Http\Requests\UpdateCourse;
+use App\Http\Requests\StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Nimbus\NimbusEdu;
@@ -18,7 +18,6 @@ use App\Registration;
 use App\Student;
 use App\CourseStatus;
 use App\Http\Requests\GetNotRegistered;
-use App\Http\Requests\RegisterStudent;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -42,6 +41,8 @@ class CourseController extends Controller
         'updated_at',
       )
       ->allowedFilters([
+        'course_grade_id',
+        'id',
         'name',
         AllowedFilter::callback('instructor_id', function (Builder $query, $value) {
             return $query->where('instructor_id', '=', (int)$value);
@@ -65,6 +66,13 @@ class CourseController extends Controller
               $query->whereNotNull('instructor_id') :
               $query->whereNull('instructor_id');
         }),
+      ])
+      ->allowedFields([
+        'registrations',
+        'registrations.user',
+        'grade:id,name',
+        'instructor:id,firstname,lastname,meta',
+        'status:id,name'
       ])
       ->allowedIncludes(
         'grade',
@@ -116,7 +124,7 @@ class CourseController extends Controller
   }
 
   /**
-   * Batch create subjects
+   * Batch create courses
    *
    * @return void
    */
@@ -146,22 +154,6 @@ class CourseController extends Controller
     $students = Student::ofUnregistered($request->course_id)->paginate($request->paginate ?? config('edu.pagination')); 
 
     return response()->json($students, 200);
-  }
-
-  /**
-   * Register students
-   *
-   * @return void
-   */
-  public function register_students(RegisterStudent $request){
-    $tenant = Auth::user()->tenant()->first();
-
-    $enrollmentService = new Enrollment($tenant);
-
-    $registrations = $enrollmentService
-      ->enrollStudents($request->student_ids, $request->course_id);
-
-    return response()->json($registrations, 200);
   }
 
   /**

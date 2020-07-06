@@ -49,7 +49,6 @@ Route::group([
       Route::post('/batch', 'CourseController@batch');
       Route::post('/generate', 'CourseController@generate');
       Route::get('/not_registered','CourseController@not_registered');
-      Route::post('/register','CourseController@register_students');
     });
     /* Lessons */
     Route::get('/lessons', 'CurriculumController@lessons');
@@ -63,7 +62,7 @@ Route::group([
       Route::get('/','RegistrationController@index');
       Route::put('/scores','RegistrationController@update_scores');
       Route::delete('/','RegistrationController@delete');
-      Route::post('/batch', 'CourseController@batch');
+      Route::post('/batch', 'RegistrationController@batch');
     });
 
     /* Users */
@@ -88,9 +87,38 @@ Route::group([
     ], function() {
       Route::get('/', 'StudentController@index');
       Route::post('/', 'StudentController@create');
-      Route::put('/', 'StudentController@edit');
-      Route::get('/transcripts', 'StudentController@transcripts');
-      Route::get('/valid_courses', 'StudentController@valid_courses');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('/', 'StudentController@show');
+        Route::put('/', 'StudentController@edit');
+        Route::get('/transcripts', 'StudentController@transcripts');
+        Route::get('/valid_courses', 'StudentController@valid_courses');
+      });
+    });
+
+    Route::group([
+      'prefix' => '/guardians'
+    ], function() {
+      Route::get('/', 'GuardianController@index');
+      Route::post('/', 'GuardianController@create');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('/', 'GuardianController@show');
+        Route::put('/', 'GuardianController@update');
+        Route::delete('/', 'GuardianController@destroy');
+
+        Route::group([
+          'prefix' => '/wards'
+        ], function() {
+          Route::get('/', 'WardController@index');
+          Route::put('/', 'WardController@update');
+          Route::delete('/', 'WardController@destroy');
+        });
+      });
     });
   });
 });
