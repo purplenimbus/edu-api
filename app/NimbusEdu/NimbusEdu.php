@@ -2,20 +2,21 @@
 
 namespace App\Nimbus;
 
-use App\Tenant as Tenant;
-use App\User as User;
+use App\Tenant;
+use App\User;
 use App\Student;
 use App\Instructor;
-use App\Subject as Subject;
-use App\Course as Course;
-use App\Curriculum as Curriculum;
-use App\CourseGrade as CourseGrade;
-use App\Registration as Registration;
-use App\SchoolTerm as SchoolTerm;
-use App\CurriculumType as CurriculumType;
-use App\UserType as UserType;
-use App\StatusType as StatusType;
-use App\Billing as Billing;
+use App\Subject;
+use App\Course;
+use App\Curriculum;
+use App\CourseGrade;
+use App\Registration;
+use App\SchoolTerm;
+use App\CurriculumType;
+use App\UserType;
+use App\StatusType;
+use App\Billing;
+use App\Guardian;
 
 use App\Notifications\BatchProcessed;
 
@@ -405,6 +406,27 @@ class NimbusEdu
       \Log::info('Created instructor '.$instructor->id);
 
       return $instructor;
+    }catch(Exception $e){
+      throw new Exception($e->getMessage());
+    }
+  }
+
+  public function create_guardian($request){
+    try{
+      $data = array_merge($request->all(), [
+        'address' => $request->address,
+        'tenant_id' => $this->tenant->id,
+      ]);
+
+      $guardian = Guardian::create($request->except('ward_ids'));
+
+      $guardian->assignWards($request->ward_ids);
+
+      $guardian->load('wards.members.user');
+
+      \Log::info('Created instructor '.$instructor->id);
+
+      return $guardian;
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }
