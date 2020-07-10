@@ -26,6 +26,16 @@ class GuardianController extends Controller
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $guardians = QueryBuilder::for(Guardian::class)
+      ->defaultSort('firstname')
+      ->allowedSorts(
+        'created_at',
+        'date_of_birth',
+        'firstname',
+        'id',
+        'lastname',
+        'ref_id',
+        'updated_at',
+      )
       ->allowedAppends([
         'roles',
         'type',
