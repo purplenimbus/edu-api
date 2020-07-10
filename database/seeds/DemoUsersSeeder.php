@@ -28,8 +28,8 @@ class DemoUsersSeeder extends Seeder
             'tenant_id' => $tenant->id,
             'firstname' => 'ekama',
             'lastname' => 'akpan',
-            'email' => 'info@showersedu.com',
-            'password' => app('hash')->make('info@showersedu.com'),
+            'email' => 'admin@yopmail.com',
+            'password' => app('hash')->make('admin@yopmail.com'),
           ])->each(function($admin)use($count){ 
             $count++; 
             $admin->assign('admin');
@@ -39,8 +39,8 @@ class DemoUsersSeeder extends Seeder
             'tenant_id' => $tenant->id,
             'firstname' => 'anthony',
             'lastname'  => 'akpan',
-            'email' => 'anthony.akpan@hotmail.com',
-            'password' => app('hash')->make('easier'),
+            'email' => 'superadmin@yopmail.com',
+            'password' => app('hash')->make('superadmin@yopmail.com'),
           ])->each(function($superadmin)use($count){ 
             $count++;
             $superadmin->assign('superadmin');

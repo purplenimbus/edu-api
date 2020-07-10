@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use App\Guardian;
 use App\UserGroup;
 use App\Student;
+use App\Nimbus\NimbusEdu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
-
 use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
 
@@ -105,13 +105,11 @@ class GuardianController extends Controller
    */
   public function create(StoreGuardian $request)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
+    $tenant = Auth::user()->tenant()->first();
 
-    $guardian = Guardian::create($request->except('ward_ids'));
+    $nimbus_edu = new NimbusEdu($tenant);
 
-    $guardian->assignWards($request->ward_ids);
-
-    $guardian->load('wards.members.user');
+    $guardian = $nimbus_edu->create_guardian($request);
 
     return response()->json($guardian, 200);
   }
