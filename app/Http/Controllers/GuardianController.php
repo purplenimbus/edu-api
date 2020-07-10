@@ -27,6 +27,8 @@ class GuardianController extends Controller
 
     $guardians = QueryBuilder::for(Guardian::class)
       ->allowedAppends([
+        'roles',
+        'type',
         'wards.members.user',
       ])
       ->allowedFilters([
