@@ -29,7 +29,6 @@ class GuardianController extends Controller
       ->allowedAppends([
         'roles',
         'type',
-        'wards.members.user',
       ])
       ->allowedFilters([
         AllowedFilter::partial('firstname'),
@@ -56,6 +55,7 @@ class GuardianController extends Controller
       ])
       ->allowedIncludes(
         'status',
+        'wards.members.user',
       )
       ->where('tenant_id', $tenant_id)
       ->paginate($request->paginate ?? config('edu.pagination'));
@@ -78,7 +78,6 @@ class GuardianController extends Controller
       ->allowedAppends([
         'roles',
         'type',
-        'wards.members.user',
       ])
       ->allowedFields([
         'address',
@@ -95,6 +94,7 @@ class GuardianController extends Controller
       ])
       ->allowedIncludes(
         'status',
+        'wards.members.user',
       )
       ->where('id', $request->id)
       ->first();
