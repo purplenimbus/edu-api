@@ -424,7 +424,7 @@ class NimbusEdu
 
       $guardian->load('wards.members.user');
 
-      \Log::info('Created instructor '.$instructor->id);
+      \Log::info('Created Guardian '.$guardian->id);
 
       return $guardian;
     }catch(Exception $e){
