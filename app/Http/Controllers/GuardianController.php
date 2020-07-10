@@ -26,6 +26,9 @@ class GuardianController extends Controller
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $guardians = QueryBuilder::for(Guardian::class)
+      ->allowedAppends([
+        'wards.members.user',
+      ])
       ->allowedFilters([
         AllowedFilter::partial('firstname'),
         AllowedFilter::partial('lastname'),
@@ -46,7 +49,8 @@ class GuardianController extends Controller
         'meta',
         'password',
         'image',
-        'ref_id'
+        'ref_id',
+        'wards.members'
       ])
       ->allowedIncludes(
         'status',
