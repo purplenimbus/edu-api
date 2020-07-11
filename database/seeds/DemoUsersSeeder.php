@@ -17,6 +17,7 @@ class DemoUsersSeeder extends Seeder
       ->create([
         'country' => config('edu.default.country'),
         'name'=> 'showers christian high school',
+        'email' => 'nimbushigh@yopmail.com',
       ])
       ->each(function($tenant)use($count){
           $institution = new Institution($tenant);

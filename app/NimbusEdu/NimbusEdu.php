@@ -16,7 +16,6 @@ use App\CurriculumType;
 use App\UserType;
 use App\StatusType;
 use App\Billing;
-use App\Guardian;
 
 use App\Notifications\BatchProcessed;
 
@@ -411,22 +410,22 @@ class NimbusEdu
     }
   }
 
-  public function create_guardian($request){
+  public function create_tenant($request){
     try{
       $data = array_merge($request->all(), [
         'address' => $request->address,
         'tenant_id' => $this->tenant->id,
       ]);
 
-      $guardian = Guardian::create($request->except('ward_ids'));
+      $tenant = tenant::create($request->except('ward_ids'));
 
-      $guardian->assignWards($request->ward_ids);
+      $tenant->assignWards($request->ward_ids);
 
-      $guardian->load('wards.members.user');
+      $tenant->load('wards.members.user');
 
-      \Log::info('Created Guardian '.$guardian->id);
+      \Log::info('Created tenant '.$tenant->id);
 
-      return $guardian;
+      return $tenant;
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }

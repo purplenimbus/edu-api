@@ -6,8 +6,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable implements JWTSubject
+class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
   use Notifiable, HasRolesAndAbilities;
 
@@ -22,6 +23,7 @@ class User extends Authenticatable implements JWTSubject
    */
   protected $dates = [
     'date_of_birth',
+    'email_verified_at',
   ];
 	/**
    * The attributes that are mass assignable.
@@ -40,7 +42,8 @@ class User extends Authenticatable implements JWTSubject
     'password',
     'image',
     'account_status_id',
-    'ref_id'
+    'ref_id',
+    'email_verified_at'
   ];
 
   /**
@@ -60,6 +63,7 @@ class User extends Authenticatable implements JWTSubject
 
 	protected $casts = [
     'address' => 'object',
+    'email_verified_at' => 'datetime',
     'meta' => 'object',
   ];
 

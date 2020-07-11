@@ -10,12 +10,21 @@ class Tenant extends Model
 {
   use Notifiable;
   /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = [
+    'email_verified_at',
+  ];
+
+  /**
   * The attributes that are mass assignable.
   *
   * @var array
   */
   protected $fillable = [
-    'address', 'name', 'meta', 'username', 'email'
+    'address', 'name', 'meta', 'username', 'email', 'email_verified_at'
   ];
 
   /**
@@ -26,6 +35,7 @@ class Tenant extends Model
 
   protected $casts = [
     'address' => 'object',
+    'email_verified_at' => 'datetime',
     'meta' => 'object',
   ];
 
