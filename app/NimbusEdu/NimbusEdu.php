@@ -433,25 +433,4 @@ class NimbusEdu
       throw new Exception($e->getMessage());
     }
   }
-
-    public function create_guardian($request){
-    try{
-      $data = array_merge($request->all(), [
-        'address' => $request->address,
-        'tenant_id' => $this->tenant->id,
-      ]);
-
-      $guardian = Guardian::create($request->except('ward_ids'));
-
-      $guardian->assignWards($request->ward_ids);
-
-      $guardian->load('wards.members.user');
-
-      \Log::info('Created Guardian '.$guardian->id);
-
-      return $guardian;
-    }catch(Exception $e){
-      throw new Exception($e->getMessage());
-    }
-  }
 }
