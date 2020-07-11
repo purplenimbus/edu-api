@@ -42,38 +42,38 @@ class ResetPasswordController extends Controller
 		$this->middleware('guest');
 	}
 
-    
-  public function getToken(GetTokenResetUserPassword $token){
-    $passwordReset = PasswordReset::where('token', $token)
-      ->first();
+		
+	public function getToken(GetTokenResetUserPassword $token){
+		$passwordReset = PasswordReset::where('token', $token)
+			->first();
 
-    if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
-        $passwordReset->delete();
+		if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+				$passwordReset->delete();
 			return response()->json([
 				'message' => 'Invalid token',
 				'errors' => [
 					'token' => ['This password reset token is invalid.'],
 				],
 			], 404);
-    }
+		}
 
-    return response()->json($passwordReset);
-  }
+		return response()->json($passwordReset);
+	}
 
-  public function reset(ResetUserPassword $request){
+	public function reset(ResetUserPassword $request){
 
-    $passwordReset = PasswordReset::where('token', $request->token)->first();
+		$passwordReset = PasswordReset::where('token', $request->token)->first();
 
-    $user = User::where('email', $passwordReset->email)->first();
+		$user = User::where('email', $passwordReset->email)->first();
 
-    $user->password = $request->password;
+		$user->password = $request->password;
 
-    $user->save();
+		$user->save();
 
-    $passwordReset->delete();
+		$passwordReset->delete();
 
-    $user->notify(new PasswordResetSuccess());
+		$user->notify(new PasswordResetSuccess());
 
-    return response()->json($user);
-  }
+		return response()->json($user);
+	}
 }
