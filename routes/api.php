@@ -22,8 +22,18 @@ Route::group([
   Route::get('/account_status','UserController@getAccountStatuses');
   Route::get('/course_status','CourseController@course_statuses');
 
+  Route::post('/register','Auth\RegisterController@create');
+  Route::get('/email/resend','Auth\VerificationController@resend')
+		->name('verification.resend');
+	Route::get('/email/verify/{id}','Auth\VerificationController@verify')
+		->name('verification.verify');
+	// Password Reset
+  Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+  Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+  Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@getToken');
+
   Route::group([
-    'middleware' => ['jwt.auth']
+    'middleware' => ['jwt.auth','verified']
   ], function() {
     /* Tenants */
     Route::get('/settings', 'TenantController@settings');

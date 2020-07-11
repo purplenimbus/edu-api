@@ -28,6 +28,7 @@ class CreateUsersTable extends Migration
       $table->json('address')->nullable();
       $table->integer('account_status_id')->default(1);
       $table->string('ref_id')->nullable();
+      $table->dateTime('email_verified_at')->nullable();
       $table->rememberToken();
       $table->timestamps();
     });
