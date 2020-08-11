@@ -163,6 +163,14 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   }
 
   /**
+   *  Get full name
+  */
+  public function getFullnameAttribute()
+  {
+    return trim("{$this->firstname} {$this->lastname} {$this->othernames}");
+  }
+
+  /**
    *  generate password
   */
   public function createDefaultPassword()

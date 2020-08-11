@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
+use App\User;
 
 class Tenant extends Model
 {
@@ -65,10 +66,17 @@ class Tenant extends Model
     parent::boot();
   }
 
-  public function getCurrentTermAttribute(){
-    return  SchoolTerm::where([
+  public function getCurrentTermAttribute() {
+    return SchoolTerm::where([
       'tenant_id' => $this->id,
-      'status_id' => 1 ])
+      'status_id' => 1
+    ])
     ->first();
+  }
+
+  public function getOwnerAttribute() {
+    return User::whereIs('admin')
+      ->where('tenant_id', $this->id)
+      ->first();
   }
 }
