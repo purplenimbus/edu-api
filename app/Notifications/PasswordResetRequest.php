@@ -41,14 +41,14 @@ class PasswordResetRequest extends Notification
 	public function toMail($notifiable)
 	{
 		$host = env('FRONT_END_URL','http://localhost/');
-    $url = "{$host}auth/reset-password?token={$this->token}";
+		$url = "{$host}auth/reset-password?token={$this->token}";
 
 		return (new MailMessage)
 			->subject(__('registration.account_created', ['name' => config('app.name')]))
 			->greeting(__('registration.hi', ['first_name' => ucfirst($notifiable->firstname)]))
-      ->line(__('passwords.recieve'))
-      ->action(__('passwords.reset_password'), url($url))
-      ->line(__('passwords.no_action'));
+			->line(__('passwords.recieve'))
+			->action(__('passwords.reset_password'), url($url))
+			->line(__('passwords.no_action'));
 	}
 
 	/**
