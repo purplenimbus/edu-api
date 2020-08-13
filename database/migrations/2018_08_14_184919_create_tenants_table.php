@@ -16,12 +16,8 @@ class CreateTenantsTable extends Migration
     Schema::create('tenants', function (Blueprint $table) {
       $table->increments('id');
       $table->string('name');
-      $table->string('username')->unique();
-      $table->string('email')->unique();
       $table->json('address')->nullable();
-      $table->json('meta')->nullable();
       $table->string('country')->default(config('edu.default.country'));
-      $table->dateTime('email_verified_at')->nullable();
       $table->timestamps();
     });
   }

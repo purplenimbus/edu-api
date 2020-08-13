@@ -37,6 +37,7 @@ Route::group([
   ], function() {
     /* Tenants */
     Route::get('/settings', 'TenantController@settings');
+    Route::post('/tenants', 'TenantController@create');
     Route::put('/tenants', 'TenantController@update');
     Route::post('/tenants/term', 'TenantController@updateTerm');
 

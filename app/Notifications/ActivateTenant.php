@@ -29,18 +29,21 @@ class ActivateTenant extends VerifyEmail
 	 */
 	public function toMail($notifiable)
 	{
+		if (static::$toMailCallback) {
+			return call_user_func(static::$toMailCallback, $notifiable);
+		}
+
 		$host = env('FRONT_END_URL','http://localhost/');
-		
-		$url = "{$host}auth/login";
 
-		$first_name = ucfirst($notifiable->owner->firstname);
+		$first_name = ucfirst($notifiable->firstname);
 
-		$email = ucfirst($notifiable->owner->email);
+		$email = ucfirst($notifiable->email);
 
-		return (new MailMessage)
-			->line(__('registration.hi', [ 'first_name' => $first_name ]))
+    return (new MailMessage)
+      ->subject(__('registration.welcome', ['name' => config('app.name')]))
+			->greeting(__('registration.hi', [ 'first_name' => $first_name ]))
 			->line(__('registration.one_step'))
 			->line(__('registration.before'))
-			->action(__('registration.email', [ 'email' => strtolower($email) ]), url('/'));
+			->action(__('registration.email', [ 'email' => strtolower($email) ]), $this->verificationUrl($notifiable));
 	}
 }

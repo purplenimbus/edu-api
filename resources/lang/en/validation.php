@@ -125,8 +125,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'admin' => [
+            'exists' => 'Account owner already exists, remove the admin to set a new account owner',
         ],
     ],
 

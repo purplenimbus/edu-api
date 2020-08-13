@@ -54,6 +54,13 @@ return [
 
   'url' => env('APP_URL', 'http://localhost'),
 
+  'front_end_url' => env('FRONT_END_URL', ''),
+
+  'email' => env('NIMBUS_EMAIL', ''),
+
+  'address' => env('NIMBUS_ADDRESS', ''),
+
+  'phone_number' => env('NIMBUS_PHONE', ''),
   /*
   |--------------------------------------------------------------------------
   | Application Timezone

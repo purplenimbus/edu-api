@@ -24,7 +24,6 @@ class UpdateTenant extends FormRequest
   public function rules()
   {
     return [
-      'email' => 'email',
       'name' => 'string',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
