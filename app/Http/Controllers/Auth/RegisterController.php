@@ -53,7 +53,7 @@ class RegisterController extends Controller
 	 */
 	protected function create(StoreTenant $data)
 	{
-		$data = $this->parse_full_name($data);
+		$data = $this->parse_user($data);
 		$tenant = Tenant::create($data->only('name'));
 		$payload = Arr::only($data->all(), ['firstname','lastname','email','password']);
 		$payload["tenant_id"] = $tenant->id;
@@ -66,12 +66,13 @@ class RegisterController extends Controller
 			'message' => 'Account created, check your email to activate your account',
 		], 200);
 	}
-	
-	private function parse_full_name($data){
+
+	private function parse_user($data){
 		$fullName = explode(' ', $data->fullName);
 		$data['firstname'] = $fullName[0];
 		$data['lastname'] = isset($fullName[1]) ? $fullName[1] : '';
+		$data['password'] = app('hash')->make($data->password);
 
-	return $data;
+		return $data;
 	}
 }

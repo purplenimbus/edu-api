@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Notifications\PasswordResetSuccess;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -144,14 +145,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   {
     $this->attributes['email'] = strtolower($value);
   }
-
-	/**
-	 *  Setup model event hooks
-  */
-	public static function boot()
-	{
-		parent::boot();
-	}
   
   /**
    *  Get user type
@@ -173,9 +166,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   /**
    *  generate password
   */
-  public function createDefaultPassword()
+  public function createDefaultPassword(string $password = null)
   {
-    return app('hash')->make($this->email);
+    return app('hash')->make($password ?? $this->email);
   }
 
   public function scopeOfTenant($query, $tenant_id)
@@ -192,5 +185,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
   function status(){
     return $this->belongsTo('App\StatusType','account_status_id');
+  }
+
+  public static function boot() 
+  {
+    parent::boot();
+
+    self::saved(function($model) {
+      if (request()->has('confirm_password') && $model->wasChanged('password')) {
+        $model->notify(new PasswordResetSuccess);
+      }
+    });
   }
 }

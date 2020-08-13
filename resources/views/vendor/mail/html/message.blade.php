@@ -23,14 +23,7 @@
 	{{-- Footer --}}
 	@slot('footer')
 		@component('mail::footer')
-			@component('mail::panel')
-				<h3>@lang('email.question')</h3>
-
-				@lang('email.email', ['email' => config('app.email')])
-			@endcomponent
-			© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.') <br>
-
-			@lang('email.privacy')
+			© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
 		@endcomponent
 	@endslot
 @endcomponent
