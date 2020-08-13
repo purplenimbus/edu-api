@@ -2,21 +2,16 @@
 
 namespace App;
 
+use App\Notifications\ActivateTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
+use App\User;
+use Illuminate\Validation\ValidationException;
 
 class Tenant extends Model
 {
   use Notifiable;
-  /**
-   * The attributes that should be mutated to dates.
-   *
-   * @var array
-   */
-  protected $dates = [
-    'email_verified_at',
-  ];
 
   /**
   * The attributes that are mass assignable.
@@ -24,7 +19,7 @@ class Tenant extends Model
   * @var array
   */
   protected $fillable = [
-    'address', 'name', 'meta', 'username', 'email', 'email_verified_at'
+    'address', 'name',
   ];
 
   /**
@@ -35,8 +30,6 @@ class Tenant extends Model
 
   protected $casts = [
     'address' => 'object',
-    'email_verified_at' => 'datetime',
-    'meta' => 'object',
   ];
 
   /**
@@ -65,10 +58,25 @@ class Tenant extends Model
     parent::boot();
   }
 
-  public function getCurrentTermAttribute(){
-    return  SchoolTerm::where([
+  public function getCurrentTermAttribute() {
+    return SchoolTerm::where([
       'tenant_id' => $this->id,
-      'status_id' => 1 ])
+      'status_id' => 1
+    ])
     ->first();
+  }
+
+  public function getOwnerAttribute() {
+    return User::whereIs('admin')
+      ->where('tenant_id', $this->id)
+      ->first();
+  }
+
+  public function setOwner(User $user) {
+    if ($this->owner) {
+      throw new ValidationException(__("validation.custom.admin.exists"));
+    }
+
+    $user->assign('admin');
   }
 }

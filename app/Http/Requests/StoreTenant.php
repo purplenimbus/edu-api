@@ -24,14 +24,10 @@ class StoreTenant extends FormRequest
   public function rules()
   {
     return [
-      'password'  => 'string|required',
-      'username'  => 'required|unique:tenants|max:255',
-      'email' => 'required|email|unique:tenants,email',
+      'email' => 'required|email|unique:users,email',
+      'fullName' => 'string|required',
+      'password'  => 'string|required|confirmed|min:8',
       'name' => 'string|required',
-      'address.street' => 'string|required_with:address.city,address.country,address.state',
-      'address.city' => 'string|required_with:address.street',
-      'address.country' => 'string|required_with:address.street',
-      'address.state' => 'string|required_with:address.street',
     ];
   }
 }

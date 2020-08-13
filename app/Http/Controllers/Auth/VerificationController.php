@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Tenant;
 use App\Http\Controllers\Controller;
+use App\Notifications\TenantCreated;
+use App\User;
 use Illuminate\Foundation\Auth\VerifiesEmails;
-use App\Services\Billing\Subscription;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 
@@ -50,30 +52,31 @@ class VerificationController extends Controller
     */
   protected function verify(Request $request)
   {
-    $tenant = Tenant::find($request->route('id'));
+    $user = User::find($request->route('id'));
     $message = '';
 
-    if (is_null($tenant)) {
-      $message = 'Tenant dosent exist';
+    if (is_null($user)) {
+      $message = 'User dosent exist';
       return $this->get_view($message);
     }
 
-    if ($request->route('id') != $tenant->getKey()) {
+    if ($request->route('id') != $user->getKey()) {
       $e = new AuthorizationException;
       return $this->get_view($e->GetMessage());
     }
 
-    if ($tenant->hasVerifiedEmail()) {
-      $message = 'Tenant already verified';
+    if ($user->hasVerifiedEmail()) {
+      $message = 'Email already verified';
       return $this->get_view($message, true);
     }
 
-    if ($tenant->markEmailAsVerified()) {
-      event(new Verified($tenant));
+    if ($user->markEmailAsVerified()) {
+      event(new Verified($user));
+      $user->notify(new TenantCreated);
       //begin trial here paystack? flutterwave? stripe?
     }
 
-    $message = 'Tenant successfully verified';
+    $message = 'Email successfully verified';
 
     return $this->get_view($message, true);
   }

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Registration as Registration;
-use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateScores;
 use App\Http\Requests\DeleteRegistration;
 use App\Http\Requests\RegisterStudent;

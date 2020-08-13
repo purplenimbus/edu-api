@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Tenant;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\StoreTenant;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Arr;
 use JWTAuth;
 use App\Notifications\ActivateTenant;
+use App\User;
 
 class RegisterController extends Controller
 {
@@ -44,42 +46,31 @@ class RegisterController extends Controller
 	}
 
 	/**
-	 * Get a validator for an incoming registration request.
-	 *
-	 * @param  array  $data
-	 * @return \Illuminate\Contracts\Validation\Validator
-	 */
-	protected function validator(array $data)
-	{
-		return Validator::make($data, [
-			'school_name' => 'required|string|max:255',
-			'email' => 'required|string|email|max:255|unique:tenants',
-			'password' => 'required|string|min:6|confirmed',
-		]);
-	}
-
-	/**
 	 * Create a new user instance after a valid registration.
 	 *
 	 * @param  array  $data
 	 * @return \App\User
 	 */
-	protected function create(array $data)
+	protected function create(StoreTenant $data)
 	{
-		$payload = Arr::only($data->all(), ['email','password','school_name']);
-		$tenant = Tenant::create($payload);
+		$data = $this->parse_full_name($data);
+		$tenant = Tenant::create($data->only('name'));
+		$payload = Arr::only($data->all(), ['firstname','lastname','email','password']);
+		$payload["tenant_id"] = $tenant->id;
+		$user = User::create($payload);
 
-		$tenant->notify(new ActivateTenant);
+		$tenant->setOwner($user);
+		$tenant->owner->notify(new ActivateTenant);
 
 		return response([
-			'message' => 'User account created , check your email to activate your account',
+			'message' => 'Account created, check your email to activate your account',
 		], 200);
 	}
 	
 	private function parse_full_name($data){
 		$fullName = explode(' ', $data->fullName);
-		$data['first_name'] = $fullName[0];
-		$data['last_name'] = isset($fullName[1]) ? $fullName[1] : '';
+		$data['firstname'] = $fullName[0];
+		$data['lastname'] = isset($fullName[1]) ? $fullName[1] : '';
 
 	return $data;
 	}
