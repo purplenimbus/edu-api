@@ -44,7 +44,7 @@ class PasswordResetRequest extends Notification
 		$url = "{$host}auth/reset-password?token={$this->token}";
 
 		return (new MailMessage)
-			->subject(__('registration.account_created', ['name' => config('app.name')]))
+			->subject(__('passwords.reset_request', ['name' => config('app.name')]))
 			->greeting(__('registration.hi', ['first_name' => ucfirst($notifiable->firstname)]))
 			->line(__('passwords.recieve'))
 			->action(__('passwords.reset_password'), url($url))

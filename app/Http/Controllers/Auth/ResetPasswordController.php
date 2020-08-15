@@ -9,6 +9,8 @@ use App\Http\Requests\GetTokenResetUserPassword;
 use App\Notifications\PasswordResetSuccess;
 use Carbon\Carbon;
 use JWTAuth;
+use App\PasswordReset;
+use App\User;
 
 class ResetPasswordController extends Controller
 {
