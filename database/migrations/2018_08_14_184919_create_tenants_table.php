@@ -18,6 +18,11 @@ class CreateTenantsTable extends Migration
       $table->string('name');
       $table->json('address')->nullable();
       $table->string('country')->default(config('edu.default.country'));
+      $table->string('paystack_id')->nullable();
+      $table->string('paystack_code')->nullable();
+      $table->string('card_brand')->nullable();
+      $table->string('card_last_four', 4)->nullable();
+      $table->timestamp('trial_ends_at')->nullable();
       $table->timestamps();
     });
   }

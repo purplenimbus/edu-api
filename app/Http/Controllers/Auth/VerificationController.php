@@ -73,7 +73,6 @@ class VerificationController extends Controller
     if ($user->markEmailAsVerified()) {
       event(new Verified($user));
       $user->notify(new TenantCreated);
-      //begin trial here paystack? flutterwave? stripe?
     }
 
     $message = 'Email successfully verified';

@@ -2,16 +2,18 @@
 
 namespace App;
 
-use App\Notifications\ActivateTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
 use App\User;
+use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Wisdomanthoni\Cashier\Billable;
 
 class Tenant extends Model
 {
-  use Notifiable;
+  use Notifiable, Billable;
 
   /**
   * The attributes that are mass assignable.
@@ -78,5 +80,23 @@ class Tenant extends Model
     }
 
     $user->assign('admin');
+  }
+
+  public function activateSubscription() {
+    try {
+      $this->createAsPaystackCustomer([
+        "email" => $this->owner->email,
+        "first_name" => $this->owner->firstname,
+        "last_name" => $this->owner->lastname,
+      ]);
+
+      $this->newSubscription(env('PAYSTACK_PLAN_NAME'), env('PAYSTACK_PLAN_ID'))
+        ->create(null);
+
+    } catch(Exception $e) {
+      Log::error('Invalid Request', [
+        'message' => $e->getMessage(),
+      ]);
+    }
   }
 }

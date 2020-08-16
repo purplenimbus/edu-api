@@ -14,7 +14,8 @@
         "silber/bouncer": "v1.0.0-rc.3",
         "spatie/laravel-query-builder": "^2.8",
         "tymon/jwt-auth": "dev-develop",
-        "webpatser/laravel-uuid": "^3.0"
+        "webpatser/laravel-uuid": "^3.0",
+        "wisdomanthoni/cashier-paystack": "^1.0"
     },
     "require-dev": {
         "filp/whoops": "^2.0",
