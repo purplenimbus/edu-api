@@ -30,7 +30,7 @@ Route::group([
 	// Password Reset
   Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
   Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');;
-  Route::get('/password/reset/{token}', 'Auth\ResetPasswordController@getToken');
+  Route::get('/password/reset', 'Auth\ResetPasswordController@getToken');
 
   Route::group([
     'middleware' => ['jwt.auth','verified']
