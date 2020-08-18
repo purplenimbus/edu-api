@@ -36,7 +36,7 @@ class InstructorController extends Controller
         'id',
         'lastname',
         'ref_id',
-        'updated_at',
+        'updated_at'
       )
       ->allowedFilters([
         'firstname',
@@ -69,10 +69,10 @@ class InstructorController extends Controller
         'meta',
         'password',
         'image',
-        'ref_id',
+        'ref_id'
       ])
       ->allowedIncludes(
-        'status',
+        'status'
       )
       ->where([
         ['tenant_id', '=', $tenant->id]

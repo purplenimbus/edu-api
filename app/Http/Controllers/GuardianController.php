@@ -3,16 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Guardian;
-use App\UserGroup;
-use App\Student;
 use App\Nimbus\NimbusEdu;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
+use App\Http\Requests\DeleteGuardian;
 
 class GuardianController extends Controller
 {
@@ -34,7 +32,7 @@ class GuardianController extends Controller
         'id',
         'lastname',
         'ref_id',
-        'updated_at',
+        'updated_at'
       )
       ->allowedAppends([
         'roles',
@@ -65,7 +63,7 @@ class GuardianController extends Controller
       ])
       ->allowedIncludes(
         'status',
-        'wards.members.user',
+        'wards.members.user'
       )
       ->where('tenant_id', $tenant_id)
       ->paginate($request->paginate ?? config('edu.pagination'));
@@ -104,7 +102,7 @@ class GuardianController extends Controller
       ])
       ->allowedIncludes(
         'status',
-        'wards.members.user',
+        'wards.members.user'
       )
       ->where('id', $request->id)
       ->first();

@@ -38,7 +38,7 @@ class StudentController extends Controller
         'id',
         'lastname',
         'ref_id',
-        'updated_at',
+        'updated_at'
       )
       ->allowedFilters([
         AllowedFilter::partial('firstname'),
@@ -83,7 +83,7 @@ class StudentController extends Controller
         'ref_id'
       ])
       ->allowedIncludes(
-        'status',
+        'status'
       )
       ->where([
         ['tenant_id', '=', $tenant->id]
@@ -136,10 +136,10 @@ class StudentController extends Controller
         'image',
         'ref_id',
         'wards.members',
-        'roles',
+        'roles'
       ])
       ->allowedIncludes(
-        'status',
+        'status'
       )
       ->where('id', $request->id)
       ->first();
@@ -188,7 +188,7 @@ class StudentController extends Controller
         'created_at',
         'id',
         'name',
-        'updated_at',
+        'updated_at'
       )
       ->paginate($request->paginate ?? config('edu.pagination'));
 

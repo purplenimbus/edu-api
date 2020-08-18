@@ -38,7 +38,7 @@ class CourseController extends Controller
       ->allowedSorts(
         'name',
         'created_at',
-        'updated_at',
+        'updated_at'
       )
       ->allowedFilters([
         'name',
@@ -77,7 +77,7 @@ class CourseController extends Controller
         'instructor',
         'registrations','registrations.user',
         'subject',
-        'status',
+        'status'
       )
       ->where([
         ['tenant_id', '=', $tenant_id]

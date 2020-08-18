@@ -145,6 +145,16 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   {
     $this->attributes['email'] = strtolower($value);
   }
+
+  /**
+   * Set the user's password
+   *
+   * @param  string  $value
+   * @return void
+   */
+  public function setPasswordAttribute($value){
+    $this->attributes['password'] = app("hash")->make($value);
+  }
   
   /**
    *  Get user type
@@ -192,7 +202,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     parent::boot();
 
     self::saved(function($model) {
-      if (request()->has('confirm_password') && $model->wasChanged('password')) {
+      if (request()->has('password_confirmation') && $model->wasChanged('password')) {
         $model->notify(new PasswordResetSuccess);
       }
     });

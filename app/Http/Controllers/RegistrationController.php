@@ -47,7 +47,7 @@ class RegistrationController extends Controller
 				'user.id',
 				'user.firstname',
 				'user.lastname',
-				'user.othernames',
+				'user.othernames'
 			)
 			->allowedIncludes([
 				'course',

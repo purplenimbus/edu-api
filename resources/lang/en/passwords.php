@@ -18,7 +18,7 @@ return [
     'recieve' => 'You are receiving this email because we received a password reset request for your account.',
     'reset' => 'Your password has been reset!',
     'reset_password' => 'Reset password',
-    'reset_request' => 'Password reset request',
+    'reset_request' => 'Reset Password Request',
     'sent' => 'We have e-mailed your password reset link!',
     'token' => 'This password reset token is invalid.',
     'user' => "We can't find a user with that e-mail address.",

@@ -18,7 +18,8 @@ use Illuminate\Database\Eloquent\Builder as Builder;
 
 class UserController extends Controller
 {
-  public function index(GetUsers $request) {
+  public function index(GetUsers $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     $nimbus_edu = new NimbusEdu($tenant);
@@ -32,34 +33,34 @@ class UserController extends Controller
         'id',
         'lastname',
         'ref_id',
-        'updated_at',
+        'updated_at'
       )
       ->allowedFilters([
         AllowedFilter::partial('firstname'),
         'email',
         AllowedFilter::partial('lastname'),
         'ref_id',
-        AllowedFilter::callback('user_type', function (Builder $query, $value) {
-            return $query->role($request->value);
+        AllowedFilter::callback('user_type', function (Builder $query) use ($request) {
+          return $query->role($request->value);
         }),
         AllowedFilter::callback('has_image', function (Builder $query, $value) {
-            return $value ?
-              $query->whereNotNull('image') :
-              $query->whereNull('image');
+          return $value ?
+            $query->whereNotNull('image') :
+            $query->whereNull('image');
         }),
         AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
-            $query->where(
-              'meta->course_grade_id',
-              '=',
-              (int)$value
-            );
+          $query->where(
+            'meta->course_grade_id',
+            '=',
+            (int)$value
+          );
         }),
         AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
-            $query->where(
-              'account_status_id',
-              '=',
-              (int)$nimbus_edu->getStatusID($value)->id
-            );
+          $query->where(
+            'account_status_id',
+            '=',
+            (int)$nimbus_edu->getStatusID($value)->id
+          );
         }),
       ])
       ->allowedAppends([
@@ -78,7 +79,7 @@ class UserController extends Controller
         'ref_id'
       ])
       ->allowedIncludes(
-        'status',
+        'status'
       )
       ->where([
         ['tenant_id', '=', $tenant->id]
@@ -88,7 +89,8 @@ class UserController extends Controller
     return response()->json($users, 200);
   }
 
-  public function getUser(GetUser $request){
+  public function getUser(GetUser $request)
+  {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $query = [
@@ -96,8 +98,8 @@ class UserController extends Controller
       ['id', '=', $request->user_id]
     ];
 
-    if($request->has('email')){
-      array_push($query,['email', '=', $request->email]);
+    if ($request->has('email')) {
+      array_push($query, ['email', '=', $request->email]);
     }
 
     $user = User::with(['status:name,id'])
@@ -106,7 +108,8 @@ class UserController extends Controller
     return response()->json($user, 200);
   }
 
-  public function saveUser(StoreUser $request){
+  public function saveUser(StoreUser $request)
+  {
     $user = Auth::user();
 
     $user->fill($request->all());
@@ -115,16 +118,18 @@ class UserController extends Controller
 
     $user->load(['status:name,id']);
 
-    return response()->json($user,200);
+    return response()->json($user, 200);
   }
 
-  public function batchUpdate(StoreBatch $request){
+  public function batchUpdate(StoreBatch $request)
+  {
     ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->all()[0], $request->type);
 
-    return response()->json(['message' => 'your request is being processed'],200);
+    return response()->json(['message' => 'your request is being processed'], 200);
   }
 
-  public function getAccountStatuses(){
-    return response()->json(StatusType::get(['id','name']),200);
+  public function getAccountStatuses()
+  {
+    return response()->json(StatusType::get(['id', 'name']), 200);
   }
 }

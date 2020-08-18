@@ -32,7 +32,7 @@ class WardController extends Controller
       ->allowedIncludes(
         'members.user',
         'members.user.status',
-        'owner',
+        'owner'
       )
       ->OfGuardians($request->id)
       ->where('tenant_id', $tenant_id)
