@@ -47,7 +47,7 @@ Route::group([
         Route::get('/settings', 'TenantController@settings');
         Route::post('/term', 'TenantController@updateTerm');
         Route::group([
-          'prefix' => '/banking'
+          'prefix' => '/bank_accounts'
         ], function() {
           Route::get('/', 'BankAccountController@index');
           Route::post('/', 'BankAccountController@create');
