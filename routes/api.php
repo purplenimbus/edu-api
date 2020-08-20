@@ -36,10 +36,26 @@ Route::group([
     'middleware' => ['jwt.auth','verified']
   ], function() {
     /* Tenants */
-    Route::get('/settings', 'TenantController@settings');
-    Route::post('/tenants', 'TenantController@create');
-    Route::put('/tenants', 'TenantController@update');
-    Route::post('/tenants/term', 'TenantController@updateTerm');
+    Route::group([
+      'prefix' => '/tenants',
+    ], function() {
+      Route::post('/', 'TenantController@create');
+      Route::group([
+        'prefix' => '/{tenant_id}'
+      ], function() {
+        Route::put('/', 'TenantController@update');
+        Route::get('/settings', 'TenantController@settings');
+        Route::post('/term', 'TenantController@updateTerm');
+        Route::group([
+          'prefix' => '/banking'
+        ], function() {
+          Route::get('/', 'BankAccountController@index');
+          Route::post('/', 'BankAccountController@create');
+          Route::put('/{bank_account_id}', 'BankAccountController@update');
+          Route::delete('/{bank_account_id}', 'BankAccountController@delete');
+        });
+      });
+    });
 
     /* Terms */
     Route::group([

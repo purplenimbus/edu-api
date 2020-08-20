@@ -12,9 +12,6 @@ use App\Http\Requests\UpdateCourse;
 use App\Http\Requests\StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
-use App\Nimbus\NimbusEdu;
-use App\Nimbus\Enrollment;
-use App\Registration;
 use App\Student;
 use App\CourseStatus;
 use App\Http\Requests\GetNotRegistered;
@@ -93,8 +90,6 @@ class CourseController extends Controller
    * @return void
    */
   public function update(UpdateCourse $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
     $course = Course::find($request->id);
 
     $course->fill($request->all());
