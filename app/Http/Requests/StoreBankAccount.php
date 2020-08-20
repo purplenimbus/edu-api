@@ -29,6 +29,7 @@ class StoreBankAccount extends FormRequest
 			'bank_name' => 'required|string',
 			'bank_code' => 'required|string',
 			'description' => 'string',
+			'default' => 'boolean',
 			'tenant_id' => 'exists:tenants,id',
 		];
 	}

@@ -21,6 +21,7 @@ class CreateBankingsTable extends Migration
 			$table->string('account_name');
 			$table->integer('tenant_id');
 			$table->text('description')->nullable();
+			$table->boolean('default')->default(false);
 			$table->timestamps();
 			$table->softDeletes();
 		});

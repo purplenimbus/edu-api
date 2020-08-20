@@ -17,10 +17,26 @@ class BankAccount extends Model
     'bank_name',
     'bank_code',
     'description',
+    'default',
     'tenant_id',
 	];
 	
 	public function tenant(){
     return $this->belongsTo('App\Tenant');
+  }
+
+  public static function boot() 
+  {
+    parent::boot();
+
+    self::saved(function($model) {
+      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
+
+      if (request()->has('default') && request()->default && $other_bank_accounts->count() > 0) {
+        $other_bank_accounts->update([
+          'default' => false,
+        ]);
+      }
+    });
   }
 }
