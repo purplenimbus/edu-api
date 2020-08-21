@@ -24,10 +24,10 @@ class StoreBankAccount extends FormRequest
 	public function rules()
 	{
 		return [
-			'account_name' => 'required|string|max:100',
-			'account_number' => 'required|integer|digits:10',
-			'bank_name' => 'required|string',
-			'bank_code' => 'required|string',
+			'account_name' => 'required_with:account_number|string|max:100',
+			'account_number' => 'required_with:account_name|integer|digits:10',
+			'bank_name' => 'required_with:bank_code|string',
+			'bank_code' => 'required_with:bank_name|string',
 			'description' => 'string',
 			'default' => 'boolean',
 			'tenant_id' => 'exists:tenants,id',
