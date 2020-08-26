@@ -1,5 +1,4 @@
 <?php
-use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -10,6 +9,9 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+use Illuminate\Support\Facades\Route;
+
 Route::group([
   'middleware' => ['cors'],
   'prefix' => 'v'.env('API_VERSION',1),

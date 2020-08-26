@@ -23,14 +23,10 @@ class StoreInstructor extends FormRequest
    */
   public function rules()
   {
-    return [
-      'account_status_id' => 'integer|exists:account_status,id',
-      'date_of_birth' => 'required|date',
-      'email'  => 'required|email|max:255|unique:users,email',
-      'firstname'   => 'required|max:255',
-      'lastname'  => 'required|max:255',
-      'othernames'  => 'nullable|string|max:255',
+    $validation = new StoreUser();
+  
+    return array_merge($validation->rules(), [
       'ref_id' => 'integer|unique:users,ref_id',
-    ];
+    ]);
   }
 }

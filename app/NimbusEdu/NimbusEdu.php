@@ -17,8 +17,9 @@ use App\UserType;
 use App\StatusType;
 use App\Billing;
 use App\Guardian;
-
+use App\Notifications\ActivateUser;
 use App\Notifications\BatchProcessed;
+use Exception;
 
 class NimbusEdu
 {
@@ -382,7 +383,7 @@ class NimbusEdu
 
       $student = Student::create($data);
 
-      $student->save();
+      $student->notify(new ActivateUser);
 
       \Log::info('Created student '.$student->ref_id);
 
@@ -401,7 +402,7 @@ class NimbusEdu
 
       $instructor = Instructor::create($data);
 
-      $instructor->save();
+      $instructor->notify(new ActivateUser);
 
       \Log::info('Created instructor '.$instructor->id);
 
@@ -419,6 +420,8 @@ class NimbusEdu
       ]);
 
       $guardian = Guardian::create($data);
+
+      $guardian->notify(new ActivateUser);
       
       if ($request->has('ward_ids')) {
         $guardian->assignWards($request->ward_ids);

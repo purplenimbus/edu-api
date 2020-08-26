@@ -43,7 +43,7 @@ class Syllabus
           $course_load['core_subjects_code'],
           $course_grade_id,
           'core',
-          $curriculum,
+          $curriculum
         );
       }
 
@@ -52,7 +52,7 @@ class Syllabus
           $course_load['elective_subjects_code'],
           $course_grade_id,
           'elective',
-          $curriculum,
+          $curriculum
         );
       }
 
@@ -61,7 +61,7 @@ class Syllabus
           $course_load['optional_subjects_code'],
           $course_grade_id,
           'optional',
-          $curriculum,
+          $curriculum
         );
       }
     }

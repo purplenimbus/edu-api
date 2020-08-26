@@ -5,12 +5,23 @@ namespace App\Notifications;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\HtmlString;
 
-class ActivateTenant extends VerifyEmail
+class ActivateUser extends VerifyEmail
 {
-  use Queueable;
+	use Queueable;
 
-  /**
+	/**
+	 * Create a new notification instance.
+	 *
+	 * @return void
+	 */
+	public function __construct()
+	{
+		//
+	}
+
+	/**
 	 * Get the notification's delivery channels.
 	 *
 	 * @param  mixed  $notifiable
@@ -19,9 +30,9 @@ class ActivateTenant extends VerifyEmail
 	public function via($notifiable)
 	{
 		return ['mail'];
-  }
+	}
 
-  /**
+	/**
 	 * Get the mail representation of the notification.
 	 *
 	 * @param  mixed  $notifiable
@@ -40,8 +51,24 @@ class ActivateTenant extends VerifyEmail
     return (new MailMessage)
       ->subject(__('registration.welcome', ['name' => config('app.name')]))
 			->greeting(__('registration.hi', [ 'first_name' => $first_name ]))
-			->line(__('registration.one_step'))
-			->line(__('registration.before'))
+			->line(new HtmlString(__('registration.invited', [
+				'school_owner' => $notifiable->tenant->owner->fullname,
+				'school_name' => $notifiable->tenant->name
+			])))
+			->line(__('registration.confirm'))
 			->action(__('registration.email', [ 'email' => strtolower($email) ]), $this->verificationUrl($notifiable));
+	}
+
+	/**
+	 * Get the array representation of the notification.
+	 *
+	 * @param  mixed  $notifiable
+	 * @return array
+	 */
+	public function toArray($notifiable)
+	{
+		return [
+			//
+		];
 	}
 }
