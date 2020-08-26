@@ -25,15 +25,17 @@ class StoreUser extends FormRequest
   public function rules()
   {
     return [
-      'date_of_birth' => 'required|date',
+      'date_of_birth' => 'date',
       'email'  => 'required|email|unique:users,email',
       'firstname'   => 'required|string|max:255',
       'lastname'  => 'required|string|max:255',
       'othernames'  => 'nullable|string|max:255',
+      'account_status_id' => 'integer|exists:account_status,id',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
       'address.country' => 'string|required_with:address.street',
       'address.state' => 'string|required_with:address.street',
+      'address.phone_number' => 'string',
     ];
   }
 }

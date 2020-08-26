@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\HtmlString;
 
 class TenantCreated extends Notification
 {
@@ -47,7 +48,7 @@ class TenantCreated extends Notification
 		return (new MailMessage)
 			->subject(__('registration.account_created', ['name' => config('app.name')]))
 			->greeting(__('registration.hi', [ 'first_name' => $first_name ]))
-			->line(__('registration.thanks', [ 'name' => $notifiable->tenant->name ]))
+			->line(new HtmlString(__('registration.thanks', [ 'name' => $notifiable->tenant->name ])))
 			->action(__('registration.login'), url("${url}auth/login"));
 	}
 }
