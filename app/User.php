@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Support\Facades\Hash;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
@@ -153,7 +154,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
    * @return void
    */
   public function setPasswordAttribute($value){
-    $this->attributes['password'] = app("hash")->make($value);
+    $this->attributes['password'] = Hash::make($value);
   }
   
   /**

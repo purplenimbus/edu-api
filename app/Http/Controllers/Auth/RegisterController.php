@@ -57,7 +57,9 @@ class RegisterController extends Controller
 		$tenant = Tenant::create($data->only('name'));
 		$payload = Arr::only($data->all(), ['firstname','lastname','email','password']);
 		$payload["tenant_id"] = $tenant->id;
-		$user = User::create($payload);
+		$user = new User();
+    $user->fill($payload);
+		$user->save();
 
 		$tenant->setOwner($user);
 		$tenant->owner->notify(new ActivateTenant);

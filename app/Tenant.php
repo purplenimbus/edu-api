@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Nimbus\Institution;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
@@ -60,6 +61,9 @@ class Tenant extends Model
   public static function boot()
   {
     parent::boot();
+    self::created(function($model) {
+      $institution = new Institution($model);
+    });
   }
 
   public function getCurrentTermAttribute() {

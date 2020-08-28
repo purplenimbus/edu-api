@@ -74,8 +74,6 @@ class ResetPasswordController extends Controller
 
 		$passwordReset->delete();
 
-		$user->notify(new PasswordResetSuccess());
-
 		return response()->json($user);
 	}
 }

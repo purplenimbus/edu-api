@@ -18,7 +18,7 @@ class Enrollment
     $this->tenant = $tenant;
   }
 
-  public function enrollStudents(Array $student_ids,Array $course_ids) {
+  public function enrollStudents(Array $student_ids, Array $course_ids) {
     $students = Student::find($student_ids);
     $courses = Course::find($course_ids);
 
