@@ -33,6 +33,8 @@ class StoreCourse extends FormRequest
       'schema.*.score' => 'required|integer|max:100',
       'subject_id' => 'integer|exists:subjects,id',
       'schema' => new ValidCourseSchema(),
+      'start_date' => 'date',
+      'end_date' => 'date|after:start_date',
     ];
   }
 }

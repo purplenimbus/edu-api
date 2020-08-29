@@ -40,7 +40,7 @@ class Registration extends Model
 
   public function user()
   {
-    return $this->belongsTo('App\User');
+    return $this->belongsTo('App\Student', 'user_id', 'id');
   }
 
   public function term()
@@ -76,6 +76,10 @@ class Registration extends Model
 
       $model->user->allow('view', $model);
       $model->user->allow('view', $model->course);
+
+      if ($model->user->guardian) {
+        $model->user->guardian->allow('view', $model);
+      }
     });
 
     self::deleting(function ($model) {
@@ -84,6 +88,10 @@ class Registration extends Model
       }
 
       $model->user->disallow('view', $model->course);
+
+      if ($model->user->guardian) {
+        $model->user->guardian->disallow('view', $model);
+      }
     });
   }
 }

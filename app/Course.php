@@ -21,7 +21,19 @@ class Course extends Model
     'code',
     'course_grade_id',
     'schema',
-    'status_id'
+    'status_id',
+    'start_date',
+    'end_date',
+  ];
+
+  /**
+   * The attributes that should be mutated to dates.
+   *
+   * @var array
+   */
+  protected $dates = [
+    'end_date',
+    'start_date',
   ];
 
   /**
