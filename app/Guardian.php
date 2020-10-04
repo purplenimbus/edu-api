@@ -14,6 +14,7 @@ class Guardian extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
+      ->setModel(new User)
       ->whereIs('guardian');
   }
 

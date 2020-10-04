@@ -11,7 +11,8 @@ class Instructor extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
-    ->whereIs('instructor');
+      ->setModel(new User)
+      ->whereIs('instructor');
   }
 
   /**
@@ -50,5 +51,15 @@ class Instructor extends User
     $this->allow('view', $course);
 
     return $course;
+  }
+
+  /**
+   * Get instructor courses
+   *
+   * @var array
+   */
+  public function courses()
+  {
+    return $this->hasMany('App\Course','instructor_id','id');
   }
 }

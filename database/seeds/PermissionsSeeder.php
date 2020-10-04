@@ -81,6 +81,10 @@ class PermissionsSeeder extends Seeder
     $this->create_permissions($permissions);
 
     $this->create_roles($roles);
+
+    Bouncer::allow('superadmin')->everything();
+
+    Bouncer::allow('admin')->everything();
   }
 
   private function create_roles($roles) {

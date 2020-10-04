@@ -10,9 +10,13 @@ use App\SchoolTerm;
 use App\UserGroup;
 use App\UserGroupMember;
 use Bouncer;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 class Student extends User
 {
+  use HasRolesAndAbilities;
+
+  public $table = "users";
   /**
    * The accessors to append to the model's array form.
    *
@@ -25,6 +29,7 @@ class Student extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
+      ->setModel(new User)
       ->whereIs('student');
   }
 
@@ -73,7 +78,9 @@ class Student extends User
       'registrations' => function($query) {
         $query->whereUserId($this->id);
       }
-    ])->get();
+    ])
+    ->whereTenantId($this->tenant->id)
+    ->get();
   }
 
   /**
@@ -93,7 +100,8 @@ class Student extends User
     });
 
     self::created(function ($model) {
-      $model->assign('student');
+      $user = User::find($model->id);
+      $user->assign('student');
 
       if (is_null($model->ref_id)) {
         $model->ref_id = $model->generateStudentId();
@@ -117,5 +125,10 @@ class Student extends User
     return $query
       ->where('meta->course_grade_id', $course->course_grade_id)
       ->whereNotIn('id', $registrations);
+  }
+
+  public function registrations()
+  {
+    return $this->hasMany('App\Registration', 'user_id', 'id');
   }
 }

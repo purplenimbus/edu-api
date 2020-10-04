@@ -16,6 +16,7 @@ use Pusher\Pusher as Pusher;
 use Carbon\Carbon;
 
 use App\Http\Requests\PusherAuth as PusherAuth;
+use Tymon\JWTAuth\JWTAuth as JWTAuthJWTAuth;
 
 class LoginController extends Controller
 {
@@ -58,7 +59,7 @@ class LoginController extends Controller
     $claims = [
       'exp' => Carbon::now()->addDays($expDate)->timestamp
     ];
-
+  
     try {
       if (!$token = JWTAuth::claims($claims)->attempt($credentials)) {
         return response()->json([

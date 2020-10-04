@@ -75,6 +75,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
    * @var array
    */
   protected $appends = [
+    'fullname',
     'type',
   ];
 
@@ -95,11 +96,13 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
    */
   public function getJWTCustomClaims()
   {
+    $permissions = $this->getAbilities()->pluck('name');
+
+    //var_dump($this->roles);
+
     return [
-      'user' => $this->only(['email', 'firstname', 'lastname', 'id']),
-      'tenant' => $this->tenant()->first(),
-      'role' => $this->type,
-      'permissions' => $this->getAbilities()->pluck('name'),
+      'user' => $this->toArray(),
+      'permissions' => $permissions,
     ];
   }
 
