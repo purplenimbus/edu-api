@@ -32,7 +32,8 @@ class Instructor extends User
     });
 
     self::created(function ($model) {
-      $model->assign('instructor');     
+      $user = User::find($model->id);
+      $user->assign('instructor');     
     });
   }
 

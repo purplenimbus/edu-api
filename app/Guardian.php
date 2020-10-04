@@ -51,7 +51,8 @@ class Guardian extends User
     });
 
     self::created(function ($model) {
-      $model->assign('guardian');     
+      $user = User::find($model->id);
+      $user->assign('guardian');     
     });
   }
 }
