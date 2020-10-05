@@ -72,7 +72,9 @@ class VerificationController extends Controller
 
     if ($user->markEmailAsVerified()) {
       event(new Verified($user));
-      $user->notify(new TenantCreated);
+      if ($user->isAn('admin')) {
+        $user->notify(new TenantCreated);
+      }
     }
 
     $message = 'Email successfully verified';
