@@ -14,7 +14,6 @@ class Guardian extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
-      ->setModel(new User)
       ->whereIs('guardian');
   }
 
@@ -32,7 +31,7 @@ class Guardian extends User
         'tenant_id' => $this->tenant->id,
         'type_id' => 1
       ]);
-  
+
       UserGroupMember::firstOrCreate([
         'group_id' => $group->id,
         'user_id' => $student->id,
@@ -52,7 +51,8 @@ class Guardian extends User
 
     self::created(function ($model) {
       $user = User::find($model->id);
-      $user->assign('guardian');     
+      $user->assign('guardian');//Assign user model a role to return roles and permissions for JWT Claims
+      $model->assign('guardian');
     });
   }
 }

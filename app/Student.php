@@ -29,7 +29,6 @@ class Student extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
-      ->setModel(new User)
       ->whereIs('student');
   }
 
@@ -101,7 +100,8 @@ class Student extends User
 
     self::created(function ($model) {
       $user = User::find($model->id);
-      $user->assign('student');
+      $user->assign('student');//Assign user model a role to return roles and permissions for JWT Claims
+      $model->assign('student');
 
       if (is_null($model->ref_id)) {
         $model->ref_id = $model->generateStudentId();

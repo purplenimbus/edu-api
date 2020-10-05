@@ -63,7 +63,7 @@ Route::group([
     Route::group([
       'prefix' => '/terms'
     ], function() {
-      Route::get('', 'TermController@index');
+      Route::get('', 'TermController@index')->middleware('can:view-terms');
       Route::get('/show', 'TermController@show');
       Route::put('', 'TermController@update');
     });
@@ -72,7 +72,7 @@ Route::group([
     Route::group([
       'prefix' => '/courses'
     ], function() {
-      Route::get('', 'CourseController@index');
+      Route::get('', 'CourseController@index')->middleware('can:view-courses');
       Route::post('', 'CourseController@create');
       Route::put('', 'CourseController@update');
       Route::post('/batch', 'CourseController@batch');
@@ -88,14 +88,14 @@ Route::group([
     Route::group([
       'prefix' => '/registrations'
     ], function() {
-      Route::get('/','RegistrationController@index');
+      Route::get('/','RegistrationController@index')->middleware('can:view-registrations');
       Route::put('/scores','RegistrationController@update_scores');
       Route::delete('/','RegistrationController@delete');
       Route::post('/batch', 'RegistrationController@batch');
     });
 
     /* Users */
-    Route::get('/users', 'UserController@index');
+    Route::get('/users', 'UserController@index')->middleware('can:view-users');
     Route::get('/user', 'UserController@getUser');
     Route::post('/users/batch', 'UserController@batchUpdate');
     Route::post('/user', 'UserController@saveUser');
@@ -104,7 +104,7 @@ Route::group([
     Route::group([
       'prefix' => '/instructors'
     ], function() {
-      Route::get('/', 'InstructorController@index');
+      Route::get('/', 'InstructorController@index')->middleware('can:view-instructors');
       Route::post('/', 'InstructorController@create');
       Route::post('/assign', 'InstructorController@assignInstructor');
       Route::put('/', 'InstructorController@edit');
@@ -114,7 +114,7 @@ Route::group([
     Route::group([
       'prefix' => '/students'
     ], function() {
-      Route::get('/', 'StudentController@index');
+      Route::get('/', 'StudentController@index')->middleware('can:view-students');
       Route::post('/', 'StudentController@create');
 
       Route::group([

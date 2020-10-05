@@ -180,9 +180,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   /**
    *  generate password
   */
-  public function createDefaultPassword(string $password = null)
+  public function createDefaultPassword()
   {
-    return app('hash')->make($password ?? $this->email);
+    return $this->email;
   }
 
   public function scopeOfTenant($query, $tenant_id)

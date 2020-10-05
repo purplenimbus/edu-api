@@ -11,7 +11,6 @@ class Instructor extends User
   public function newQuery($excludeDeleted = true)
   {
     return parent::newQuery($excludeDeleted)
-      ->setModel(new User)
       ->whereIs('instructor');
   }
 
@@ -33,7 +32,8 @@ class Instructor extends User
 
     self::created(function ($model) {
       $user = User::find($model->id);
-      $user->assign('instructor');     
+      $user->assign('instructor');//Assign user model a role to return roles and permissions for JWT Claims
+      $model->assign('instructor');
     });
   }
 
