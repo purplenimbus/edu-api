@@ -98,11 +98,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   {
     $permissions = $this->getAbilities()->pluck('name');
 
-    //var_dump($this->roles);
-
     return [
       'user' => $this->toArray(),
       'permissions' => $permissions,
+      'tenant' => $this->tenant->only('country','name','id'),
     ];
   }
 
