@@ -29,7 +29,7 @@ class DemoUsersSeeder extends Seeder
             'firstname' => 'ekama',
             'lastname' => 'akpan',
             'email' => 'admin@yopmail.com',
-            'password' => app('hash')->make('admin@yopmail.com'),
+            'password' => 'admin@yopmail.com',
           ])->each(function($admin)use($count){ 
             $count++; 
             $admin->assign('admin');
@@ -40,7 +40,7 @@ class DemoUsersSeeder extends Seeder
             'firstname' => 'anthony',
             'lastname'  => 'akpan',
             'email' => 'superadmin@yopmail.com',
-            'password' => app('hash')->make('superadmin@yopmail.com'),
+            'password' => 'superadmin@yopmail.com',
           ])->each(function($superadmin)use($count){ 
             $count++;
             $superadmin->assign('superadmin');
