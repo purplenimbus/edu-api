@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidGuardian;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidStudent;
 
@@ -30,6 +31,7 @@ class StoreStudent extends FormRequest
       'date_of_birth' => 'required|date',
       'email'  => 'required|email|max:255|unique:users,email',
       'firstname'   => 'required|max:255',
+      'guardian_id' => ['exists:users,id', new ValidGuardian()],
       'id'   => ['exists:users,id', new ValidStudent()],
       'lastname'  => 'required|max:255',
       'othernames'  => 'nullable|string|max:255',

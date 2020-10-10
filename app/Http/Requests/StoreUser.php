@@ -26,7 +26,7 @@ class StoreUser extends FormRequest
   {
     return [
       'date_of_birth' => 'date',
-      'email'  => 'required|email|unique:users,email',
+      'email'  => 'email|unique:users,email',
       'firstname'   => 'required|string|max:255',
       'lastname'  => 'required|string|max:255',
       'othernames'  => 'nullable|string|max:255',

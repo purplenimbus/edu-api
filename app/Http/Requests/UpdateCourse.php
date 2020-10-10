@@ -37,4 +37,8 @@ class UpdateCourse extends FormRequest
       'status_id' => 'integer|exists:course_statuses,id',
     ];
   }
+
+  public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
+  }
 }

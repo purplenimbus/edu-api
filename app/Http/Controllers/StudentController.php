@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Course;
 use App\Student;
-use App\Registration;
+use App\Guardian;
 use Illuminate\Support\Facades\Auth;
 use App\Nimbus\NimbusEdu;
 use App\Http\Requests\StoreStudent;
@@ -105,6 +105,8 @@ class StudentController extends Controller
 
     $student = $nimbus_edu->create_student($request);
 
+    $student->append('guardian');
+
     return response()->json($student, 200);
   }
 
@@ -158,6 +160,15 @@ class StudentController extends Controller
     $student->fill($request->all());
     
     $student->save();
+
+    if ($request->has('guardian_id')) {
+      $guardian_id = request()->guardian_id;
+      $guardian = Guardian::find($guardian_id);
+
+      if ($guardian) {
+        $guardian->assignWards([$student->id]);
+      }
+    }
 
     return response()->json($student, 200);
   }

@@ -52,6 +52,7 @@ class Registration extends Model
   {
     return $this->hasOne('App\CourseScore', 'id', 'course_score_id');
   }
+
   /**
    *  Setup model event hooks
    */

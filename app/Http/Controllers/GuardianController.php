@@ -11,6 +11,7 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
 use App\Http\Requests\DeleteGuardian;
+use App\Http\Requests\GetUsers;
 
 class GuardianController extends Controller
 {
@@ -19,7 +20,7 @@ class GuardianController extends Controller
    *
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(GetUsers $request)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
 
@@ -65,10 +66,11 @@ class GuardianController extends Controller
         'status',
         'wards.members.user'
       )
-      ->where('tenant_id', $tenant_id)
-      ->paginate($request->paginate ?? config('edu.pagination'));
+      ->where('tenant_id', $tenant_id);
     
-    return response()->json($guardians, 200);
+    $data = isset($request->paginate) ? $guardians->paginate($request->paginate) : $guardians->get();
+    
+    return response()->json($data, 200);
   }
 
   /**

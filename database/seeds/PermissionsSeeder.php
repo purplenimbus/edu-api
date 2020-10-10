@@ -58,6 +58,7 @@ class PermissionsSeeder extends Seeder
           'courses' => ['view'],
           'users' => ['view'],
           'registrations' => ['view'],
+          'students' => ['view'],
         ],
       ],
       [

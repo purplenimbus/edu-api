@@ -383,6 +383,15 @@ class NimbusEdu
 
       $student = Student::create($data);
 
+      if ($request->has('guardian_id')) {
+        $guardian_id = request()->guardian_id;
+        $guardian = Guardian::find($guardian_id);
+
+        if ($guardian) {
+          $guardian->assignWards([$student->id]);
+        }
+      }
+
       $student->notify(new ActivateUser);
 
       \Log::info('Created student '.$student->ref_id);
@@ -396,9 +405,12 @@ class NimbusEdu
   public function create_instructor($request){
     try{
       $data = array_merge($request->all(), [
-        'address' => $request->address,
         'tenant_id' => $this->tenant->id,
       ]);
+
+      if ($request->has('address')) {
+        $data['address'] = $request->address;
+      }
 
       $instructor = Instructor::create($data);
 

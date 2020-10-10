@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Course as Course;
 use App\Curriculum as Curriculum;
+use App\Http\Requests\GetCourse;
 use App\Http\Requests\GetCourses;
 use App\Http\Requests\StoreCourse;
 use App\Http\Requests\UpdateCourse;
@@ -113,6 +114,41 @@ class CourseController extends Controller
 
     $course = Course::create($data);
     
+    return response()->json($course, 200);
+  }
+
+  /**
+   * Show the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  App\Http\Requests\GetCourse  $course
+   * @return \Illuminate\Http\Response
+   */
+  public function show(GetCourse $request)
+  {
+    $tenant_id = Auth::user()->tenant()->first()->id;
+
+    $course = QueryBuilder::for(Course::class)
+      ->allowedFields([
+        'registrations',
+        'registrations.user',
+        'grade:id,name',
+        'instructor:id,firstname,lastname,meta',
+        'status:id,name'
+      ])
+      ->allowedIncludes(
+        'grade',
+        'instructor',
+        'registrations','registrations.user',
+        'subject',
+        'status'
+      )
+      ->where([
+        ['tenant_id', '=', $tenant_id],
+        ['id', '=', $request->id],
+      ])
+      ->first();
+
     return response()->json($course, 200);
   }
 

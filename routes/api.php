@@ -72,12 +72,28 @@ Route::group([
     Route::group([
       'prefix' => '/courses'
     ], function() {
-      Route::get('', 'CourseController@index')->middleware('can:view-courses');
-      Route::post('', 'CourseController@create');
-      Route::put('', 'CourseController@update');
-      Route::post('/batch', 'CourseController@batch');
-      Route::post('/generate', 'CourseController@generate');
-      Route::get('/not_registered','CourseController@not_registered');
+      Route::group([
+        'middleware' => ['can:view-courses']
+      ], function() {
+        Route::get('', 'CourseController@index');
+        Route::get('/not_registered','CourseController@not_registered');
+      });
+
+      Route::group([
+        'middleware' => ['can:edit-courses']
+      ], function() {
+        Route::post('', 'CourseController@create');
+        Route::post('/batch', 'CourseController@batch');
+        Route::post('/generate', 'CourseController@generate');
+      });
+
+      Route::group([
+        'middleware' => ['can:view-course'],
+        'prefix' => '/{id}',
+      ], function() {
+        Route::put('/', 'CourseController@update');
+        Route::get('/', 'CourseController@show');
+      });
     });
     /* Lessons */
     Route::get('/lessons', 'CurriculumController@lessons');
@@ -106,8 +122,13 @@ Route::group([
     ], function() {
       Route::get('/', 'InstructorController@index')->middleware('can:view-instructors');
       Route::post('/', 'InstructorController@create');
-      Route::post('/assign', 'InstructorController@assignInstructor');
-      Route::put('/', 'InstructorController@edit');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::post('/assign', 'InstructorController@assignInstructor');
+        Route::put('/', 'InstructorController@edit');
+      });
     });
 
     /* Students */

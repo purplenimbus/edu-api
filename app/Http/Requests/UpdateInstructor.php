@@ -39,4 +39,8 @@ class UpdateInstructor extends FormRequest
       'address.state' => 'string|required_with:address.street',
     ];
   }
+
+  public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
+  }
 }

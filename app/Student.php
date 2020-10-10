@@ -7,6 +7,7 @@ use App\StatusType;
 use App\CourseGrade;
 use App\Registration;
 use App\SchoolTerm;
+use App\Scopes\TenantScope;
 use App\UserGroup;
 use App\UserGroupMember;
 use Bouncer;
@@ -17,6 +18,15 @@ class Student extends User
   use HasRolesAndAbilities;
 
   public $table = "users";
+  /**
+   * The "booted" method of the model.
+   *
+   * @return void
+   */
+  protected static function booted()
+  {
+    static::addGlobalScope(new TenantScope);
+  }
   /**
    * The accessors to append to the model's array form.
    *
@@ -124,7 +134,13 @@ class Student extends User
 
     return $query
       ->where('meta->course_grade_id', $course->course_grade_id)
+      ->ofTenant($course->tenant_id)
       ->whereNotIn('id', $registrations);
+  }
+
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
   }
 
   public function registrations()

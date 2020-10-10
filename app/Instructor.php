@@ -47,9 +47,9 @@ class Instructor extends User
     ]);
 
     $course->save();
-
-    $this->allow('edit', $course);
-    $this->allow('view', $course);
+    
+    Bouncer::allow($this)->to('edit', $course);
+    Bouncer::allow($this)->to('view', $course);
 
     return $course;
   }
@@ -62,5 +62,10 @@ class Instructor extends User
   public function courses()
   {
     return $this->hasMany('App\Course','instructor_id','id');
+  }
+
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
   }
 }

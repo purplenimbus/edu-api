@@ -2,10 +2,21 @@
 
 namespace App;
 
+use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
 {
+  /**
+   * The "booted" method of the model.
+   *
+   * @return void
+   */
+  protected static function booted()
+  {
+    static::addGlobalScope(new TenantScope);
+  }
+
   /**
    * The attributes that are mass assignable.
    *
@@ -73,7 +84,7 @@ class Course extends Model
    */
   public function instructor()
   {
-    return $this->belongsTo('App\User','instructor_id','id');
+    return $this->belongsTo('App\Instructor','instructor_id','id');
   }
 
   /**
@@ -125,6 +136,26 @@ class Course extends Model
         $model->schema = config('edu.default.course_schema');
       }
     });
+
+    self::created(function ($model) {
+      if (request()->has('instructor_id') && $model->wasChanged('instructor_id')) {
+        $model->instructor->assignInstructor($model);
+      };
+    });
+
+    self::saved(function ($model) {
+      //var_dump("hello updating");
+      if (request()->has('instructor_id') && $model->wasChanged('instructor_id')) {
+        $former_instructor_id = $model->getOriginal()["instructor_id"];
+        $former_instructor = Instructor::find($former_instructor_id);
+        if ($former_instructor) {
+          var_dump("former instructor");
+          Bouncer::disallow($former_instructor)->to('view', $model);
+        }
+        $model->instructor->assignInstructor($model);
+        $model::unsetEventDispatcher();
+      }
+    });
   }
 
   public function scopeOfCourseGrade($query, $course_grade_id)
@@ -133,12 +164,18 @@ class Course extends Model
       ->where('course_grade_id', $course_grade_id);
   }
 
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
+  }
+
   public function scopeValidCourses($query, Student $student)
   {
     $course_ids = Registration::where('user_id', $student->id)->pluck('course_id');
 
     return $query
       ->ofCourseGrade($student->grade['id'])
+      ->ofTenant($student->tenant_id)
       ->whereNotIn('id', $course_ids);
   }
 
