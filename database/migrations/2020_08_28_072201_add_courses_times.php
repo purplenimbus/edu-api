@@ -30,8 +30,6 @@ class AddCoursesTimes extends Migration
 			$table->dropColumn([
 				'start_date',
 				'end_date',
-				'start_time',
-				'end_time',
 			]);
 		});
 	}
