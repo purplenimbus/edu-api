@@ -384,11 +384,12 @@ class NimbusEdu
       $student = Student::create($data);
 
       if ($request->has('guardian_id')) {
-        $guardian_id = request()->guardian_id;
+        $guardian_id = $request->guardian_id;
         $guardian = Guardian::find($guardian_id);
 
         if ($guardian) {
           $guardian->assignWards([$student->id]);
+          $student->append('guardian');
         }
       }
 

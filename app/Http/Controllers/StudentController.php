@@ -105,8 +105,6 @@ class StudentController extends Controller
 
     $student = $nimbus_edu->create_student($request);
 
-    $student->append('guardian');
-
     return response()->json($student, 200);
   }
 

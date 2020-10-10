@@ -33,6 +33,7 @@ class DemoUsersSeeder extends Seeder
           ])->each(function($admin)use($count){ 
             $count++; 
             $admin->assign('admin');
+            $admin->markEmailAsVerified();
           });
 
           factory(App\User::class, 1)->create([
@@ -44,6 +45,7 @@ class DemoUsersSeeder extends Seeder
           ])->each(function($superadmin)use($count){ 
             $count++;
             $superadmin->assign('superadmin');
+            $superadmin->markEmailAsVerified();
           });
       });
 
