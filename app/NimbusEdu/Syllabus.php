@@ -27,7 +27,7 @@ class Syllabus
     $this->curriculum_type = $this->getCurriculumType();
   }
 
-  public function processCurriculum($course_load, $payload) {
+  public function processCurriculum(array $course_load, $payload) {
     $this->payload = $payload;
 
     $course_grade_id = $course_load['course_grade_id'];
@@ -75,20 +75,19 @@ class Syllabus
     CurriculumType::where(['country' => $this->tenant->country])->first();
   }
 
-  public function processCourses($data): array {
-    foreach($data as $item) {
-      if (is_array($item)) {
-        $item['tenant_id'] = $this->tenant->id;
-        $course = Course::firstOrNew($item);
+  public function processCourses(array $coursesData): array {
+    foreach($coursesData as $courseData) {
+      $courseData["tenant_id"] = $this->tenant->id;
 
-        if ($course->id) {
-          $this->payload['updated'][] = $course;
-        } else {
-          $this->payload['created'][] = $course;
-        }
+      $course = Course::firstOrNew($courseData);
 
-        $course->save();
+      if ($course->id) {
+        $this->payload['updated'][] = $course;
+      } else {
+        $this->payload['created'][] = $course;
       }
+
+      $course->save();
     }
 
     return $this->payload;

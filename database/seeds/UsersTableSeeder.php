@@ -35,7 +35,7 @@ class UsersTableSeeder extends Seeder
               'tenant_id' => $nimbus_edu->tenant->id,
             ]);
 
-          $parent->assignWard($student);
+          $parent->assignWards([$student->id]);
 
           $nimbus_edu->enrollCoreCourses($student, $course_grade);
 

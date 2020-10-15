@@ -12,7 +12,7 @@ class StoreBatch extends FormRequest
 {
   const types = [
     [
-      'name' => 'course',
+      'type' => 'course',
       'model' => Course::class,
       'validation' => StoreCourse::class,
     ],
@@ -37,27 +37,30 @@ class StoreBatch extends FormRequest
     return array_merge([
       'type'  => [
         'required',
-        Rule::in(Arr::pluck(self::types, 'name'))
+        Rule::in(Arr::pluck(self::types, 'type'))
       ],
       'data'  => 'required|array',
     ], $this->getRule());
   }
 
-  private function getRule() {
+  private function getRule(): array {
     $rules = [];
 
     $validation = Arr::first(self::types, function ($value) {
-      return $value['name'] === $this->type;
+      return $value['type'] === request()->type;
     });
 
-    $validation = new $validation['validation']();
+    if ($validation) {
+      $validation = new $validation['validation']();
+      $validation_rules = $validation->rules();
 
-    $validation_rules = $validation->rules();
+      foreach(array_keys($validation_rules) as $key) {
+        $rules["data.*.{$key}"] = is_string($validation_rules[$key]) ? $validation_rules[$key]."|distinct" : $validation_rules[$key];
+      }
 
-    foreach(array_keys($validation_rules) as $key) {
-      $rules["data.*.{$key}"] = is_string($validation_rules[$key]) ? $validation_rules[$key]."|distinct" : $validation_rules[$key];
+      return $rules;
     }
 
-    return $rules;
+    return [];
   }
 }

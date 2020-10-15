@@ -243,25 +243,27 @@ class NimbusEdu
         'term_id' => $school_term->id
       ]);
 
-      foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
+      if ($this->getCourseLoadIds($course_grade_id)['core']) {
+        foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
 
-        var_dump('Enrolling '.$student->ref_id.' in '.$course['code']);
-
-        $registration = Registration::firstOrCreate([
-          'tenant_id' => $this->tenant->id ,
-          'user_id' => $student->id ,
-          'course_id' => $course['id'],
-          'term_id' => $school_term->id,
-          'billing_id' => $billing->id
-        ]);
-
-        $student->account_status_id = $this->getStatusID('registered')->id;
-
-        $student->save();
-
-        \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
-
-        var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
+          var_dump('Enrolling '.$student->ref_id.' in '.$course['code']);
+  
+          $registration = Registration::firstOrCreate([
+            'tenant_id' => $this->tenant->id ,
+            'user_id' => $student->id ,
+            'course_id' => $course['id'],
+            'term_id' => $school_term->id,
+            'billing_id' => $billing->id
+          ]);
+  
+          $student->account_status_id = $this->getStatusID('registered')->id;
+  
+          $student->save();
+  
+          \Log::info('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
+  
+          var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
+        }
       }
     }catch(Exception $e){
       throw new Exception($e->getMessage());

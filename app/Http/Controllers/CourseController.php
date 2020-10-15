@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Course as Course;
-use App\Curriculum as Curriculum;
+use App\Course;
+use App\Curriculum;
 use App\Http\Requests\GetCourse;
 use App\Http\Requests\GetCourses;
 use App\Http\Requests\StoreCourse;
+use App\Http\Requests\StoreCourseBatch;
 use App\Http\Requests\UpdateCourse;
 use App\Http\Requests\StoreBatch;
 use App\Jobs\ProcessBatch;
@@ -19,6 +20,7 @@ use App\Http\Requests\GetNotRegistered;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
+use App\Nimbus\Syllabus;
 
 class CourseController extends Controller
 {
@@ -157,10 +159,14 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function batch(StoreBatch $request){
-    ProcessBatch::dispatch(Auth::user()->tenant()->first(), [$request->data], $request->type);
+  public function batch(StoreCourseBatch $request) {
+    $syllabus = new Syllabus(Auth::user()->tenant()->first());
 
-    return response()->json(['message' => 'your request is being processed'], 200);
+    $data = $syllabus->processCourses($request->data);
+
+    var_dump($data);
+
+    //return response()->json(['message' => 'your request is being processed'], 200);
   }
 
   /**

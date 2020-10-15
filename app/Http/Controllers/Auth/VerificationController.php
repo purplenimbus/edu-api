@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Tenant;
 use App\Http\Controllers\Controller;
+use App\Notifications\ActivateTenant;
 use App\Notifications\TenantCreated;
 use App\User;
 use Illuminate\Foundation\Auth\VerifiesEmails;
@@ -40,7 +41,6 @@ class VerificationController extends Controller
    */
   public function __construct()
   {
-    $this->middleware('signed')->only('verify');
     $this->middleware('throttle:6,1')->only('verify', 'resend');
   }
 
@@ -56,8 +56,18 @@ class VerificationController extends Controller
     $message = '';
 
     if (is_null($user)) {
-      $message = 'User dosent exist';
-      return $this->get_view($message);
+      return view('auth.error', [
+        'title' => __('registration.user_exist'),
+        'message' => ''
+      ]);
+    }
+
+    if (!$request->hasValidSignature()) {
+      $user->notify(new ActivateTenant);
+      return view('auth.error', [ 
+        'title' => __('registration.token_expired'),
+        'message' => __('registration.email_resend')
+      ]);
     }
 
     if ($request->route('id') != $user->getKey()) {
@@ -77,7 +87,7 @@ class VerificationController extends Controller
       }
     }
 
-    $message = 'Email successfully verified';
+    $message =  __('registration.email_success', [ 'email' => $user->email ]);
 
     return $this->get_view($message, true);
   }

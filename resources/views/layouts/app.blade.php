@@ -7,78 +7,21 @@
     <title>@yield('title')</title>
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Lato:200,600" rel="stylesheet">
 
-    <!-- Styles -->
-    <style>
-      html, body {
-          background-color: #2b3e50;
-          color: white;
-          font-family: 'Lato', sans-serif;
-          font-weight: 200;
-          height: 100vh;
-          margin: 0;
-      }
+    <link href="{{ URL::asset('css/app.css') }}" rel="stylesheet"/>
+    <link href="https://unpkg.com/basscss@8.0.2/css/basscss.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/basscss-colors@2.2.0/css/colors.css" rel="stylesheet">
+    <link href="https://unpkg.com/basscss-background-colors@2.1.0/css/background-colors.css" rel="stylesheet">
+    <link href="https://unpkg.com/basscss-responsive-layout@1.0.1/css/responsive-layout.css" rel="stylesheet">
 
-      .full-height {
-          height: 100vh;
-      }
-
-      .flex-center {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-      }
-
-      .position-ref {
-          position: relative;
-      }
-
-      .top-right {
-          position: absolute;
-          right: 10px;
-          top: 18px;
-      }
-
-      .content {
-          text-align: center;
-      }
-
-      .title {
-        font-size: 2em;
-        margin: 0.67em 0;
-      }
-
-      .links > a {
-          color: #636b6f;
-          padding: 0 25px;
-          font-size: 13px;
-          font-weight: 600;
-          letter-spacing: .1rem;
-          text-decoration: none;
-          text-transform: uppercase;
-      }
-
-      .m-b-md {
-          margin-bottom: 30px;
-      }
-
-      .btn {
-        color: #ffffff;
-        background-color: #ff7f72;
-        border-color: transparent;
-        font-weight: 500;
-        cursor: default;
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-        line-height: 1.25;
-        border-radius: 100em !important;
-        text-transform: uppercase;
-        text-decoration: none;
-      }
-    </style>
   </head>
   <body>
-    @yield('content')
+    <section class="full-height flex items-center">
+      <div class="md-col-3 mx-auto">
+        <div class="flex flex-column bg-white rounded">
+          @yield('content')
+        </div>
+      </div>
+    </section>
   </body>
 </html>

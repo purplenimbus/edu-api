@@ -44,8 +44,14 @@ class CurriculumCourseLoad extends Model
   public function getHasCourseAttribute()
   {
     return Course::where([
+      //['tenant_id', $this->tenant_id], // need to scope to tenant?
       ['course_grade_id', $this->curriculum->grade->id],
       ['subject_id', $this->subject->id],
     ])->first() ? true : false;
+  }
+
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
   }
 }
