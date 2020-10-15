@@ -17,7 +17,7 @@
   </head>
   <body>
     <section class="full-height flex items-center">
-      <div class="md-col-3 mx-auto">
+      <div class="md-col-4 mx-auto">
         <div class="flex flex-column bg-white rounded">
           @yield('content')
         </div>
