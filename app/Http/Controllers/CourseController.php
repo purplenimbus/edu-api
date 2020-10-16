@@ -16,6 +16,7 @@ use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Student;
 use App\CourseStatus;
+use App\Http\Requests\DeleteCourse;
 use App\Http\Requests\GetNotRegistered;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
@@ -199,4 +200,15 @@ class CourseController extends Controller
   public function course_statuses(){
     return response()->json(CourseStatus::all(), 200);
   }
+
+  /**
+	 * Delete courses
+	 *
+	 * @return void
+	 */
+	public function delete(DeleteCourse $request){
+		Course::destroy($request->course_ids);
+
+		return response()->json(true, 200);
+	}
 }

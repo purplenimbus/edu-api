@@ -4,6 +4,7 @@ namespace App;
 
 use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Model;
+use Bouncer;
 
 class Course extends Model
 {
@@ -144,16 +145,14 @@ class Course extends Model
     });
 
     self::saved(function ($model) {
-      //var_dump("hello updating");
-      if (request()->has('instructor_id') && $model->wasChanged('instructor_id')) {
-        $former_instructor_id = $model->getOriginal()["instructor_id"];
-        $former_instructor = Instructor::find($former_instructor_id);
-        if ($former_instructor) {
-          var_dump("former instructor");
-          Bouncer::disallow($former_instructor)->to('view', $model);
-        }
+      if (request()->has('instructor_id') && $model->wasChanged('instructor_id') && isset($model->instructor_id)) {
         $model->instructor->assignInstructor($model);
-        $model::unsetEventDispatcher();
+      }
+    });
+
+    self::deleting(function ($model) {
+      if ($model->registrations()->count() > 0) {
+        $model->registrations()->delete();
       }
     });
   }

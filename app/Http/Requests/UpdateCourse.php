@@ -27,7 +27,7 @@ class UpdateCourse extends FormRequest
     return [
       'course_grade_id' => 'integer|exists:course_grades,id',
       'id' => 'required|integer|exists:courses,id',
-      'instructor_id' => 'integer|max:255|exists:users,id',
+      'instructor_id' => 'integer|max:255|exists:users,id|nullable',
       'name' => 'string|max:255',
       'schema' => 'array',
       'schema.*.name' => 'required|string|max:255',

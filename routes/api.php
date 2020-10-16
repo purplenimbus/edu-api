@@ -85,6 +85,7 @@ Route::group([
         Route::post('', 'CourseController@create');
         Route::post('/batch', 'CourseController@batch');
         Route::post('/generate', 'CourseController@generate');
+        Route::delete('', 'CourseController@delete');
       });
 
       Route::group([

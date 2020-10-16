@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\CourseScore;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Bouncer;
 
 class Registration extends Model
 {

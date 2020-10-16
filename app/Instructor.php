@@ -41,17 +41,17 @@ class Instructor extends User
    *  Assign Instructor
   */
   public function assignInstructor(Course $course) 
-  {
-    $course->fill([
-      'instructor_id' => $this->id,
-    ]);
+  { 
+    $former_instructor_id = $course->getOriginal()["instructor_id"];
+    $former_instructor = Instructor::find($former_instructor_id);
 
-    $course->save();
-    
+    if ($former_instructor) {
+      Bouncer::disallow($former_instructor)->to('view', $course);
+      Bouncer::disallow($former_instructor)->to('edit', $course);
+    }
+
     Bouncer::allow($this)->to('edit', $course);
     Bouncer::allow($this)->to('view', $course);
-
-    return $course;
   }
 
   /**
