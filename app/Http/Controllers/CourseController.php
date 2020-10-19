@@ -32,7 +32,8 @@ class CourseController extends Controller
    */
   public function index(GetCourses $request)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
+    $user = Auth::user();
+    $tenant = $user->tenant()->first();
 
     $courses = QueryBuilder::for(Course::class)
       ->defaultSort('name')
@@ -81,7 +82,7 @@ class CourseController extends Controller
         'status'
       )
       ->where([
-        ['tenant_id', '=', $tenant_id]
+        ['tenant_id', '=', $tenant->id]
       ])
       ->paginate($request->paginate ?? config('edu.pagination'));
     

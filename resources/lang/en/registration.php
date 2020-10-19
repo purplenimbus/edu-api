@@ -4,7 +4,7 @@ return [
   'account_created' => 'Account Created',
   'before' => 'but before you do that, you will need to confirm your email address',
   'email' => 'yes :email is my email address',
-  'email_resend' => 'Dont worry, we can resend the email confirmation',
+  'email_resend' => 'Dont worry, we have resent the email confirmation',
   'email_success' => '<strong>:email</strong> successfully verified',
   'hi' => 'Hi :first_name!',
   'login' => 'Login',
