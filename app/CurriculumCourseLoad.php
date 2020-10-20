@@ -54,4 +54,9 @@ class CurriculumCourseLoad extends Model
   {
     return $query->where('tenant_id', $tenant_id);
   }
+
+  public function scopeOfCore($query)
+  {
+    return $query->where('type_id', 1); //need to move to constant
+  }
 }
