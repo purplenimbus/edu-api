@@ -115,25 +115,16 @@ class Tenant extends Model
  
   public function createSubAccount(array $options = []) {
     try {
+      if ($this->subaccount_code) {
+        return Paystack::fetchSubAccount($this->subaccount_code);
+      }
+
       $bank_account = $this->defaultBankAccount();
 
       if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
-        $payload = array_merge([
-          'account_number' => strval($bank_account->account_number),
-          'business_name' => $this->name,
-          'settlement_bank' => strval($bank_account->bank_code),
-          'percentage_charge' => floatval(env('PAYSTACK_PROCESSING_FEE_PERCENTAGE')),
-          'primary_contact_email' => $this->owner->email,
-          'primary_contact_name' => $this->owner->fullname,
-        ], $options);
+        request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
 
-        $phone_number = Arr::get($this, 'owner.address.phone_number', null);
-  
-        if ($phone_number) {
-          $payload["primary_contact_phone"] = $phone_number;
-        }
-
-        $sub_account = Paystack::createSubAccount($payload);
+        $sub_account = Paystack::createSubAccount();
 
         $sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
 
@@ -141,14 +132,64 @@ class Tenant extends Model
           $this->update(['subaccount_code' => $sub_account_code]);
         }
 
-        dd($sub_account);
+        return $this;
       }
 
-    } catch(Exception $e) {
-      dd($e->getMessage());
+    } catch (Exception $e) {
       Log::error('Invalid Request', [
         'message' => $e->getMessage(),
       ]);
     }
+  }
+
+  public function updateSubAccount(array $options = []) {
+    if (!$this->subaccount_code) {
+      return;
+    }
+
+    try {
+      if ($this->subaccount_code) {
+        return Paystack::fetchSubAccount($this->subaccount_code);
+      }
+
+      $bank_account = $this->defaultBankAccount();
+
+      if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
+        request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
+
+        $sub_account = Paystack::updateSubAccount($this->subaccount_code);
+
+        $sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
+
+        if ($sub_account_code) {
+          $this->update(['subaccount_code' => $sub_account_code]);
+        }
+
+        return $this;
+      }
+    } catch(Exception $e) {
+
+    }
+  }
+
+  private function getPaystackPayload(array $options = []) {
+    $bank_account = $this->defaultBankAccount();
+
+    $payload = array_merge([
+      'account_number' => strval($bank_account->account_number),
+      'business_name' => $this->name,
+      'settlement_bank' => strval($bank_account->bank_code),
+      'percentage_charge' => floatval(env('PAYSTACK_PROCESSING_FEE_PERCENTAGE')),
+      'primary_contact_email' => $this->owner->email,
+      'primary_contact_name' => $this->owner->fullname,
+    ], $options);
+
+    $phone_number = Arr::get($this, 'owner.address.phone_number', null);
+
+    if ($phone_number) {
+      $payload["primary_contact_phone"] = $phone_number;
+    }
+
+    return $payload;
   }
 }

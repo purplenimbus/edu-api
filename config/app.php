@@ -158,6 +158,7 @@ return [
        * Package Service Providers...
        */
       Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+      Unicodeveloper\Paystack\PaystackServiceProvider::class,
       /*
        * Application Service Providers...
        */
