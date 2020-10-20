@@ -45,6 +45,7 @@ Route::group([
       Route::group([
         'prefix' => '/{tenant_id}'
       ], function() {
+        Route::get('/', 'TenantController@show');
         Route::put('/', 'TenantController@update');
         Route::get('/settings', 'TenantController@settings');
         Route::post('/term', 'TenantController@updateTerm');

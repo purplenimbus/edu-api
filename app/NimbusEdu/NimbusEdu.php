@@ -15,7 +15,7 @@ use App\SchoolTerm;
 use App\CurriculumType;
 use App\UserType;
 use App\StatusType;
-use App\Billing;
+use App\Invoice;
 use App\Guardian;
 use App\Notifications\ActivateUser;
 use App\Notifications\BatchProcessed;
@@ -238,7 +238,7 @@ class NimbusEdu
 
       $school_term = $this->tenant->current_term;
 
-      $billing = Billing::firstOrCreate([
+      $invoice = Invoice::firstOrCreate([
         'tenant_id' => $this->tenant->id,
         'term_id' => $school_term->id
       ]);
@@ -253,7 +253,7 @@ class NimbusEdu
             'user_id' => $student->id ,
             'course_id' => $course['id'],
             'term_id' => $school_term->id,
-            'billing_id' => $billing->id
+            'invoice_id' => $invoice->id
           ]);
   
           $student->account_status_id = $this->getStatusID('registered')->id;

@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Billing as Billing;
+use App\Invoice;
 
-class BillingController extends Controller
+class InvoiceController extends Controller
 {
 	public function getBills($tenant_id, Request $request)
 	{
@@ -17,11 +17,11 @@ class BillingController extends Controller
 		$relationships = ['registrations', 'status'];
 
 		$bills = $request->has('paginate') ?
-			Billing::with($relationships)
+			Invoice::with($relationships)
 			->where($query)
 			->paginate($request->paginate)
 
-			: Billing::with($relationships)
+			: Invoice::with($relationships)
 			->where($query)
 			->get();
 
@@ -29,7 +29,7 @@ class BillingController extends Controller
 			return response()->json($bills, 200);
 		} else {
 
-			$message = 'no billing found for tenant id : ' . $tenant_id;
+			$message = 'no invoice found for tenant id : ' . $tenant_id;
 
 			return response()->json(['message' => $message], 204);
 		}

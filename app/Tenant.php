@@ -42,9 +42,7 @@ class Tenant extends Model
    *
    * @var array
    */
-  protected $appends = [
-    'current_term'
-  ];
+  protected $appends = [];
 
   /**
   * The attributes excluded from the model's JSON form.
@@ -78,6 +76,10 @@ class Tenant extends Model
     return User::whereIs('admin')
       ->where('tenant_id', $this->id)
       ->first();
+  }
+
+  public function getPaymentDetailsAttribute() {
+    return $this->defaultBankAccount();
   }
 
   public function setOwner(User $user) {

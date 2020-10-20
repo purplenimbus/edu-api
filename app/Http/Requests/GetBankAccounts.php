@@ -24,7 +24,7 @@ class GetBankAccounts extends FormRequest
 	public function rules()
 	{
 		return [
-			'tenant_id' => 'exists:tenants,id',
+			'id' => 'exists:tenants,id',
 		];
 	}
 

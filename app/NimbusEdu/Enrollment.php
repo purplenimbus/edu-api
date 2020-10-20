@@ -3,7 +3,7 @@
 namespace App\Nimbus;
 
 use App\Registration;
-use App\Billing;
+use App\Invoice;
 use App\Student;
 use App\Tenant;
 use App\Guardian;
@@ -32,7 +32,7 @@ class Enrollment
   private function enroll(Student $student, Int $course_id) {
     $school_term = $this->tenant->current_term;
 
-    $billing = Billing::firstOrCreate([
+    $invoice = Invoice::firstOrCreate([
       'tenant_id' => $this->tenant->id,
       'term_id' => $school_term->id
     ]);
@@ -42,7 +42,7 @@ class Enrollment
       'user_id' => $student->id,
       'course_id' => $course_id,
       'term_id' => $school_term->id,
-      'billing_id' => $billing->id
+      'invoice_id' => $invoice->id
     ]);
 
     return $registration;

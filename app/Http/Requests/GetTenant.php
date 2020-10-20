@@ -24,7 +24,11 @@ class GetTenant extends FormRequest
     public function rules()
     {
       return [
-        'id'  => 'integer|required|exists:tenants,id',
+        'tenant_id'  => 'integer|required|exists:tenants,id',
       ];
+    }
+
+    public function validationData() {
+      return array_merge($this->all(), $this->route()->parameters());
     }
   }
