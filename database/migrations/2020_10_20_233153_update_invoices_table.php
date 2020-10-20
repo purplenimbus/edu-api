@@ -17,7 +17,7 @@ class UpdateInvoicesTable extends Migration
 			$table->string('invoice_number')->nullable()->unique();
 			$table->date('due_date')->nullable();
 			$table->mediumText('comments')->nullable();
-			$table->integer('user_id');
+			$table->integer('user_id')->nullable();
 		});
 	}
 
