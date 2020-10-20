@@ -11,12 +11,11 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Wisdomanthoni\Cashier\Billable;
 use Unicodeveloper\Paystack\Facades\Paystack;
 
 class Tenant extends Model
 {
-  use Notifiable, Billable;
+  use Notifiable;
 
   /**
   * The attributes that are mass assignable.
