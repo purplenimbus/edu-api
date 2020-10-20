@@ -12,7 +12,14 @@ class Invoice extends Model
    * @var array
    */
   protected $fillable = [
-    'details','status_id','tenant_id','term_id'
+    'details',
+    'due_date',
+    'comments',
+    'invoice_number',
+    'status_id',
+    'tenant_id',
+    'term_id',
+    'user_id',
   ];
 
   /**
@@ -29,8 +36,12 @@ class Invoice extends Model
     return $this->hasMany('App\Registration');
   }
 
+  public function lineItems(){
+    return $this->hasMany('App\LineItem');
+  }
+
   public function status(){
-    return $this->belongsTo('App\BillingStatus','status_id');
+    return $this->belongsTo('App\InvoiceStatus','status_id');
   }
 
   /**

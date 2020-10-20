@@ -47,7 +47,7 @@ class OtherSeeders extends Seeder
       App\StatusType::create($account_status_type);
     }
 
-    $billing_status_types = [
+    $invoice_status_types = [
       [ 'name' => 'pending' ],
       [ 'name' => 'paid'  ],
       [ 'name' => 'voided' ],
@@ -55,8 +55,8 @@ class OtherSeeders extends Seeder
     ];
     
     //Create Biling Status Types
-    foreach($billing_status_types as $billing_status_type){
-      App\BillingStatus::create($billing_status_type);
+    foreach($invoice_status_types as $billing_status_type){
+      App\InvoiceStatus::create($billing_status_type);
     }
 
     $course_statuses = [
