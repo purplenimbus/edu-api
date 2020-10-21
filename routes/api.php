@@ -57,6 +57,20 @@ Route::group([
           Route::put('/{bank_account_id}', 'BankAccountController@update');
           Route::delete('/{bank_account_id}', 'BankAccountController@delete');
         });
+
+        Route::group([
+          'prefix' => '/invoices'
+        ], function() {
+          Route::get('/', 'InvoiceController@index');
+          Route::post('/', 'InvoiceController@create');
+          Route::group([
+            'prefix' => '/{id}'
+          ], function() {
+            Route::get('/', 'InvoiceController@show');
+            Route::put('/', 'InvoiceController@update');
+            Route::delete('/', 'InvoiceController@delete');
+          });
+        });
       });
     });
 

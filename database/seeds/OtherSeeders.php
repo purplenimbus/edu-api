@@ -49,6 +49,7 @@ class OtherSeeders extends Seeder
 
     $invoice_status_types = [
       [ 'name' => 'pending' ],
+      [ 'name' => 'past_due' ],
       [ 'name' => 'paid'  ],
       [ 'name' => 'voided' ],
       [ 'name' => 'archived'  ],

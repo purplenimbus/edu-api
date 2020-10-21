@@ -2,36 +2,97 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeleteInvoice;
+use App\Http\Requests\GetInvoices;
+use App\Http\Requests\GetInvoice;
 use Illuminate\Http\Request;
-
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use App\Invoice;
+use App\InvoiceStatus;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Builder as Builder;
 
 class InvoiceController extends Controller
 {
-	public function getBills($tenant_id, Request $request)
-	{
-		$query = [
-			['tenant_id', '=', $tenant_id]
-		];
+	/**
+   * List all Invoices
+   *
+   * @return void
+   */
+	public function index(GetInvoices $request) {
+		$tenant = Auth::user()->tenant()->first();
 
-		$relationships = ['registrations', 'status'];
+		$invoices = QueryBuilder::for(Invoice::class)
+			->allowedIncludes([
+				'line_items',
+				'recipient',
+				'status',
+			])
+			->allowedFilters([
+        'name',
+        AllowedFilter::callback('recipient_id', function (Builder $query, $value) {
+          return $query->where('recipient_id', '=', (int)$value);
+        }),
+        AllowedFilter::callback('status', function (Builder $query, $value) {
+          $status = InvoiceStatus::where('name', $value)->first();
 
-		$bills = $request->has('paginate') ?
-			Invoice::with($relationships)
-			->where($query)
-			->paginate($request->paginate)
+          return $query->where('status_id', '=', isset($status->id) ? (int)$status->id: false);
+        }),
+        AllowedFilter::callback('status_id', function (Builder $query, $value) {
+          return $query->where('status_id', '=', (int)$value);
+				}),
+			])
+			->where([
+				['tenant_id', '=', $tenant->id]
+			]);
 
-			: Invoice::with($relationships)
-			->where($query)
-			->get();
+		$data = isset($request->paginate) ? $invoices->paginate($request->paginate) : $invoices->get();
 
-		if (sizeof($bills)) {
-			return response()->json($bills, 200);
-		} else {
+		return response()->json($data, 200);
+	}
 
-			$message = 'no invoice found for tenant id : ' . $tenant_id;
 
-			return response()->json(['message' => $message], 204);
-		}
+	/**
+   * Show an Invoices
+   *
+   * @return void
+   */
+	public function show(GetInvoice $request) {
+		$tenant = Auth::user()->tenant()->first();
+
+		$invoice = QueryBuilder::for(Invoice::class)
+			->allowedIncludes([
+				'line_items',
+				'recipient',
+				'status',
+			])
+			->where([
+				['tenant_id', '=', $tenant->id],
+				['id', '=', $request->id],
+			])
+			->first();
+
+		return response()->json($invoice, 200);
+	}
+
+	/**
+   * Update an Invoices
+   *
+   * @return void
+   */
+	public function update(GetInvoice $request) {
+
+	}
+
+	/**
+   * delete an Invoices
+   *
+   * @return void
+   */
+	public function delete(DeleteInvoice $request) {
+		Invoice::destroy($request->invoice_ids);
+
+		return response()->json(true, 200);
 	}
 }

@@ -19,7 +19,7 @@ class Invoice extends Model
     'status_id',
     'tenant_id',
     'term_id',
-    'user_id',
+    'recipient_id',
   ];
 
   /**
@@ -36,12 +36,20 @@ class Invoice extends Model
     return $this->hasMany('App\Registration');
   }
 
-  public function lineItems(){
+  public function line_items(){
     return $this->hasMany('App\LineItem');
   }
 
   public function status(){
     return $this->belongsTo('App\InvoiceStatus','status_id');
+  }
+
+  public function tenant(){
+    return $this->belongsTo('App\Tenant');
+  }
+
+  public function recipient(){
+    return $this->belongsTo('App\User','recipient_id');
   }
 
   /**
@@ -59,5 +67,10 @@ class Invoice extends Model
   public static function boot()
   {
     parent::boot();
+  }
+
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->where('tenant_id', $tenant_id);
   }
 }
