@@ -51,15 +51,13 @@ class RegisterController extends Controller
 	 * @param  array  $data
 	 * @return \App\User
 	 */
-	protected function create(StoreTenant $data)
+	protected function create(StoreTenant $request)
 	{
-		$data = $this->parse_user($data);
-		$tenant = Tenant::create($data->only('name'));
-		$payload = Arr::only($data->all(), ['firstname','lastname','email','password']);
+		$tenant = Tenant::create($request->only('name'));
+		$request = $this->parse_user($request);
+		$payload = $request->only(['firstname','lastname','email','password']);
 		$payload["tenant_id"] = $tenant->id;
-		$user = new User();
-    $user->fill($payload);
-		$user->save();
+		$user = User::create($payload);
 
 		$tenant->setOwner($user);
 		$tenant->owner->notify(new ActivateTenant);
@@ -69,12 +67,13 @@ class RegisterController extends Controller
 		], 200);
 	}
 
-	private function parse_user($data){
-		$fullName = explode(' ', $data->fullName);
+	private function parse_user(Request $request){
+		$data = [];
+		$fullName = explode(' ', $request->fullName);
 		$data['firstname'] = $fullName[0];
 		$data['lastname'] = isset($fullName[1]) ? $fullName[1] : '';
-		$data['password'] = app('hash')->make($data->password);
+		$request->merge($data);
 
-		return $data;
+		return $request;
 	}
 }

@@ -40,7 +40,7 @@ class PasswordResetRequest extends Notification
 	 */
 	public function toMail($notifiable)
 	{
-		$host = env('FRONT_END_URL','http://localhost:4200/');
+		$host = env('FRONT_END_URL','http://localhost:4200/#/');
 		$url = "{$host}auth/reset-password?token={$this->token}";
 
 		return (new MailMessage)
