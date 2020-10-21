@@ -17,7 +17,7 @@ class CreateBankingsTable extends Migration
 			$table->increments('id');
 			$table->string('bank_name', 100);
 			$table->string('bank_code');
-			$table->integer('account_number');
+			$table->char('account_number', 10);
 			$table->string('account_name');
 			$table->integer('tenant_id');
 			$table->text('description')->nullable();

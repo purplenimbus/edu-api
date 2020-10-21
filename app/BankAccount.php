@@ -29,6 +29,12 @@ class BankAccount extends Model
   {
     parent::boot();
 
+    self::created(function($model) {
+      if ($model->tenant->payment_details) {
+        $model->tenant->createSubAccount();
+      }
+    });
+
     self::saving(function($model) {
       $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
 
@@ -44,6 +50,10 @@ class BankAccount extends Model
         $other_bank_accounts->update([
           'default' => false,
         ]);
+      }
+
+      if ($model->tenant->payment_details) {
+        $model->tenant->updateOrCreateSubAccount();
       }
     });
 

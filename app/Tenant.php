@@ -89,24 +89,6 @@ class Tenant extends Model
     $user->assign('admin');
   }
 
-  public function activateSubscription() {
-    try {
-      $this->createAsPaystackCustomer([
-        "email" => $this->owner->email,
-        "first_name" => $this->owner->firstname,
-        "last_name" => $this->owner->lastname,
-      ]);
-
-      $this->newSubscription(env('PAYSTACK_PLAN_NAME'), env('PAYSTACK_PLAN_ID'))
-        ->create(null);
-
-    } catch(Exception $e) {
-      Log::error('Invalid Request', [
-        'message' => $e->getMessage(),
-      ]);
-    }
-  }
-
   public function defaultBankAccount() {
     return BankAccount::where([
       'tenant_id' => $this->id,
@@ -117,7 +99,7 @@ class Tenant extends Model
   public function createSubAccount(array $options = []) {
     try {
       if ($this->subaccount_code) {
-        return Paystack::fetchSubAccount($this->subaccount_code);
+        return $this->getAsPayStackAccount();
       }
 
       $bank_account = $this->defaultBankAccount();
@@ -133,7 +115,7 @@ class Tenant extends Model
           $this->update(['subaccount_code' => $sub_account_code]);
         }
 
-        return $this;
+        return $sub_account;
       }
 
     } catch (Exception $e) {
@@ -143,16 +125,12 @@ class Tenant extends Model
     }
   }
 
-  public function updateSubAccount(array $options = []) {
+  public function updateOrCreateSubAccount(array $options = []) {
     if (!$this->subaccount_code) {
-      return;
+      return $this->createSubAccount();
     }
 
     try {
-      if ($this->subaccount_code) {
-        return Paystack::fetchSubAccount($this->subaccount_code);
-      }
-
       $bank_account = $this->defaultBankAccount();
 
       if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
@@ -171,6 +149,14 @@ class Tenant extends Model
     } catch(Exception $e) {
 
     }
+  }
+
+  public function getAsPayStackAccount() {
+    if (!$this->subaccount_code) {
+      return;
+    }
+
+    return Paystack::fetchSubAccount($this->subaccount_code);
   }
 
   private function getPaystackPayload(array $options = []) {
