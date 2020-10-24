@@ -27,4 +27,8 @@ class GetInvoice extends FormRequest
 			'id' => 'exists:invoices,id'
 		];
 	}
+
+	public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
+  }
 }

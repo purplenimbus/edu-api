@@ -17,6 +17,7 @@ class CreateLineItemsTable extends Migration
 			$table->float('amount');
 			$table->increments('id');
 			$table->integer('invoice_id');
+			$table->integer('tenant_id');
 			$table->integer('quantity');
 			$table->mediumText('description');
 			$table->timestamps();

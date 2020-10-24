@@ -57,19 +57,27 @@ Route::group([
           Route::put('/{bank_account_id}', 'BankAccountController@update');
           Route::delete('/{bank_account_id}', 'BankAccountController@delete');
         });
+      });
+    });
+
+    /* Invoices */
+    Route::group([
+      'prefix' => '/invoices'
+    ], function() {
+      Route::get('/', 'InvoiceController@index');
+      Route::post('/', 'InvoiceController@create');
+      Route::group([
+        'prefix' => '/{invoice_id}'
+      ], function() {
+        Route::get('/', 'InvoiceController@show');
+        Route::put('/', 'InvoiceController@update');
+        Route::delete('/', 'InvoiceController@delete');
 
         Route::group([
-          'prefix' => '/invoices'
+          'prefix' => '/line_items'
         ], function() {
-          Route::get('/', 'InvoiceController@index');
-          Route::post('/', 'InvoiceController@create');
-          Route::group([
-            'prefix' => '/{id}'
-          ], function() {
-            Route::get('/', 'InvoiceController@show');
-            Route::put('/', 'InvoiceController@update');
-            Route::delete('/', 'InvoiceController@delete');
-          });
+          Route::get('/', 'LineItemsController@index');
+          Route::delete('/', 'LineItemsController@delete');
         });
       });
     });

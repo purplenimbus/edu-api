@@ -32,7 +32,7 @@ class UpdateInvoicesTable extends Migration
 			$table->dropColumn('comments');
 			$table->dropColumn('due_date');
 			$table->dropColumn('invoice_number');
-			$table->dropColumn('user_id');
+			$table->dropColumn('recipient_id');
 		});
 	}
 }

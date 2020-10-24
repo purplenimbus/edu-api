@@ -32,17 +32,11 @@ class Enrollment
   private function enroll(Student $student, Int $course_id) {
     $school_term = $this->tenant->current_term;
 
-    $invoice = Invoice::firstOrCreate([
-      'tenant_id' => $this->tenant->id,
-      'term_id' => $school_term->id
-    ]);
-
     $registration = Registration::firstOrCreate([
       'tenant_id' => $this->tenant->id ,
       'user_id' => $student->id,
       'course_id' => $course_id,
       'term_id' => $school_term->id,
-      'invoice_id' => $invoice->id
     ]);
 
     return $registration;

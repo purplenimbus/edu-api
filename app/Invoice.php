@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 class Invoice extends Model
 {
   /**
+   * Cast meta property to array
+   *
+   * @var array
+   */
+  protected $casts = [
+    'meta' => 'array',
+  ];
+
+  /**
    * The attributes that are mass assignable.
    *
    * @var array
@@ -53,24 +62,27 @@ class Invoice extends Model
   }
 
   /**
-   * Cast meta property to array
-   *
-   * @var array
-   */
-  protected $casts = [
-    'meta' => 'array',
-  ];
-
-  /**
  *  Setup model event hooks
  */
   public static function boot()
   {
     parent::boot();
+
+    self::deleting(function ($model) {
+      if ($model->line_items()->count() > 0) {
+        $model->line_items()->delete();
+      }
+    });
   }
 
   public function scopeOfTenant($query, $tenant_id)
   {
     return $query->where('tenant_id', $tenant_id);
+  }
+
+  public function getBalanceAttribute() {
+    return $this->line_items->sum(function($line_item){
+      return $line_item->amount*$line_item->quantity;
+    });
   }
 }

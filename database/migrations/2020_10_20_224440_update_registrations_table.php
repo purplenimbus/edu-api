@@ -14,7 +14,7 @@ class UpdateRegistrationsTable extends Migration
 	public function up()
 	{
 		Schema::table('registrations', function (Blueprint $table) {
-			$table->renameColumn('billing_id', 'invoice_id');
+			$table->dropColumn('billing_id');
 		});
 	}
 
@@ -26,7 +26,7 @@ class UpdateRegistrationsTable extends Migration
 	public function down()
 	{
 		Schema::table('registrations', function (Blueprint $table) {
-			$table->renameColumn('invoice_id', 'billing_id');
+			$table->integer('billing_id')->nullable();
 		});
 	}
 }

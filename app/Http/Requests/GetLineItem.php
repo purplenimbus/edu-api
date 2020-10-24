@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DeleteInvoice extends FormRequest
+class GetLineItem extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,8 +24,12 @@ class DeleteInvoice extends FormRequest
 	public function rules()
 	{
 		return [
-			'invoice_ids' => 'array|required',
-      'invoice_ids.*' => 'required|integer|exists:invoices,id',
+			'id' => 'integer|exists:line_items,id',
+			'invoice_id' => 'integer|exists:invoices,id',
 		];
 	}
+
+	public function validationData(){
+    return array_merge($this->all(), $this->route()->parameters());
+  }
 }

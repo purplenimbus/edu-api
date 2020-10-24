@@ -442,8 +442,6 @@ class NimbusEdu
         $guardian->assignWards($request->ward_ids);
       }
 
-      $guardian->load('wards.members.user');
-
       \Log::info('Created Guardian '.$guardian->id);
 
       return $guardian;

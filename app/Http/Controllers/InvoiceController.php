@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\DeleteInvoice;
 use App\Http\Requests\GetInvoices;
 use App\Http\Requests\GetInvoice;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreInvoice;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Invoice;
@@ -28,6 +28,9 @@ class InvoiceController extends Controller
 				'line_items',
 				'recipient',
 				'status',
+			])
+			->allowedAppends([
+				'balance',
 			])
 			->allowedFilters([
         'name',
@@ -54,7 +57,7 @@ class InvoiceController extends Controller
 
 
 	/**
-   * Show an Invoices
+   * Show an Invoice
    *
    * @return void
    */
@@ -69,10 +72,33 @@ class InvoiceController extends Controller
 			])
 			->where([
 				['tenant_id', '=', $tenant->id],
-				['id', '=', $request->id],
+				['id', '=', $request->invoice_id],
 			])
 			->first();
 
+		return response()->json($invoice, 200);
+	}
+
+	/**
+   * Create an Invoice
+   *
+   * @return void
+   */
+	public function create(StoreInvoice $request) {
+		$tenant = Auth::user()->tenant()->first();
+
+		$request->merge([
+			'tenant_id' => $tenant->id,
+		]);
+
+		$invoice = Invoice::create($request->only(['recipient_id', 'tenant_id']));
+
+		$line_items = $request->line_items;
+
+		$line_items = data_fill($line_items, '*.tenant_id', $tenant->id);
+
+		$invoice->line_items()->createMany($line_items);
+			
 		return response()->json($invoice, 200);
 	}
 
@@ -86,7 +112,7 @@ class InvoiceController extends Controller
 	}
 
 	/**
-   * delete an Invoices
+   * delete an Invoice
    *
    * @return void
    */
