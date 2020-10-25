@@ -101,7 +101,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     return [
       'user' => $this->toArray(),
       'permissions' => $permissions,
-      'tenant' => $this->tenant->only('country','name','id'),
+      'tenant' => $this->tenant,
     ];
   }
 

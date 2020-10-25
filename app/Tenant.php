@@ -41,7 +41,9 @@ class Tenant extends Model
    *
    * @var array
    */
-  protected $appends = [];
+  protected $appends = [
+    'email'
+  ];
 
   /**
   * The attributes excluded from the model's JSON form.
@@ -79,6 +81,10 @@ class Tenant extends Model
 
   public function getPaymentDetailsAttribute() {
     return $this->defaultBankAccount();
+  }
+
+  public function getEmailAttribute() {
+    return Arr::get($this, 'owner.email', null);
   }
 
   public function setOwner(User $user) {
