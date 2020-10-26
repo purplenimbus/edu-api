@@ -21,7 +21,7 @@ class UsersTableSeeder extends Seeder
     $course_grades = [7,8,9,10,11,12,13];
   
     foreach($course_grades as $course_grade){
-      $students = factory(App\Student::class, 'student', 10)
+      $students = factory(App\Student::class, 10)
         ->create([
           'tenant_id' => $nimbus_edu->tenant->id,
           'meta' => [
@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
         ])
         ->each(function($student) use ($nimbus_edu, $course_grade, $count){
 
-          $parent = factory(Guardian::class, 'parent')
+          $parent = factory(Guardian::class)
             ->create([
               'tenant_id' => $nimbus_edu->tenant->id,
             ]);

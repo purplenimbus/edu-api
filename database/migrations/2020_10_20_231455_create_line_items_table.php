@@ -14,7 +14,7 @@ class CreateLineItemsTable extends Migration
 	public function up()
 	{
 		Schema::create('line_items', function (Blueprint $table) {
-			$table->float('amount');
+			$table->decimal('amount', 13, 2);
 			$table->increments('id');
 			$table->integer('invoice_id');
 			$table->integer('tenant_id');

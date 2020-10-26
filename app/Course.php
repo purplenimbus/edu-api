@@ -8,15 +8,15 @@ use Bouncer;
 
 class Course extends Model
 {
-  /**
-   * The "booted" method of the model.
-   *
-   * @return void
-   */
-  protected static function booted()
-  {
-    static::addGlobalScope(new TenantScope);
-  }
+  // /**
+  //  * The "booted" method of the model.
+  //  *
+  //  * @return void
+  //  */
+  // protected static function booted()
+  // {
+  //   static::addGlobalScope(new TenantScope);
+  // }
 
   /**
    * The attributes that are mass assignable.

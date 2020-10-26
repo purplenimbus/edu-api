@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Cknow\Money\Money;
 
 class Invoice extends Model
 {
@@ -84,5 +85,17 @@ class Invoice extends Model
     return $this->line_items->sum(function($line_item){
       return $line_item->amount*$line_item->quantity;
     });
+  }
+
+  public function getFormattedBalanceAttribute() {
+    $defaultCurrency = config('money.defaultCurrency', 'NGN');
+
+    $money = Money::$defaultCurrency($this->balance);
+    
+    $balance = $money->toArray();
+
+    $balance['value'] = intval($money->formatByDecimal());
+    
+    return $balance;
   }
 }

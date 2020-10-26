@@ -27,14 +27,14 @@ $factory->define(App\User::class, function (Faker $faker) {
   ];
 });
 
-$factory->defineAs(App\Student::class, 'student', function (Faker $faker) use ($factory) {
+$factory->define(App\Student::class, function () use ($factory) {
   return $factory->raw(App\User::class);
 });
 
-$factory->defineAs(App\Instructor::class, 'teacher', function (Faker $faker) use ($factory) {
+$factory->define(App\Instructor::class, function () use ($factory) {
   return $factory->raw(App\User::class);
 });
 
-$factory->defineAs(App\Guardian::class, 'parent', function (Faker $faker) use ($factory) {
+$factory->define(App\Guardian::class, function () use ($factory) {
   return $factory->raw(App\User::class);
 });

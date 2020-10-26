@@ -31,6 +31,7 @@ class InvoiceController extends Controller
 			])
 			->allowedAppends([
 				'balance',
+				'formatted_balance',
 			])
 			->allowedFilters([
         'name',
