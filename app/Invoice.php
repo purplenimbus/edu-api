@@ -42,10 +42,6 @@ class Invoice extends Model
     'tenant_id'
   ];
 
-  public function registrations(){
-    return $this->hasMany('App\Registration');
-  }
-
   public function line_items(){
     return $this->hasMany('App\LineItem');
   }
@@ -60,6 +56,11 @@ class Invoice extends Model
 
   public function recipient(){
     return $this->belongsTo('App\User','recipient_id');
+  }
+
+  public function transactions()
+  {
+    return $this->hasMany('App\Transaction', 'invoice_id');
   }
 
   /**
