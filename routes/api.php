@@ -70,6 +70,7 @@ Route::group([
         'prefix' => '/{invoice_id}'
       ], function() {
         Route::get('/', 'InvoiceController@show');
+        Route::get('/verify', 'InvoiceController@verify');
         Route::put('/', 'InvoiceController@update');
         Route::delete('/', 'InvoiceController@delete');
 
@@ -81,6 +82,14 @@ Route::group([
         });
       });
     });
+
+    Route::group([
+      'prefix' => '/transactions'
+    ], function() {
+      Route::get('/verify', 'TransactionController@verify');
+    });
+
+    /* Transactions */
 
     /* Terms */
     Route::group([
@@ -172,6 +181,7 @@ Route::group([
       });
     });
 
+    /* Transaction */
     Route::group([
       'prefix' => '/guardians'
     ], function() {

@@ -55,9 +55,21 @@ class OtherSeeders extends Seeder
       [ 'name' => 'archived'  ],
     ];
     
-    //Create Biling Status Types
+    //Create Invoice Status Types
     foreach($invoice_status_types as $billing_status_type){
       App\InvoiceStatus::create($billing_status_type);
+    }
+
+    $transaction_statuses = [
+      [ 'name' => 'pending' ],
+      [ 'name' => 'success' ],
+      [ 'name' => 'failed' ],
+      [ 'name' => 'refunded'  ],
+    ];
+    
+    //Create Invoice Statuses
+    foreach($transaction_statuses as $transaction_status){
+      App\TransactionStatus::create($transaction_status);
     }
 
     $course_statuses = [
