@@ -62,6 +62,14 @@ class RegisterController extends Controller
 		$tenant->setOwner($user);
 		$tenant->owner->notify(new ActivateTenant);
 
+		$payStackCustomer = PayStack::createCustomer([
+			'first_name' => $request->firstname,
+			'last_name' => $request->lastname,
+			'email' => $request->email
+		]);
+
+		$tenant->fill(['paystack_id' => $payStackCustomer->customer_code]);
+
 		return response([
 			'message' => 'Account created, check your email to activate your account',
 		], 200);
