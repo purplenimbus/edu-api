@@ -23,7 +23,11 @@ class Tenant extends Model
   * @var array
   */
   protected $fillable = [
-    'address', 'name', 'subaccount_code'
+    'address', 
+    'name', 
+    'subaccount_code',
+    'paystack_id', 
+    'paystack_code'
   ];
 
   /**
