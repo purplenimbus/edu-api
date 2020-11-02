@@ -12,6 +12,7 @@ use Illuminate\Support\Arr;
 use JWTAuth;
 use App\Notifications\ActivateTenant;
 use App\User;
+use Unicodeveloper\Paystack\Facades\Paystack;
 
 class RegisterController extends Controller
 {
@@ -71,7 +72,7 @@ class RegisterController extends Controller
 		$payStackCustomer = PayStack::createCustomer();
 
 		$tenant->update([
-			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code', data)
+			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
 		]);
 
 		return response([
