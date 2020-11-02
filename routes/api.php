@@ -204,7 +204,5 @@ Route::group([
         });
       });
     });
-
-    //Route::post('', 'PaystackWebhookController');
   });
 });
