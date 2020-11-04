@@ -12,7 +12,6 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Unicodeveloper\Paystack\Facades\Paystack;
-use Storage;
 
 class Tenant extends Model
 {
