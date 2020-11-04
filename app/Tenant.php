@@ -12,6 +12,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Unicodeveloper\Paystack\Facades\Paystack;
+use Storage;
 
 class Tenant extends Model
 {
@@ -26,8 +27,9 @@ class Tenant extends Model
     'address',
     'name',
     'subaccount_code',
-    'paystack_id',
-    'paystack_code'
+    'paystack_id', 
+    'paystack_code',
+    'logo',
   ];
 
   /**
