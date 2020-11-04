@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
 		'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
         'cors' => \App\Http\Middleware\Cors::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'hasbankaccount'=> \App\Http\Middleware\HasBankAccount::class,
     ];
 }

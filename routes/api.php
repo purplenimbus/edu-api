@@ -62,6 +62,7 @@ Route::group([
 
     /* Invoices */
     Route::group([
+      'middleware' => ['hasbankaccount'],
       'prefix' => '/invoices'
     ], function() {
       Route::get('/', 'InvoiceController@index');

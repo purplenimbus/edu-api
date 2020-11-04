@@ -261,4 +261,8 @@ class Tenant extends Model
 
     return $payload;
   }
+
+   public function getHasBankAccountAttribute(){
+    return ($this->defaultBankAccount() ? true : false);
+  }
 }
