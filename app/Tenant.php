@@ -15,249 +15,249 @@ use Unicodeveloper\Paystack\Facades\Paystack;
 
 class Tenant extends Model
 {
-	use Notifiable;
+  use Notifiable;
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var array
-	 */
-	protected $fillable = [
-		'address',
-		'name',
-		'subaccount_code',
-		'paystack_id',
-		'paystack_code'
-	];
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
+  protected $fillable = [
+    'address',
+    'name',
+    'subaccount_code',
+    'paystack_id',
+    'paystack_code'
+  ];
 
-	/**
-	 * Cast meta property to array
-	 *
-	 * @var object
-	 */
+  /**
+   * Cast meta property to array
+   *
+   * @var object
+   */
 
-	protected $casts = [
-		'address' => 'object',
-	];
+  protected $casts = [
+    'address' => 'object',
+  ];
 
-	/**
-	 * The accessors to append to the model's array form.
-	 *
-	 * @var array
-	 */
-	protected $appends = [
-		'email'
-	];
+  /**
+   * The accessors to append to the model's array form.
+   *
+   * @var array
+   */
+  protected $appends = [
+    'email'
+  ];
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = [
-		'created_at', 'updated_at'
-	];
+  /**
+   * The attributes excluded from the model's JSON form.
+   *
+   * @var array
+   */
+  protected $hidden = [
+    'created_at', 'updated_at'
+  ];
 
-	/**
-	 *  Setup model event hooks
-	 */
-	public static function boot()
-	{
-		parent::boot();
-		self::created(function ($model) {
-			$institution = new Institution($model);
-		});
-	}
+  /**
+   *  Setup model event hooks
+   */
+  public static function boot()
+  {
+    parent::boot();
+    self::created(function ($model) {
+      $institution = new Institution($model);
+    });
+  }
 
-	public function getCurrentTermAttribute()
-	{
-		return SchoolTerm::where([
-			'tenant_id' => $this->id,
-			'status_id' => 1
-		])
-			->first();
-	}
+  public function getCurrentTermAttribute()
+  {
+    return SchoolTerm::where([
+      'tenant_id' => $this->id,
+      'status_id' => 1
+    ])
+      ->first();
+  }
 
-	public function getOwnerAttribute()
-	{
-		return User::whereIs('admin')
-			->where('tenant_id', $this->id)
-			->first();
-	}
+  public function getOwnerAttribute()
+  {
+    return User::whereIs('admin')
+      ->where('tenant_id', $this->id)
+      ->first();
+  }
 
-	public function getPaymentDetailsAttribute()
-	{
-		return $this->defaultBankAccount();
-	}
+  public function getPaymentDetailsAttribute()
+  {
+    return $this->defaultBankAccount();
+  }
 
-	public function getEmailAttribute()
-	{
-		return Arr::get($this, 'owner.email', null);
-	}
+  public function getEmailAttribute()
+  {
+    return Arr::get($this, 'owner.email', null);
+  }
 
-	public function setOwner(User $user)
-	{
-		if ($this->owner) {
-			throw new ValidationException(__("validation.custom.admin.exists"));
-		}
+  public function setOwner(User $user)
+  {
+    if ($this->owner) {
+      throw new ValidationException(__("validation.custom.admin.exists"));
+    }
 
-		$user->assign('admin');
-	}
+    $user->assign('admin');
+  }
 
-	public function defaultBankAccount()
-	{
-		return BankAccount::where([
-			'tenant_id' => $this->id,
-			'default' => 1,
-		])->first();
-	}
+  public function defaultBankAccount()
+  {
+    return BankAccount::where([
+      'tenant_id' => $this->id,
+      'default' => 1,
+    ])->first();
+  }
 
-	public function createPayStackCustomer(array $options = [])
-	{
-		if ($this->paystack_id || !$this->owner) {
-			return $this;
-		}
+  public function createPayStackCustomer(array $options = [])
+  {
+    if ($this->paystack_id || !$this->owner) {
+      return $this;
+    }
 
-		$data = array_merge([
-			'fname' => $this->owner->firstname,
-			'lname' => $this->owner->lastname,
-			'email' => $this->owner->email
-		], $options);
+    $data = array_merge([
+      'fname' => $this->owner->firstname,
+      'lname' => $this->owner->lastname,
+      'email' => $this->owner->email
+    ], $options);
 
-		$phone_number = Arr::get($this, 'address.phone', null);
+    $phone_number = Arr::get($this, 'address.phone', null);
 
-		if ($phone_number) {
-			$data['phone'] = $phone_number;
-		}
+    if ($phone_number) {
+      $data['phone'] = $phone_number;
+    }
 
-		request()->merge($data);
+    request()->merge($data);
 
-		$payStackCustomer = PayStack::createCustomer();
+    $payStackCustomer = PayStack::createCustomer();
 
-		$this->update([
-			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
-		]);
+    $this->update([
+      'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
+    ]);
 
-		return $this;
-	}
+    return $this;
+  }
 
-	public function updatePayStackCustomer(array $options = [])
-	{
-		if (!$this->paystack_id || !$this->owner) {
-			return;
-		}
+  public function updatePayStackCustomer(array $options = [])
+  {
+    if (!$this->paystack_id || !$this->owner) {
+      return;
+    }
 
-		$data = array_merge([
-			'fname' => $this->owner->firstname,
-			'lname' => $this->owner->lastname,
-			'email' => $this->owner->email
-		], $options);
+    $data = array_merge([
+      'fname' => $this->owner->firstname,
+      'lname' => $this->owner->lastname,
+      'email' => $this->owner->email
+    ], $options);
 
-		$phone_number = Arr::get($this, 'address.phone', null);
+    $phone_number = Arr::get($this, 'address.phone', null);
 
-		if ($phone_number) {
-			$data['phone'] = $phone_number;
-		}
+    if ($phone_number) {
+      $data['phone'] = $phone_number;
+    }
 
-		request()->merge($data);
+    request()->merge($data);
 
-		PayStack::updateCustomer($this->paystack_id);
+    PayStack::updateCustomer($this->paystack_id);
 
-		return $this;
-	}
+    return $this;
+  }
 
-	public function getAsPayStackCustomer(array $options = [])
-	{
-		if (!$this->paystack_id) {
-			return;
-		}
+  public function getAsPayStackCustomer(array $options = [])
+  {
+    if (!$this->paystack_id) {
+      return;
+    }
 
-		return PayStack::fetchCustomer($this->paystack_id);
-	}
+    return PayStack::fetchCustomer($this->paystack_id);
+  }
 
-	public function createSubAccount(array $options = [])
-	{
-		try {
-			if ($this->subaccount_code) {
-				return $this->getAsPayStackAccount();
-			}
+  public function createSubAccount(array $options = [])
+  {
+    try {
+      if ($this->subaccount_code) {
+        return $this->getAsPayStackAccount();
+      }
 
-			$bank_account = $this->defaultBankAccount();
+      $bank_account = $this->defaultBankAccount();
 
-			if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
-				request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
+      if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
+        request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
 
-				$sub_account = Paystack::createSubAccount();
+        $sub_account = Paystack::createSubAccount();
 
-				$sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
+        $sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
 
-				if ($sub_account_code) {
-					$this->update(['subaccount_code' => $sub_account_code]);
-				}
+        if ($sub_account_code) {
+          $this->update(['subaccount_code' => $sub_account_code]);
+        }
 
-				return $sub_account;
-			}
-		} catch (Exception $e) {
-			Log::error('Invalid Request', [
-				'message' => $e->getMessage(),
-			]);
-		}
-	}
+        return $sub_account;
+      }
+    } catch (Exception $e) {
+      Log::error('Invalid Request', [
+        'message' => $e->getMessage(),
+      ]);
+    }
+  }
 
-	public function updateOrCreateSubAccount(array $options = [])
-	{
-		if (!$this->subaccount_code) {
-			return $this->createSubAccount();
-		}
+  public function updateOrCreateSubAccount(array $options = [])
+  {
+    if (!$this->subaccount_code) {
+      return $this->createSubAccount();
+    }
 
-		try {
-			$bank_account = $this->defaultBankAccount();
+    try {
+      $bank_account = $this->defaultBankAccount();
 
-			if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
-				request()->merge($this->getPaystackPayload($options)); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
+      if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
+        request()->merge($this->getPaystackPayload($options)); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
 
-				$sub_account = Paystack::updateSubAccount($this->subaccount_code);
+        $sub_account = Paystack::updateSubAccount($this->subaccount_code);
 
-				$sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
+        $sub_account_code = Arr::get($sub_account, 'data.subaccount_code', null);
 
-				if ($sub_account_code) {
-					$this->update(['subaccount_code' => $sub_account_code]);
-				}
+        if ($sub_account_code) {
+          $this->update(['subaccount_code' => $sub_account_code]);
+        }
 
-				return $this;
-			}
-		} catch (Exception $e) {
-		}
-	}
+        return $this;
+      }
+    } catch (Exception $e) {
+    }
+  }
 
-	public function getAsPayStackAccount()
-	{
-		if (!$this->subaccount_code) {
-			return;
-		}
+  public function getAsPayStackAccount()
+  {
+    if (!$this->subaccount_code) {
+      return;
+    }
 
-		return Paystack::fetchSubAccount($this->subaccount_code);
-	}
+    return Paystack::fetchSubAccount($this->subaccount_code);
+  }
 
-	private function getPaystackPayload(array $options = [])
-	{
-		$bank_account = $this->defaultBankAccount();
+  private function getPaystackPayload(array $options = [])
+  {
+    $bank_account = $this->defaultBankAccount();
 
-		$payload = array_merge([
-			'account_number' => strval($bank_account->account_number),
-			'business_name' => $this->name,
-			'settlement_bank' => strval($bank_account->bank_code),
-			'percentage_charge' => floatval(env('PAYSTACK_PROCESSING_FEE_PERCENTAGE')),
-			'primary_contact_email' => $this->owner->email,
-			'primary_contact_name' => $this->owner->fullname,
-		], $options);
+    $payload = array_merge([
+      'account_number' => strval($bank_account->account_number),
+      'business_name' => $this->name,
+      'settlement_bank' => strval($bank_account->bank_code),
+      'percentage_charge' => floatval(env('PAYSTACK_PROCESSING_FEE_PERCENTAGE')),
+      'primary_contact_email' => $this->owner->email,
+      'primary_contact_name' => $this->owner->fullname,
+    ], $options);
 
-		$phone_number = Arr::get($this, 'owner.address.phone_number', null);
+    $phone_number = Arr::get($this, 'owner.address.phone_number', null);
 
-		if ($phone_number) {
-			$payload["primary_contact_phone"] = $phone_number;
-		}
+    if ($phone_number) {
+      $payload["primary_contact_phone"] = $phone_number;
+    }
 
-		return $payload;
-	}
+    return $payload;
+  }
 }
