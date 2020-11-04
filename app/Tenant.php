@@ -18,23 +18,23 @@ class Tenant extends Model
 	use Notifiable;
 
 	/**
-	* The attributes that are mass assignable.
-	*
-	* @var array
-	*/
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
 	protected $fillable = [
-		'address', 
-		'name', 
+		'address',
+		'name',
 		'subaccount_code',
-		'paystack_id', 
+		'paystack_id',
 		'paystack_code'
 	];
 
 	/**
-	* Cast meta property to array
-	*
-	* @var object
-	*/
+	 * Cast meta property to array
+	 *
+	 * @var object
+	 */
 
 	protected $casts = [
 		'address' => 'object',
@@ -50,48 +50,53 @@ class Tenant extends Model
 	];
 
 	/**
-	* The attributes excluded from the model's JSON form.
-	*
-	* @var array
-	*/
+	 * The attributes excluded from the model's JSON form.
+	 *
+	 * @var array
+	 */
 	protected $hidden = [
 		'created_at', 'updated_at'
 	];
 
 	/**
-	*  Setup model event hooks
-	*/
+	 *  Setup model event hooks
+	 */
 	public static function boot()
 	{
 		parent::boot();
-		self::created(function($model) {
+		self::created(function ($model) {
 			$institution = new Institution($model);
 		});
 	}
 
-	public function getCurrentTermAttribute() {
+	public function getCurrentTermAttribute()
+	{
 		return SchoolTerm::where([
 			'tenant_id' => $this->id,
 			'status_id' => 1
 		])
-		->first();
+			->first();
 	}
 
-	public function getOwnerAttribute() {
+	public function getOwnerAttribute()
+	{
 		return User::whereIs('admin')
 			->where('tenant_id', $this->id)
 			->first();
 	}
 
-	public function getPaymentDetailsAttribute() {
+	public function getPaymentDetailsAttribute()
+	{
 		return $this->defaultBankAccount();
 	}
 
-	public function getEmailAttribute() {
+	public function getEmailAttribute()
+	{
 		return Arr::get($this, 'owner.email', null);
 	}
 
-	public function setOwner(User $user) {
+	public function setOwner(User $user)
+	{
 		if ($this->owner) {
 			throw new ValidationException(__("validation.custom.admin.exists"));
 		}
@@ -99,14 +104,16 @@ class Tenant extends Model
 		$user->assign('admin');
 	}
 
-	public function defaultBankAccount() {
+	public function defaultBankAccount()
+	{
 		return BankAccount::where([
 			'tenant_id' => $this->id,
 			'default' => 1,
 		])->first();
 	}
 
-	public function createPayStackCustomer(array $options = []) {
+	public function createPayStackCustomer(array $options = [])
+	{
 		if ($this->paystack_id || !$this->owner) {
 			return $this;
 		}
@@ -130,11 +137,12 @@ class Tenant extends Model
 		$this->update([
 			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
 		]);
-		
+
 		return $this;
 	}
 
-	public function updatePayStackCustomer(array $options = []) {
+	public function updatePayStackCustomer(array $options = [])
+	{
 		if (!$this->paystack_id || !$this->owner) {
 			return;
 		}
@@ -154,19 +162,21 @@ class Tenant extends Model
 		request()->merge($data);
 
 		PayStack::updateCustomer($this->paystack_id);
-		
+
 		return $this;
 	}
 
-	public function getAsPayStackCustomer(array $options = []) {
+	public function getAsPayStackCustomer(array $options = [])
+	{
 		if (!$this->paystack_id) {
 			return;
 		}
 
 		return PayStack::fetchCustomer($this->paystack_id);
 	}
- 
-	public function createSubAccount(array $options = []) {
+
+	public function createSubAccount(array $options = [])
+	{
 		try {
 			if ($this->subaccount_code) {
 				return $this->getAsPayStackAccount();
@@ -187,7 +197,6 @@ class Tenant extends Model
 
 				return $sub_account;
 			}
-
 		} catch (Exception $e) {
 			Log::error('Invalid Request', [
 				'message' => $e->getMessage(),
@@ -195,7 +204,8 @@ class Tenant extends Model
 		}
 	}
 
-	public function updateOrCreateSubAccount(array $options = []) {
+	public function updateOrCreateSubAccount(array $options = [])
+	{
 		if (!$this->subaccount_code) {
 			return $this->createSubAccount();
 		}
@@ -216,12 +226,12 @@ class Tenant extends Model
 
 				return $this;
 			}
-		} catch(Exception $e) {
-
+		} catch (Exception $e) {
 		}
 	}
 
-	public function getAsPayStackAccount() {
+	public function getAsPayStackAccount()
+	{
 		if (!$this->subaccount_code) {
 			return;
 		}
@@ -229,7 +239,8 @@ class Tenant extends Model
 		return Paystack::fetchSubAccount($this->subaccount_code);
 	}
 
-	private function getPaystackPayload(array $options = []) {
+	private function getPaystackPayload(array $options = [])
+	{
 		$bank_account = $this->defaultBankAccount();
 
 		$payload = array_merge([
