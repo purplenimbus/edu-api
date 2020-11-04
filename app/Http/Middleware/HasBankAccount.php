@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-use \App\Tenant as Tenant;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Access\AuthorizationException;
 
 class HasBankAccount
 {
@@ -13,14 +15,14 @@ class HasBankAccount
 		 *
 		 * @param  \Illuminate\Http\Request  $request
 		 * @param  \Closure  $next
-		 * @return mixed
+		 * @return mixe
 		 */
 		public function handle($request, Closure $next)
 		{
-			$tenant = new Tenant();
-			$hasbankaccount = $tenant->has_bank_account();      
-			if ( $hasbankaccount == FALSE){
-				return response()->json($hasbankaccount, 403);
+			$user = Auth::user();
+			$tenant = $user->tenant()->first();
+			if (!$tenant->has_bank_account){
+				throw new AuthorizationException(__('validation.custom.bank_account.not_set'));
 			}
 			return $next($request);
 		}
