@@ -6,13 +6,10 @@ use App\Tenant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTenant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Arr;
-use JWTAuth;
 use App\Notifications\ActivateTenant;
 use App\User;
-use Unicodeveloper\Paystack\Facades\Paystack;
+
 
 class RegisterController extends Controller
 {
@@ -63,17 +60,18 @@ class RegisterController extends Controller
 		$tenant->setOwner($user);
 		$tenant->owner->notify(new ActivateTenant);
 
-		$request->merge([
-			'fname' => $user->firstname,
-			'lname' => $user->lastname,
-			'email' => $user->email
-		]);
+		$tenant->createPayStackCustomer();
+		// $request->merge([
+		// 	'fname' => $user->firstname,
+		// 	'lname' => $user->lastname,
+		// 	'email' => $user->email
+		// ]);
 
-		$payStackCustomer = PayStack::createCustomer();
+		// $payStackCustomer = PayStack::createCustomer();
 
-		$tenant->update([
-			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
-		]);
+		// $tenant->update([
+		// 	'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
+		// ]);
 
 		return response([
 			'message' => 'Account created, check your email to activate your account',

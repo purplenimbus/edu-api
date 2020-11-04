@@ -105,6 +105,66 @@ class Tenant extends Model
       'default' => 1,
     ])->first();
   }
+
+  public function createPayStackCustomer(array $options = []) {
+    if ($this->paystack_id || !$this->owner) {
+      return $this;
+    }
+
+    $data = array_merge([
+			'fname' => $this->owner->firstname,
+			'lname' => $this->owner->lastname,
+			'email' => $this->owner->email
+    ], $options);
+
+    $phone_number = Arr::get($this, 'address.phone', null);
+
+    if ($phone_number) {
+      $data['phone'] = $phone_number;
+    }
+
+    request()->merge($data);
+
+		$payStackCustomer = PayStack::createCustomer();
+
+		$this->update([
+			'paystack_id' => Arr::get($payStackCustomer, 'data.customer_code')
+    ]);
+    
+    return $this;
+  }
+
+  public function updatePayStackCustomer(array $options = []) {
+    if (!$this->paystack_id || !$this->owner) {
+      return;
+    }
+
+    $data = array_merge([
+			'fname' => $this->owner->firstname,
+			'lname' => $this->owner->lastname,
+			'email' => $this->owner->email
+    ], $options);
+
+    $phone_number = Arr::get($this, 'address.phone', null);
+
+    if ($phone_number) {
+      $data['phone'] = $phone_number;
+    }
+
+    request()->merge($data);
+
+		PayStack::updateCustomer($this->paystack_id);
+    
+    return $this;
+  }
+
+  public function getAsPayStackCustomer(array $options = []) {
+    if (!$this->paystack_id) {
+      return;
+    }
+
+		return PayStack::fetchCustomer($this->paystack_id);
+  }
  
   public function createSubAccount(array $options = []) {
     try {
@@ -144,7 +204,7 @@ class Tenant extends Model
       $bank_account = $this->defaultBankAccount();
 
       if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
-        request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
+        request()->merge($this->getPaystackPayload($options)); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
 
         $sub_account = Paystack::updateSubAccount($this->subaccount_code);
 
