@@ -26,8 +26,9 @@ class Tenant extends Model
     'address',
     'name',
     'subaccount_code',
-    'paystack_id',
-    'paystack_code'
+    'paystack_id', 
+    'paystack_code',
+    'logo',
   ];
 
   /**

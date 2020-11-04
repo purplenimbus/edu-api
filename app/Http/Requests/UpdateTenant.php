@@ -25,6 +25,7 @@ class UpdateTenant extends FormRequest
   {
     return [
       'name' => 'string',
+      'logo' => 'mimes:jpeg,png|nullable|max:1048576',
       'address.street' => 'string|required_with:address.city,address.country,address.state',
       'address.city' => 'string|required_with:address.street',
       'address.country' => 'string|required_with:address.street',

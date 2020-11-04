@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateTenant;
 use App\Http\Requests\GetTenant;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Tenant;
+use Storage;
 
 class TenantController extends BaseController
 {
@@ -38,8 +39,32 @@ class TenantController extends BaseController
    */
   public function update(UpdateTenant $request){
     $tenant = Auth::user()->tenant()->first();
-    
-    $tenant->fill($request->all());
+    $disk = Storage::disk('s3');
+
+    $tenant->fill($request->except('logo'));
+
+    if ($request->has('logo') && !is_null($request->logo)) {
+      $extension = $request->logo->extension();
+      $file_name = $tenant->id.".{$extension}";
+
+      $path = $request->logo->storeAs('tenant_avatars', $file_name, 's3');
+
+      $tenant->logo = $disk->url($path);
+    }
+
+    if ($request->has('logo') && is_null($request->logo)) {
+      $tenant->logo = null;
+      $file_name_png = "tenant_avatars\\{$tenant->id}.png";
+      $file_name_jpg = "tenant_avatars\\{$tenant->id}.jpg";
+
+      if ($disk->has($file_name_png)) {
+        $disk->delete($file_name_png);
+      }
+
+      if ($disk->has($file_name_jpg)) {
+        $disk->delete($file_name_jpg);
+      }
+    }
 
     $tenant->save();
 
