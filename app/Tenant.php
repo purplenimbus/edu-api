@@ -12,11 +12,12 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Unicodeveloper\Paystack\Facades\Paystack;
+use Glorand\Model\Settings\Traits\HasSettingsTable;
 
 class Tenant extends Model
 {
   use Notifiable;
-
+  use HasSettingsTable;
   /**
    * The attributes that are mass assignable.
    *
