@@ -20,6 +20,17 @@ return [
         'name' => 'exam',
         'score' => 40,
       ]
+    ],
+    'school_terms' => [
+      [
+        'name' => 'first term',
+      ],
+      [
+        'name' => 'second term',
+      ],
+      [
+        'name' => 'third term',
+      ]
     ]
   ],
   'pagination' => 10
