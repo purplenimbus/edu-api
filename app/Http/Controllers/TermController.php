@@ -21,18 +21,19 @@ class TermController extends Controller
    *
    * @return void
    */
-  public function index(GetTerm $request){
+  public function index(GetTerm $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     $terms = QueryBuilder::for(SchoolTerm::class)
       ->allowedFilters([
         AllowedFilter::callback('status', function (Builder $query, $value) {
-            $status = SchoolTermStatus::where('name', $value)->first();
+          $status = SchoolTermStatus::where('name', $value)->first();
 
-            return $query->where('status_id', '=', isset($status->id) ? (int)$status->id: false);
+          return $query->where('status_id', '=', isset($status->id) ? (int)$status->id : false);
         }),
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
-            return $query->where('status_id', '=', (int)$value);
+          return $query->where('status_id', '=', (int)$value);
         }),
       ])
       ->allowedFields([
@@ -62,7 +63,8 @@ class TermController extends Controller
    *
    * @return void
    */
-  public function show(GetTerm $request){
+  public function show(GetTerm $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     $term = SchoolTerm::find($request->id);
@@ -75,7 +77,8 @@ class TermController extends Controller
    *
    * @return void
    */
-  public function update(UpdateTerm $request){
+  public function update(UpdateTerm $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     if ($request->status_id === 2) {
