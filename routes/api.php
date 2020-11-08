@@ -132,7 +132,7 @@ Route::group([
       });
     });
     /* Lessons */
-    Route::get('/lessons', 'CurriculumController@lessons');
+    Route::get('/lessons', 'CurriculumController@lessons')->middleware('checksubscription');
     /*  Curriculum */
     Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
 
