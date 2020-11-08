@@ -62,8 +62,8 @@ Route::group([
 
     /* Invoices */
     Route::group([
-      'middleware' => ['hasbankaccount'],
-      'prefix' => '/invoices'
+      'prefix' => '/invoices',
+      'middleware' => ['hasbankaccount']
     ], function() {
       Route::get('/', 'InvoiceController@index');
       Route::post('/', 'InvoiceController@create');
@@ -94,7 +94,8 @@ Route::group([
 
     /* Terms */
     Route::group([
-      'prefix' => '/terms'
+      'prefix' => '/terms',
+      'middleware' => ['checksubscription']
     ], function() {
       Route::get('', 'TermController@index')->middleware('can:view-terms');
       Route::get('/show', 'TermController@show');
@@ -103,7 +104,8 @@ Route::group([
 
     /* Courses */
     Route::group([
-      'prefix' => '/courses'
+      'prefix' => '/courses',
+      'middleware' => ['checksubscription'],
     ], function() {
       Route::group([
         'middleware' => ['can:view-courses']
@@ -130,13 +132,14 @@ Route::group([
       });
     });
     /* Lessons */
-    Route::get('/lessons', 'CurriculumController@lessons');
+    Route::get('/lessons', 'CurriculumController@lessons')->middleware('checksubscription');
     /*  Curriculum */
     Route::post('/curriculum/generate', 'CurriculumController@generateCurriculum');
 
     /*  Registrations */
     Route::group([
-      'prefix' => '/registrations'
+      'prefix' => '/registrations',
+      'middleware' => ['checksubscription'],
     ], function() {
       Route::get('/','RegistrationController@index')->middleware('can:view-registrations');
       Route::put('/scores','RegistrationController@update_scores');
@@ -152,7 +155,8 @@ Route::group([
 
     /* Instructors */
     Route::group([
-      'prefix' => '/instructors'
+      'prefix' => '/instructors',
+      'middleware' => ['checksubscription'],
     ], function() {
       Route::get('/', 'InstructorController@index')->middleware('can:view-instructors');
       Route::post('/', 'InstructorController@create');
@@ -167,7 +171,8 @@ Route::group([
 
     /* Students */
     Route::group([
-      'prefix' => '/students'
+      'prefix' => '/students',
+      'middleware' => ['checksubscription'],
     ], function() {
       Route::get('/', 'StudentController@index')->middleware('can:view-students');
       Route::post('/', 'StudentController@create');
@@ -184,7 +189,8 @@ Route::group([
 
     /* Transaction */
     Route::group([
-      'prefix' => '/guardians'
+      'prefix' => '/guardians',
+      'middleware' => ['checksubscription'],
     ], function() {
       Route::get('/', 'GuardianController@index');
       Route::post('/', 'GuardianController@create');
