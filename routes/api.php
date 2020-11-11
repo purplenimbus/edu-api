@@ -100,6 +100,7 @@ Route::group([
       Route::get('', 'TermController@index')->middleware('can:view-terms');
       Route::get('/show', 'TermController@show');
       Route::put('', 'TermController@update');
+      Route::post('', 'TermController@create');
     });
 
     /* Courses */

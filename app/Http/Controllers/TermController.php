@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreTerm;
 use App\SchoolTerm;
 use App\SchoolTermStatus;
 use App\Jobs\CompleteTerm;
@@ -85,5 +86,18 @@ class TermController extends Controller
     return response()->json([
       'message' => 'your request is being processed'
     ], 200);
+  }
+
+  public function create(StoreTerm $request){
+    
+    $tenant = Auth::user()->tenant()->first();
+
+    $data = $request->all();
+
+    $data['tenant_id'] = $tenant->id;
+
+    $term = SchoolTerm::create($data);
+    
+    return response()->json($term, 200);
   }
 }
