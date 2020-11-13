@@ -73,6 +73,15 @@ class Course extends Model
    *
    * @var array
    */
+  public function tenant()
+  {
+    return $this->belongsTo('App\Tenant');
+  }
+  /**
+   * Get course grade
+   *
+   * @var array
+   */
   public function grade()
   {
     return $this->belongsTo('App\CourseGrade','course_grade_id');
@@ -147,6 +156,18 @@ class Course extends Model
     self::saved(function ($model) {
       if (request()->has('instructor_id') && $model->wasChanged('instructor_id') && isset($model->instructor_id)) {
         $model->instructor->assignInstructor($model);
+      }
+
+      if ($model->status->name == 'complete')
+      {
+        $courses_in_progres = $model->where([
+          ['tenant_id', '=', $model->tenant->id],
+          ['status_id', '=', 1],
+        ]);
+
+        if ($courses_in_progres->count() == 0 && isset($model->tenant->current_term)){
+          $model->tenant->current_term->update(['status_id'=> 2]);
+        }
       }
     });
 
