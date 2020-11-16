@@ -106,7 +106,6 @@ Route::group([
     /* Courses */
     Route::group([
       'prefix' => '/courses',
-      'middleware' => ['checksubscription'],
     ], function() {
       Route::group([
         'middleware' => ['can:view-courses']

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidRegistration;
 use App\Rules\ValidStudent;
 use App\Rules\ValidCourse;
+use App\Rules\CourseInProgress;
 
 class RegisterStudent extends FormRequest
 {
@@ -31,7 +32,8 @@ class RegisterStudent extends FormRequest
       'course_ids' => 'required|array|max:10',
       'course_ids.*' => [
         'required','integer','distinct','exists:courses,id',
-        new ValidCourse($this->input('course_grade_id'))
+        new ValidCourse($this->input('course_grade_id')),
+        new CourseInProgress()
       ],
       'student_ids' => 'required|array|max:10',
       'student_ids.*' => [
