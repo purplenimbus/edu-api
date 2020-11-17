@@ -126,7 +126,7 @@ return [
 
 	'custom' => [
 		'course' => [
-			'complete' => 'this course cannot be edited because is completed or archived',
+			'complete' => 'this course cannot be edited because it is completed or archived',
 		],
 		'admin' => [
 			'exists' => 'Account owner already exists, remove the admin to set a new account owner',
