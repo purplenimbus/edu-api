@@ -6,6 +6,8 @@ use App\Observers\BankAccountObserver;
 use App\BankAccount;
 use App\Observers\CourseObserver;
 use App\Course;
+use App\Observers\GuardianObserver;
+use App\Guardian;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		BankAccount::observe(BankAccountObserver::class);
 		Course::observe(CourseObserver::class);
+		Guardian::observe(GuardianObserver::class);
 	}
 
 	/**
