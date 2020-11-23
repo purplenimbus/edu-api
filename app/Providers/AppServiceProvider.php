@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Observers\BankAccountObserver;
 use App\BankAccount;
+use App\Observers\CourseObserver;
+use App\Course;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
 	public function boot()
 	{
 		BankAccount::observe(BankAccountObserver::class);
+		Course::observe(CourseObserver::class);
 	}
 
 	/**
