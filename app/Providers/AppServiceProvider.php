@@ -10,6 +10,8 @@ use App\Observers\GuardianObserver;
 use App\Guardian;
 use App\Observers\InstructorObserver;
 use App\Instructor;
+use App\Observers\InvoiceObserver;
+use App\Invoice;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
 		Course::observe(CourseObserver::class);
 		Guardian::observe(GuardianObserver::class);
 		Instructor::observe(InstructorObserver::class);
+		Invoice::observe(InvoiceObserver::class);
 	}
 
 	/**

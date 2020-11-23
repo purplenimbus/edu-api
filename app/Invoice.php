@@ -63,20 +63,6 @@ class Invoice extends Model
     return $this->hasMany('App\Transaction', 'invoice_id');
   }
 
-  /**
- *  Setup model event hooks
- */
-  public static function boot()
-  {
-    parent::boot();
-
-    self::deleting(function ($model) {
-      if ($model->line_items()->count() > 0) {
-        $model->line_items()->delete();
-      }
-    });
-  }
-
   public function scopeOfTenant($query, $tenant_id)
   {
     return $query->where('tenant_id', $tenant_id);
