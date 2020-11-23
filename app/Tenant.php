@@ -58,17 +58,6 @@ class Tenant extends Model
     'created_at', 'updated_at'
   ];
 
-  /**
-  *  Setup model event hooks
-  */
-  public static function boot()
-  {
-    parent::boot();
-    self::created(function($model) {
-      $institution = new Institution($model);
-    });
-  }
-
   public function getCurrentTermAttribute() {
     return SchoolTerm::where([
       'tenant_id' => $this->id,
