@@ -14,6 +14,8 @@ use App\Observers\InvoiceObserver;
 use App\Invoice;
 use App\Observers\RegistrationObserver;
 use App\Registration;
+use App\Observers\StudentObserver;
+use App\Student;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
 		Instructor::observe(InstructorObserver::class);
 		Invoice::observe(InvoiceObserver::class);
 		Registration::observe(RegistrationObserver::class);
+		Student::observe(StudentObserver::class);
 	}
 
 	/**
