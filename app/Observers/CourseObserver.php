@@ -43,7 +43,6 @@ class CourseObserver
 
   private function setDefaultAttributes(Course $course)
   {
-    dd($course->grade->name);
     if (is_null($course->name)) {
       $course->name = $course->subject->name;
     }
