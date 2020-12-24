@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueCourse;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidCourseSchema;
 
@@ -25,13 +26,18 @@ class StoreCourse extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => 'required|integer|exists:course_grades,id',
+      'course_grade_id' => [
+        'required',
+        'integer',
+        'exists:course_grades,id',
+        new UniqueCourse()
+      ],
       'instructor_id' => 'integer|exists:users,id',
       'name' => 'nullable|string|max:255',
       'schema' => 'array',
       'schema.*.name' => 'required|string|max:255',
       'schema.*.score' => 'required|integer|max:100',
-      'subject_id' => 'integer|exists:subjects,id',
+      'subject_id' => 'required|integer|exists:subjects,id',
       'schema' => new ValidCourseSchema(),
       'start_date' => 'date',
       'end_date' => 'date|after:start_date',

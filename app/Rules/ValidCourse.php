@@ -29,8 +29,7 @@ class ValidCourse implements Rule
 	public function passes($attribute, $course_id)
 	{
 		$course = Course::find($course_id);
-		//dd($course->g);
-		//dd($this->course_grade->id);
+
     return $course && $course->grade && $course->grade->id == $this->course_grade->id;
 	}
 

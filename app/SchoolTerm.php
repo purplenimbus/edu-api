@@ -42,11 +42,9 @@ class SchoolTerm extends Model
   }
 
   public function courses() {
-    return $this->hasManyThrough(
+    return $this->hasMany(
       "App\Course",
-      "App\Registration",
-      "term_id",
-      'id'
+      "term_id"
     );
   }
 

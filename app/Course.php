@@ -5,6 +5,7 @@ namespace App;
 use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Model;
 use Bouncer;
+use Illuminate\Support\Arr;
 
 class Course extends Model
 {
@@ -28,6 +29,7 @@ class Course extends Model
     'description',
     'meta',
     'tenant_id',
+    'term_id',
     'instructor_id',
     'subject_id',
     'code',
@@ -69,13 +71,23 @@ class Course extends Model
   ];
 
   /**
-   * Get course grade
+   * Get tenant
    *
    * @var array
    */
   public function tenant()
   {
     return $this->belongsTo('App\Tenant');
+  }
+
+  /**
+   * Get term
+   *
+   * @var array
+   */
+  public function term()
+  {
+    return $this->belongsTo('App\SchoolTerm');
   }
   /**
    * Get course grade
@@ -84,7 +96,7 @@ class Course extends Model
    */
   public function grade()
   {
-    return $this->belongsTo('App\CourseGrade','course_grade_id');
+    return $this->belongsTo('App\CourseGrade', 'course_grade_id');
   }
 
   /**
@@ -94,7 +106,7 @@ class Course extends Model
    */
   public function instructor()
   {
-    return $this->belongsTo('App\Instructor','instructor_id','id');
+    return $this->belongsTo('App\Instructor');
   }
 
   /**
@@ -104,7 +116,7 @@ class Course extends Model
    */
   public function subject()
   {
-    return $this->belongsTo('App\Subject','subject_id','id');
+    return $this->belongsTo('App\Subject');
   }
 
   /**
@@ -145,6 +157,10 @@ class Course extends Model
       if (is_null($model->schema)) {
         $model->schema = config('edu.default.course_schema');
       }
+
+      if (isset($model->tenant->current_term)) {
+        $model->term_id = $model->tenant->current_term->id;
+      }
     });
 
     self::created(function ($model) {
@@ -158,14 +174,19 @@ class Course extends Model
         $model->instructor->assignInstructor($model);
       }
 
-      if ($model->status->name == 'complete')
-      {
-        $courses_in_progres = $model->where([
-          ['tenant_id', '=', $model->tenant->id],
-          ['status_id', '=', 1],
-        ]);
+      $course_status = Arr::get($model, "status.name", null);
 
-        if ($courses_in_progres->count() == 0 && isset($model->tenant->current_term)){
+      if ($course_status == "complete" && isset($model->tenant->current_term))
+      {
+        $courses_in_progress_this_term = $model
+          ->tenant
+          ->current_term
+          ->courses()
+          ->where([
+            ['status_id', '=', 1],
+          ]);
+
+        if ($courses_in_progress_this_term->count() == 0 ){
           $model->tenant->current_term->update(['status_id'=> 2]);
         }
       }
