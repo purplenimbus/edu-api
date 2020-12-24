@@ -35,13 +35,13 @@ class BankAccount extends Model
       }
     });
 
-    self::saving(function($model) {
-      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
+    // self::saving(function($model) {
+    //   $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
 
-      if ($other_bank_accounts->count() == 0) {
-        $model->default = true;
-      }
-    });
+    //   if ($other_bank_accounts->count() == 0) {
+    //     $model->default = true;
+    //   }
+    // });
 
     self::saved(function($model) {
       $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
