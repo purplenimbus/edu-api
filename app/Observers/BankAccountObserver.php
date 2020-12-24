@@ -29,7 +29,7 @@ class BankAccountObserver
    */
   public function updated(BankAccount $bankAccount)
   {
-      //
+    $this->updateSubAccount($bankAccount);
   }
 
   /**
