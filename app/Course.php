@@ -145,58 +145,6 @@ class Course extends Model
   public static function boot()
   {
     parent::boot();
-    self::creating(function ($model) {
-      if (is_null($model->name)) {
-        $model->name = $model->subject->name;
-      }
-
-      if (is_null($model->code)) {
-        $model->code = $model->parse_course_code();
-      }
-      
-      if (is_null($model->schema)) {
-        $model->schema = config('edu.default.course_schema');
-      }
-
-      if (isset($model->tenant->current_term)) {
-        $model->term_id = $model->tenant->current_term->id;
-      }
-    });
-
-    self::created(function ($model) {
-      if (request()->has('instructor_id') && $model->wasChanged('instructor_id')) {
-        $model->instructor->assignInstructor($model);
-      };
-    });
-
-    self::saved(function ($model) {
-      if (request()->has('instructor_id') && $model->wasChanged('instructor_id') && isset($model->instructor_id)) {
-        $model->instructor->assignInstructor($model);
-      }
-
-      $course_status = Arr::get($model, "status.name", null);
-
-      if ($course_status == "complete" && isset($model->tenant->current_term))
-      {
-        $courses_in_progress_this_term = $model
-          ->tenant
-          ->current_term
-          ->courses()
-          ->where([
-            ['status_id', '=', 1],
-          ]);
-
-        if ($courses_in_progress_this_term->count() == 0 ){
-          $model->tenant->current_term->update(['status_id'=> 2]);
-        }
-      }
-    });
-
-    self::deleting(function ($model) {
-      if ($model->registrations()->count() > 0) {
-        $model->registrations()->delete();
-      }
-    });
   }
 
   public function scopeOfCourseGrade($query, $course_grade_id)
@@ -220,7 +168,7 @@ class Course extends Model
       ->whereNotIn('id', $course_ids);
   }
 
-  private function parse_course_code() {
+  public function parse_course_code() {
     return strtoupper($this->subject->code.'-'.str_replace(' ','-',$this->grade->name));
   }
 }
