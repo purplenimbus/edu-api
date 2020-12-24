@@ -94,4 +94,14 @@ class BankAccountObserver
       $bankAccount->tenant->createSubAccount();
     }
   }
+  
+  private function updateDefaultBankAccount(BankAccount $bankAccount){
+    $other_bank_accounts = BankAccount::whereNotIn('id', [$bankAccount->id]);
+
+    if ($other_bank_accounts->count() > 0) {
+      $other_bank_accounts->first()->update([
+        'default' => true,
+      ]);
+    }
+  }
 }
