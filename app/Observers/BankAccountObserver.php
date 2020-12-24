@@ -14,7 +14,11 @@ class BankAccountObserver
    */
   public function created(BankAccount $bankAccount)
   {
-      //
+    $this->setDefaultBankAccount($bankAccount);
+    
+    $this->newSubAccount($bankAccount);
+
+    $this->updateOtherBankAccount($bankAccount);
   }
 
   /**
@@ -82,6 +86,12 @@ class BankAccountObserver
   private function updateSubAccount(BankAccount $bankAccount){
     if ($bankAccount->tenant->payment_details) {
       $bankAccount->tenant->updateOrCreateSubAccount();
+    }
+  }
+
+  private function newSubAccount(BankAccount $bankAccount){
+    if ($bankAccount->tenant->payment_details) {
+      $bankAccount->tenant->createSubAccount();
     }
   }
 }
