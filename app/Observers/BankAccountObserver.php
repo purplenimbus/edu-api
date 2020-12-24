@@ -68,4 +68,14 @@ class BankAccountObserver
       $bankAccount->default = true;
     }
   }
+  
+  private function updateOtherBankAccount(BankAccount $bankAccount){
+    $other_bank_accounts = BankAccount::whereNotIn('id', [$bankAccount->id]);
+
+    if (request()->has('default') && request()->default && $other_bank_accounts->count() > 0) {
+      $other_bank_accounts->update([
+        'default' => false,
+      ]);
+    }
+  }
 }
