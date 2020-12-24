@@ -57,14 +57,14 @@ class BankAccount extends Model
     //   }
     // });
 
-    self::deleted(function($model) {
-      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
+    // self::deleted(function($model) {
+    //   $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
 
-      if ($other_bank_accounts->count() > 0) {
-        $other_bank_accounts->first()->update([
-          'default' => true,
-        ]);
-      }
-    });
+    //   if ($other_bank_accounts->count() > 0) {
+    //     $other_bank_accounts->first()->update([
+    //       'default' => true,
+    //     ]);
+    //   }
+    // });
   }
 }
