@@ -54,6 +54,10 @@ class CourseObserver
     if (is_null($course->schema)) {
       $course->schema = config('edu.default.course_schema');
     }
+
+    if (isset($course->tenant->current_term)) {
+      $course->term_id = $course->tenant->current_term->id;
+    }
   }
 
   private function setNewInstructor(Course $course)
