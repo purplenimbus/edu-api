@@ -40,7 +40,7 @@ class BankAccountObserver
    */
   public function deleted(BankAccount $bankAccount)
   {
-      //
+    $this->updateDefaultBankAccount($bankAccount);
   }
 
   /**
@@ -94,7 +94,7 @@ class BankAccountObserver
       $bankAccount->tenant->createSubAccount();
     }
   }
-  
+
   private function updateDefaultBankAccount(BankAccount $bankAccount){
     $other_bank_accounts = BankAccount::whereNotIn('id', [$bankAccount->id]);
 
