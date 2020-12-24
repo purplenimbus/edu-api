@@ -43,19 +43,19 @@ class BankAccount extends Model
     //   }
     // });
 
-    self::saved(function($model) {
-      // $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
+    // self::saved(function($model) {
+    //   // $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
 
-      // if (request()->has('default') && request()->default && $other_bank_accounts->count() > 0) {
-      //   $other_bank_accounts->update([
-      //     'default' => false,
-      //   ]);
-      // }
+    //   // if (request()->has('default') && request()->default && $other_bank_accounts->count() > 0) {
+    //   //   $other_bank_accounts->update([
+    //   //     'default' => false,
+    //   //   ]);
+    //   // }
 
-      if ($model->tenant->payment_details) {
-        $model->tenant->updateOrCreateSubAccount();
-      }
-    });
+    //   if ($model->tenant->payment_details) {
+    //     $model->tenant->updateOrCreateSubAccount();
+    //   }
+    // });
 
     self::deleted(function($model) {
       $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);

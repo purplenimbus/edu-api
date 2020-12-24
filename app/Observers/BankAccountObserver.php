@@ -78,4 +78,10 @@ class BankAccountObserver
       ]);
     }
   }
+
+  private function updateSubAccount(BankAccount $bankAccount){
+    if ($bankAccount->tenant->payment_details) {
+      $bankAccount->tenant->updateOrCreateSubAccount();
+    }
+  }
 }
