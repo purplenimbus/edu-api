@@ -25,6 +25,14 @@ class BankAccount extends Model
     return $this->belongsTo('App\Tenant');
   }
 
+  public function getHasOtherBankAccountsAttribute() {
+    return !$this->other_bank_accounts->count() == 0;
+  }
+
+  public function getOtherBankAccountsAttribute() {
+    return BankAccount::whereNotIn('id', [$this->id]);
+  }
+
   public static function boot() 
   {
     parent::boot();
@@ -36,18 +44,14 @@ class BankAccount extends Model
     });
 
     self::saving(function($model) {
-      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
-
-      if ($other_bank_accounts->count() == 0) {
+      if (!$model->has_other_bank_accounts) {
         $model->default = true;
       }
     });
 
     self::saved(function($model) {
-      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
-
-      if (request()->has('default') && request()->default && $other_bank_accounts->count() > 0) {
-        $other_bank_accounts->update([
+      if (request()->has('default') && request()->default && $model->has_other_bank_accounts) {
+        $model->other_bank_accounts->update([
           'default' => false,
         ]);
       }
@@ -58,10 +62,8 @@ class BankAccount extends Model
     });
 
     self::deleted(function($model) {
-      $other_bank_accounts = BankAccount::whereNotIn('id', [$model->id]);
-
-      if ($other_bank_accounts->count() > 0) {
-        $other_bank_accounts->first()->update([
+      if ($model->has_other_bank_accounts) {
+        $model->other_bank_accounts->first()->update([
           'default' => true,
         ]);
       }
