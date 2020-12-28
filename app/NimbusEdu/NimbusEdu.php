@@ -123,53 +123,6 @@ class NimbusEdu
     }
   }
 
-  public function processCurriculum($data, $payload){
-    try{
-      $course_load = [
-        'core' => [],
-        'optional' => [],
-        'elective' => [],
-      ];
-
-      $query = array_only($data, ['course_grade_id']);
-
-      $curriculum_type = $this->getCurriculumType();
-
-      $query['type_id'] = $curriculum_type->id;
-
-      $curriculum = Curriculum::firstOrNew($query);
-
-      $new = isset($curriculum->id) ? $curriculum->id : false;
-
-      if(isset($data['core_subjects_code'])){
-        $course_load['core'] = $this->parseSubjects($data['core_subjects_code'], $curriculum, true, $payload);
-      }
-
-      if(isset($data['elective_subjects_code'])){
-        $course_load['elective'] = $this->parseSubjects($data['elective_subjects_code'], $curriculum, true, $payload);
-      }
-
-      if(isset($data['optional_subjects_code'])){
-        $course_load['optional'] = $this->parseSubjects($data['optional_subjects_code'], $curriculum, true, $payload);
-      }
-
-      $curriculum->course_load = $course_load;
-
-      $curriculum->save();
-
-      if($new){
-        $payload['updated'][] = $curriculum;
-      }else{
-        $payload['created'][] = $curriculum;
-      }
-
-      return $payload;
-
-    }catch(Exception $e){
-      throw new Exception($e->getMessage());
-    }
-  }
-
   public function processCourseGrade($data, $payload){
     try{
       $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
