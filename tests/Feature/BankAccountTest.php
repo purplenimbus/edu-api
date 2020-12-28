@@ -12,44 +12,11 @@ use Tests\TestCase;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Unicodeveloper\Paystack\Facades\Paystack;
 use Mockery\MockInterface;
+use Tests\Feature\Helpers\Auth\SetupUser;
 
 class BankAccountTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
-
-  public $user;
-
-  public function setUp(): void {
-    parent::setUp();
-
-    $tenant = factory(Tenant::class)->create();
-
-    $this->user = factory(User::class)->create([
-      'tenant_id' => $tenant->id
-    ]);
-
-    $this->user->markEmailAsVerified();
-
-    $token = auth()->login($this->user);
-  }
-
-  /**
-   * Set the currently logged in user for the application.
-   *
-   * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-   * @param  string|null                                $driver
-   * @return $this
-   */
-  public function actingAs($user, $driver = null)
-  {
-    $token = JWTAuth::fromUser($user);
-
-    $this->withHeader('Authorization', "Bearer {$token}");
-
-    parent::actingAs($user, "api");
-    
-    return $this;
-  }
+  use RefreshDatabase, WithFaker, SetupUser;
 
   /**
    * Test the default bank account when a new bank account is created with no other bank accounts
