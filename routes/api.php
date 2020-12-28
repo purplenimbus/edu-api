@@ -115,7 +115,7 @@ Route::group([
       });
 
       Route::group([
-        'middleware' => ['can:edit-courses']
+        // 'middleware' => ['can:edit-courses']
       ], function() {
         Route::post('', 'CourseController@create');
         Route::post('/batch', 'CourseController@batch');

@@ -30,7 +30,7 @@ class StoreCourse extends FormRequest
         'required',
         'integer',
         'exists:course_grades,id',
-        new UniqueCourse()
+        // new UniqueCourse()
       ],
       'instructor_id' => 'integer|exists:users,id',
       'name' => 'nullable|string|max:255',
