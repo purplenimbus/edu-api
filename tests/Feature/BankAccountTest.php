@@ -3,51 +3,16 @@
 namespace Tests\Feature;
 
 use App\BankAccount;
-use App\Nimbus\Institution;
 use App\Tenant;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
+use Unicodeveloper\Paystack\Facades\Paystack;
+use Tests\Feature\Helpers\Auth\SetupUser;
 
 class BankAccountTest extends TestCase
 {
-  use RefreshDatabase, WithFaker;
-
-  public $user;
-
-  public function setUp(): void {
-    parent::setUp();
-
-    $tenant = factory(Tenant::class)->create();
-
-    $this->user = factory(User::class)->create([
-      'tenant_id' => $tenant->id
-    ]);
-
-    $this->user->markEmailAsVerified();
-
-    $token = auth()->login($this->user);
-  }
-
-  /**
-   * Set the currently logged in user for the application.
-   *
-   * @param  \Illuminate\Contracts\Auth\Authenticatable $user
-   * @param  string|null                                $driver
-   * @return $this
-   */
-  public function actingAs($user, $driver = null)
-  {
-    $token = JWTAuth::fromUser($user);
-
-    $this->withHeader('Authorization', "Bearer {$token}");
-
-    parent::actingAs($user, "api");
-    
-    return $this;
-  }
+  use RefreshDatabase, WithFaker, SetupUser;
 
   /**
    * Test the default bank account when a new bank account is created with no other bank accounts
@@ -65,7 +30,6 @@ class BankAccountTest extends TestCase
         "bank_name" => "gt bank",
         "description" => "test"
       ]);
-    
 
     $response->assertStatus(200);
     $response->assertJson([
@@ -175,12 +139,12 @@ class BankAccountTest extends TestCase
    */
   public function testReturnsTheBankAccounts()
   {    
-    $defaultBankAccount = factory(BankAccount::class)->create([
+    factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "default" => true,
       "tenant_id" => $this->user->tenant->id,
     ]);
-    $otherBankAccount = factory(BankAccount::class)->create([
+    factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "tenant_id" => $this->user->tenant->id,
     ]);
@@ -192,5 +156,35 @@ class BankAccountTest extends TestCase
 
     $response->assertStatus(200);
     $response->assertJsonCount(2, "data");
+  }
+
+  /**
+   * Create a new sub account when a bank account is created
+   *
+   * @return void
+   */
+  public function testCreatesNewSubAccountWhenBankAccountCreated()
+  {
+    $this->user->tenant->setOwner($this->user);
+
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
+    $response = $this->actingAs($this->user)
+      ->postJson("api/v1/tenants/{$this->user->tenant->id}/bank_accounts", [
+        "account_name" => $this->user->full_name,
+        "account_number" => "0038445618",
+        "bank_code" => "055",
+        "bank_name" => "gt bank",
+        "description" => "test",
+      ]);
+
+    $response->assertStatus(200);
+
+    $this->assertEquals("abcdef", Tenant::first()->subaccount_code);
   }
 }
