@@ -3,15 +3,11 @@
 namespace Tests\Feature;
 
 use App\BankAccount;
-use App\Nimbus\Institution;
 use App\Tenant;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Unicodeveloper\Paystack\Facades\Paystack;
-use Mockery\MockInterface;
 use Tests\Feature\Helpers\Auth\SetupUser;
 
 class BankAccountTest extends TestCase
@@ -34,7 +30,6 @@ class BankAccountTest extends TestCase
         "bank_name" => "gt bank",
         "description" => "test"
       ]);
-    
 
     $response->assertStatus(200);
     $response->assertJson([
