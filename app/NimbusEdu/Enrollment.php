@@ -3,10 +3,8 @@
 namespace App\Nimbus;
 
 use App\Registration;
-use App\Invoice;
 use App\Student;
 use App\Tenant;
-use App\Guardian;
 use App\Course;
 
 class Enrollment
