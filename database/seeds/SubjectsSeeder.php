@@ -12,6 +12,8 @@ class SubjectsSeeder extends Seeder
    */
   public function run()
   {
-    Institution::generateSubjects();
+    $institution = new Institution();
+
+    $institution->generateSubjects();
   }
 }

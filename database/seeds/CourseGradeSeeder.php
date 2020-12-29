@@ -12,6 +12,8 @@ class CourseGradeSeeder extends Seeder
    */
   public function run()
   {
-    Institution::generateClasses();
+    $institution = new Institution();
+
+    $institution->generateClasses();
   }
 }
