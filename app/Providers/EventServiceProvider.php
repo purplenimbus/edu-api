@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Course;
 use App\Observers\CourseObserver;
+use App\Guardian;
+use App\Observers\GuardianObserver;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -30,5 +32,6 @@ class EventServiceProvider extends ServiceProvider
     parent::boot();
 
     Course::observe(CourseObserver::class);
+    Guardian::observe(GuardianObserver::class);
   }
 }
