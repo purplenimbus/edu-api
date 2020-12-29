@@ -81,8 +81,7 @@ class Institution
       $curriculum_course_load_type = $this->getCurriculumCourseLoadType($type);
 
       if ($subject && $curriculum_course_load_type) {
-        $this->payload['created'][] = $curriculum
-          ->subjects()
+        $curriculum->subjects()
           ->firstOrCreate([
             'subject_id' => $subject->id,
             'type_id' => $curriculum_course_load_type->id
@@ -90,8 +89,6 @@ class Institution
           ->toArray();
       }
     }
-
-    return $this->payload;
   }
 
   private function readJson($path){
