@@ -52,10 +52,10 @@ class Guardian extends User
       $model->password = $model->createDefaultPassword();   
     });
 
-    self::created(function ($model) {
-      $user = User::find($model->id);
-      $user->assign('guardian');//Assign user model a role to return roles and permissions for JWT Claims
-      $model->assign('guardian');
-    });
+    // self::created(function ($model) {
+    //   $user = User::find($model->id);
+    //   $user->assign('guardian');//Assign user model a role to return roles and permissions for JWT Claims
+    //   $model->assign('guardian');
+    // });
   }
 }
