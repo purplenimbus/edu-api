@@ -48,9 +48,9 @@ class Guardian extends User
   public static function boot()
   {
     parent::boot();
-    self::creating(function ($model) {
-      $model->password = $model->createDefaultPassword();   
-    });
+    // self::creating(function ($model) {
+    //   $model->password = $model->createDefaultPassword();   
+    // });
 
     // self::created(function ($model) {
     //   $user = User::find($model->id);

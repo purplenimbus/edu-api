@@ -8,6 +8,17 @@ use App\User;
 class GuardianObserver
 {
   /**
+   * Handle the guardian "creating" event.
+   *
+   * @param  \App\Guardian  $guardian
+   * @return void
+   */
+  public function creating(Guardian $guardian)
+  {
+    $this->setDefaultPassword($guardian);
+  }
+
+  /**
    * Handle the guardian "created" event.
    *
    * @param  \App\Guardian  $guardian
@@ -61,6 +72,10 @@ class GuardianObserver
    */
   public function forceDeleted(Guardian $guardian)
   {
-      //
+    //
+  }
+
+  private function setDefaultPassword(Guardian $guardian){
+    $guardian->password = $guardian->createDefaultPassword();  
   }
 }
