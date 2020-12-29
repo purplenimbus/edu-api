@@ -31,50 +31,6 @@ class GuardianObserver
     $guardian->assign('guardian');
   }
 
-  /**
-   * Handle the guardian "updated" event.
-   *
-   * @param  \App\Guardian  $guardian
-   * @return void
-   */
-  public function updated(Guardian $guardian)
-  {
-      //
-  }
-
-  /**
-   * Handle the guardian "deleted" event.
-   *
-   * @param  \App\Guardian  $guardian
-   * @return void
-   */
-  public function deleted(Guardian $guardian)
-  {
-      //
-  }
-
-  /**
-   * Handle the guardian "restored" event.
-   *
-   * @param  \App\Guardian  $guardian
-   * @return void
-   */
-  public function restored(Guardian $guardian)
-  {
-      //
-  }
-
-  /**
-   * Handle the guardian "force deleted" event.
-   *
-   * @param  \App\Guardian  $guardian
-   * @return void
-   */
-  public function forceDeleted(Guardian $guardian)
-  {
-    //
-  }
-
   private function setDefaultPassword(Guardian $guardian){
     $guardian->password = $guardian->createDefaultPassword();  
   }
