@@ -115,7 +115,7 @@ Route::group([
       });
 
       Route::group([
-        // 'middleware' => ['can:edit-courses']
+        'middleware' => ['can:edit-courses']
       ], function() {
         Route::post('', 'CourseController@create');
         Route::post('/batch', 'CourseController@batch');
@@ -124,7 +124,7 @@ Route::group([
       });
 
       Route::group([
-        // 'middleware' => ['can:view-courses'],
+        'middleware' => ['can:view-courses'],
         'prefix' => '/{id}',
       ], function() {
         Route::put('/', 'CourseController@update');

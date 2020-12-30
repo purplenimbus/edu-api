@@ -9,18 +9,17 @@ use App\Instructor;
 use App\Nimbus\Institution;
 use App\Registration;
 use App\SchoolTerm;
-use App\SchoolTermStatus;
 use App\Subject;
-use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use DatabaseSeeder;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\Feature\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
 class CourseObserverTest extends TestCase
 {
-  use RefreshDatabase, WithFaker, SetupUser;
+  use RefreshDatabase, WithFaker, SetupUser, WithoutMiddleware;
    /**
    * Test default course name
    *
