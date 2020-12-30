@@ -66,18 +66,21 @@ class Tenant extends Model
   public static function boot()
   {
     parent::boot();
-    self::created(function ($model) {
-      $institution = new Institution($model);
-    });
+    // self::created(function ($model) {
+    //   $institution = new Institution();
+    //   $institution->newSchoolTerm($model);
+    // });
   }
 
   public function getCurrentTermAttribute()
   {
+    $termStatus = SchoolTermStatus::whereName('in progress')->first();
+
     return SchoolTerm::where([
       'tenant_id' => $this->id,
-      'status_id' => 1
+      'status_id' => $termStatus->id
     ])
-      ->first();
+    ->first();
   }
 
   public function getOwnerAttribute()

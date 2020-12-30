@@ -139,14 +139,6 @@ class Course extends Model
     return $this->belongsTo('App\CourseStatus');
   }
 
-  /**
-   *  Setup model event hooks
-   */
-  public static function boot()
-  {
-    parent::boot();
-  }
-
   public function scopeOfCourseGrade($query, $course_grade_id)
   {
     return $query
@@ -169,6 +161,9 @@ class Course extends Model
   }
 
   public function parse_course_code() {
-    return strtoupper($this->subject->code.'-'.str_replace(' ','-',$this->grade->name));
+    $subjectCode = Arr::get($this, "subject.code", "");
+    $courseGrade = Arr::get($this, "grade.name", "");
+  
+    return strtoupper($subjectCode.'-'.str_replace(' ', '-', $courseGrade));
   }
 }

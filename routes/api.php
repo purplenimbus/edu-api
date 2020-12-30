@@ -124,7 +124,7 @@ Route::group([
       });
 
       Route::group([
-        'middleware' => ['can:view-courses'],
+        // 'middleware' => ['can:view-courses'],
         'prefix' => '/{id}',
       ], function() {
         Route::put('/', 'CourseController@update');

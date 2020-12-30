@@ -1,26 +1,56 @@
 <?php
 
+use App\Course;
+use App\CourseGrade;
+use App\CourseStatus;
+use App\Instructor;
+use App\Student;
+use App\Subject;
+use App\Tenant;
 use Faker\Generator as Faker;
 
 $factory->define(App\Course::class, function (Faker $faker) {
   return [
-    'description' => $faker->text(200)
+    'course_grade_id' => factory(CourseGrade::class),
+    'description' => $faker->text(200),
+    'instructor_id' => factory(Instructor::class),
+    'name' => $faker->text(200),
+    'status_id' => factory(CourseStatus::class),
+    'subject_id' => factory(Subject::class),
+    'tenant_id' => factory(Tenant::class),
   ];
 });
 
-$factory->define(App\Scores::class, function (Faker $faker) {
+$factory->define(App\Registration::class, function () {
+  return [
+    'course_id' => factory(Course::class),
+    'user_id' => factory(Student::class),
+    'tenant_id' => factory(Tenant::class)
+  ];
+});
 
-  return  [
-    'quiz' => $faker->numberBetween(0, 15),
-    'midterm' => $faker->numberBetween(0, 30),
-    'assignment' => $faker->numberBetween(0, 15),
-    'lab' => $faker->numberBetween(0, 5),
-    'exam' => $faker->numberBetween(0, 35)
+$factory->define(App\Subject::class, function (Faker $faker) {
+  return [
+    'description' => $faker->text(200),
+    'name' => $faker->text(50),
+  ];
+});
+
+$factory->define(App\CourseGrade::class, function (Faker $faker) {
+  return [
+    'description' => $faker->text(200),
+    'name' => $faker->text(50),
+  ];
+});
+
+$factory->define(App\CourseStatus::class, function (Faker $faker) {
+  return [
+    'description' => $faker->text(200),
+    'name' => $faker->text(50),
   ];
 });
 
 $factory->define(App\Lesson::class, function (Faker $faker) {
-
   return  [
     'title' => $faker->sentence(6, true),
     'description' => $faker->text(200),

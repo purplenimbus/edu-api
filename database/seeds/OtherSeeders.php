@@ -73,6 +73,7 @@ class OtherSeeders extends Seeder
     }
 
     $course_statuses = [
+      [ 'name' => 'created' ],
       [ 'name' => 'in progress' ],
       [ 'name' => 'complete' ],
       [ 'name' => 'archived'  ],
