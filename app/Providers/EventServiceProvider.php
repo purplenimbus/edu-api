@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\BankAccount;
 use App\Course;
+use App\Observers\BankAccountObserver;
 use App\Observers\CourseObserver;
 use App\Guardian;
 use App\Observers\GuardianObserver;
@@ -33,5 +35,6 @@ class EventServiceProvider extends ServiceProvider
 
     Course::observe(CourseObserver::class);
     Guardian::observe(GuardianObserver::class);
+    BankAccount::observe(BankAccountObserver::class);
   }
 }

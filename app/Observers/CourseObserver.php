@@ -3,6 +3,10 @@
 namespace App\Observers;
 
 use App\Course;
+use App\CourseStatus;
+use App\SchoolTerm;
+use App\SchoolTermStatus;
+use Illuminate\Support\Arr;
 
 class CourseObserver
 {
@@ -14,86 +18,80 @@ class CourseObserver
    */
   public function created(Course $course)
   {
-    $this->setDefaultAttributes($course);
-
-    $this->setNewInstructor($course);
+    if (request()->has('instructor_id') && $course->wasChanged('instructor_id')) {	
+      $course->instructor->assignInstructor($course);	
+    }
   }
 
   /**
-   * Handle the course "updated" event.
+   * Handle the course "creating" event.
    *
    * @param  \App\Course  $course
    * @return void
    */
-  public function updated(Course $course)
+  public function creating(Course $course)
   {
-    $this->updateCourseAttributes($course);
+    if (is_null($course->name) && $course->subject) {	
+      $course->name = $course->subject->name;	
+    }	
+
+    if (is_null($course->code)) {	
+      $course->code = $course->parse_course_code();	
+    }	
+
+    if (is_null($course->schema)) {	
+      $course->schema = config('edu.default.course_schema');	
+    }
+
+    $courseStatus = CourseStatus::where('name', 'created')->first();
+
+    if ($courseStatus) {
+      $course->status_id = $courseStatus->id;
+    }
   }
 
   /**
-   * Handle the course "deleted" event.
+   * Handle the course "saved" event.
    *
    * @param  \App\Course  $course
    * @return void
    */
-  public function deleted(Course $course)
+  public function saved(Course $course)
   {
-    $this->deleteRegisteredStudents($course);
-  }
-
-  private function setDefaultAttributes(Course $course)
-  {
-    if (is_null($course->name)) {
-      $course->name = $course->subject->name;
+    if (request()->has('instructor_id') && $course->wasChanged('instructor_id') && isset($course->instructor_id)) {	
+      $course->instructor->assignInstructor($course);	
     }
 
-    if (is_null($course->code)) {
-      $course->code = $course->parse_course_code();
-    }
+    $courseStatus = Arr::get($course, "status.name", null);
 
-    if (is_null($course->schema)) {
-      $course->schema = config('edu.default.course_schema');
-    }
+    if ($courseStatus == 'complete')
+    {
+      $courseStatus = CourseStatus::whereName('in progress')->first();
+      $termStatus = SchoolTermStatus::whereName('complete')->first();
 
-    if (isset($course->tenant->current_term)) {
-      $course->term_id = $course->tenant->current_term->id;
-    }
-  }
+      $otherCourses = $course->where([	
+        ['tenant_id', '=', $course->tenant->id],	
+        ['status_id', '=', $courseStatus->id],	
+      ]);	
 
-  private function setNewInstructor(Course $course)
-  {
-    if (request()->has('instructor_id') && $course->wasChanged('instructor_id')) {
-      $course->instructor->assignInstructor($course);
-    };
-  }
-
-  private function updateCourseAttributes(Course $course)
-  {
-    if (request()->has('instructor_id') && $course->wasChanged('instructor_id') && isset($course->instructor_id)) {
-      $course->instructor->assignInstructor($course);
-    }
-
-    $this->updateCourseStatus($course);
-  }
-
-  private function updateCourseStatus(Course $course)
-  {
-    if ($course->status->name == 'complete') {
-      $courses_in_progres = $course->where([
-        ['tenant_id', '=', $course->tenant->id],
-        ['status_id', '=', 1],
-      ]);
-
-      if ($courses_in_progres->count() == 0 && isset($course->tenant->current_term)) {
-        $course->tenant->current_term->update(['status_id' => 2]);
-      }
+      if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
+        $course->tenant->current_term->update([
+          'status_id'=> $termStatus->id
+        ]);	
+      }	
     }
   }
 
-  private function deleteRegisteredStudents(Course $course)
+  /**
+   * Handle the course "deleting" event.
+   *
+   * @param  \App\Course  $course
+   * @return void
+   */
+  public function deleting(Course $course)
   {
-    if ($course->registrations()->count() > 0) {
-      $course->registrations()->delete();
+    if ($course->registrations()->count() > 0) {	
+      $course->registrations()->delete();	
     }
   }
 }

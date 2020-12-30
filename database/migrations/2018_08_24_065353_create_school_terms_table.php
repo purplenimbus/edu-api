@@ -21,7 +21,7 @@ class CreateSchoolTermsTable extends Migration
       $table->string('description')->nullable();
       $table->timestamps();
       $table->dateTime('start_date');
-      $table->integer('status_id')->default(1);
+      $table->integer('status_id');
       $table->dateTime('end_date');
     });
   }

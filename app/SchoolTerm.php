@@ -73,4 +73,8 @@ class SchoolTerm extends Model
       ->pluck('course.status_id')
       ->every(function ($value) { return $value === 2; });
   }
+
+  public function scopeOfTenant($query, $tenant_id) {
+    return $query->whereTenantId($tenant_id);
+  }
 }

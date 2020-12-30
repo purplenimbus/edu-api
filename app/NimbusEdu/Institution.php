@@ -6,12 +6,30 @@ use App\CourseGrade;
 use App\Curriculum;
 use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
 use App\Nimbus\Helpers\Subject\SubjectHelpers;
+use App\SchoolTerm;
+use App\SchoolTermStatus;
 use App\Subject;
+use App\Tenant;
+use Carbon\Carbon;
 use Exception;
 
 class Institution
 {
   use CurriculumHelpers, SubjectHelpers;
+
+  public function newSchoolTerm(Tenant $tenant, $options = []) {
+    $status_id = SchoolTermStatus::whereName('in progress')->first()->id;
+
+    $data = array_merge([
+      'end_date' => Carbon::now()->addMonths(4),
+      'name' => 'first term',
+      'status_id' => $status_id,
+      'start_date' => Carbon::now(),
+      'tenant_id' => $tenant->id,
+    ], $options);
+
+    SchoolTerm::create($data);
+  }
 
   public function generateSubjects() {
     foreach($this->readJson('subjects.json') as $subject) {

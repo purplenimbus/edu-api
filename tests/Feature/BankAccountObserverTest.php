@@ -10,7 +10,7 @@ use Tests\TestCase;
 use Unicodeveloper\Paystack\Facades\Paystack;
 use Tests\Feature\Helpers\Auth\SetupUser;
 
-class BankAccountTest extends TestCase
+class BankAccountObserverTest extends TestCase
 {
   use RefreshDatabase, WithFaker, SetupUser;
 

@@ -1,8 +1,9 @@
 <?php
 
+use App\Tenant;
 use Faker\Generator as Faker;
 
-$factory->define(App\Tenant::class, function (Faker $faker) {
+$factory->define(Tenant::class, function (Faker $faker) {
   return [
     'name' => $faker->company,
   ];
