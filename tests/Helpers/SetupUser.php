@@ -21,7 +21,7 @@ trait SetupUser
 
     $this->user->markEmailAsVerified();
 
-    $token = auth()->login($this->user);
+    auth()->login($this->user);
   }
 
     /**

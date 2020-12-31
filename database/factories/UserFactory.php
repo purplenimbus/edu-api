@@ -24,8 +24,8 @@ $factory->define(User::class, function (Faker $faker) {
       'street' => $faker->streetAddress
     ],
     'date_of_birth' => $faker->date,
-    'firstname' => $faker->name,
-    'lastname' => $faker->name,
+    'firstname' => $faker->firstName,
+    'lastname' => $faker->lastName,
     'email' => $faker->email,
     'password' => '123456',
     'tenant_id' => factory(Tenant::class),
