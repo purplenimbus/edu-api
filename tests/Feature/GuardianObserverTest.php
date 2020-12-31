@@ -37,7 +37,7 @@ class GuardianObserverTest extends TestCase
   }
 
   /**
-   * Test the default password
+   * Test the default role
    *
    * @return void
    */
