@@ -11,7 +11,6 @@ use App\Registration;
 use App\SchoolTerm;
 use App\Subject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\Feature\Helpers\Auth\SetupUser;
@@ -19,7 +18,7 @@ use Tests\TestCase;
 
 class CourseObserverTest extends TestCase
 {
-  use RefreshDatabase, WithFaker, SetupUser, WithoutMiddleware;
+  use RefreshDatabase, SetupUser, WithoutMiddleware;
    /**
    * Test default course name
    *

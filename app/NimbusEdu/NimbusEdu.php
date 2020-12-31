@@ -20,6 +20,7 @@ use App\Guardian;
 use App\Notifications\ActivateUser;
 use App\Notifications\BatchProcessed;
 use Exception;
+use Illuminate\Http\Request;
 
 class NimbusEdu
 {
@@ -380,7 +381,7 @@ class NimbusEdu
     }
   }
 
-  public function create_guardian($request){
+  public function create_guardian(Request $request){
     try{
       $data = array_merge($request->except('ward_ids'), [
         'address' => $request->address,
@@ -388,7 +389,7 @@ class NimbusEdu
       ]);
 
       $guardian = Guardian::create($data);
-
+      
       $guardian->notify(new ActivateUser);
       
       if ($request->has('ward_ids')) {
