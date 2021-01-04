@@ -30,11 +30,11 @@ class Instructor extends User
 
     });
 
-    self::created(function ($model) {
-      $user = User::find($model->id);
-      $user->assign('instructor');//Assign user model a role to return roles and permissions for JWT Claims
-      $model->assign('instructor');
-    });
+    // self::created(function ($model) {
+    //   $user = User::find($model->id);
+    //   $user->assign('instructor');//Assign user model a role to return roles and permissions for JWT Claims
+    //   $model->assign('instructor');
+    // });
   }
 
   /**
