@@ -8,6 +8,14 @@ use App\StatusType;
 
 class InstructorObserver
 {
+  public function creating(Instructor $instructor){
+    $instructor->password = $instructor->createDefaultPassword();
+    $status_type = StatusType::where('name', 'created')->first();
+
+    if (!is_null($status_type)) {
+      $instructor->account_status_id = $status_type->id;
+    }
+  }
   /**
    * Handle the instructor "created" event.
    *

@@ -20,15 +20,15 @@ class Instructor extends User
   public static function boot()
   {
     parent::boot();
-    self::creating(function ($model) {
-      $model->password = $model->createDefaultPassword();
-      $status_type = StatusType::where('name', 'created')->first();
+    // self::creating(function ($model) {
+    //   $model->password = $model->createDefaultPassword();
+    //   $status_type = StatusType::where('name', 'created')->first();
 
-      if (!is_null($status_type)) {
-        $model->account_status_id = $status_type->id;
-      }
+    //   if (!is_null($status_type)) {
+    //     $model->account_status_id = $status_type->id;
+    //   }
 
-    });
+    // });
 
     // self::created(function ($model) {
     //   $user = User::find($model->id);
