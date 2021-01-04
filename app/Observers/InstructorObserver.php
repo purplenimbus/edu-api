@@ -8,6 +8,13 @@ use App\StatusType;
 
 class InstructorObserver
 {
+
+  /**
+   * Handle the instructor "creating" event.
+   *
+   * @param  \App\Instructor  $instructor
+   * @return void
+   */
   public function creating(Instructor $instructor){
     $instructor->password = $instructor->createDefaultPassword();
     $status_type = StatusType::where('name', 'created')->first();
@@ -16,6 +23,7 @@ class InstructorObserver
       $instructor->account_status_id = $status_type->id;
     }
   }
+  
   /**
    * Handle the instructor "created" event.
    *
@@ -29,47 +37,4 @@ class InstructorObserver
     $instructor->assign('instructor');
   }
 
-  /**
-   * Handle the instructor "updated" event.
-   *
-   * @param  \App\Instructor  $instructor
-   * @return void
-   */
-  public function updated(Instructor $instructor)
-  {
-      //
-  }
-
-  /**
-   * Handle the instructor "deleted" event.
-   *
-   * @param  \App\Instructor  $instructor
-   * @return void
-   */
-  public function deleted(Instructor $instructor)
-  {
-      //
-  }
-
-  /**
-   * Handle the instructor "restored" event.
-   *
-   * @param  \App\Instructor  $instructor
-   * @return void
-   */
-  public function restored(Instructor $instructor)
-  {
-      //
-  }
-
-  /**
-   * Handle the instructor "force deleted" event.
-   *
-   * @param  \App\Instructor  $instructor
-   * @return void
-   */
-  public function forceDeleted(Instructor $instructor)
-  {
-      //
-  }
 }
