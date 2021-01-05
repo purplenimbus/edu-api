@@ -31,7 +31,7 @@ class StoreGuardian extends FormRequest
       'ward_ids'  => [
         'array',
       ],
-      'ward_ids.*'  => ['required_with:ward_ids','integer',new ValidStudent()],
+      'ward_ids.*'  => ['required_with:ward_ids', 'integer', new ValidStudent()],
     ], $userValidation->rules());
   }
 }
