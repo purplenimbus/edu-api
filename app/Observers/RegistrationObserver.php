@@ -49,6 +49,18 @@ class RegistrationObserver
       //
   }
 
+  public function deleting(Registration $registration){
+    if ($registration->course_score) {
+      $registration->course_score->delete();
+    }
+
+    $registration->user->disallow('view', $registration->course);
+
+    if ($registration->user->guardian) {
+      $registration->user->guardian->disallow('view', $registration);
+    }
+  }
+
   /**
    * Handle the registration "deleted" event.
    *

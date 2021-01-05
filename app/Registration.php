@@ -84,16 +84,16 @@ class Registration extends Model
     //   }
     // });
 
-    self::deleting(function ($model) {
-      if ($model->course_score) {
-        $model->course_score->delete();
-      }
+    // self::deleting(function ($model) {
+    //   if ($model->course_score) {
+    //     $model->course_score->delete();
+    //   }
 
-      $model->user->disallow('view', $model->course);
+    //   $model->user->disallow('view', $model->course);
 
-      if ($model->user->guardian) {
-        $model->user->guardian->disallow('view', $model);
-      }
-    });
+    //   if ($model->user->guardian) {
+    //     $model->user->guardian->disallow('view', $model);
+    //   }
+    // });
   }
 }
