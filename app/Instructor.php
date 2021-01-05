@@ -15,29 +15,6 @@ class Instructor extends User
   }
 
   /**
-   *  Setup model event hooks
-  */
-  public static function boot()
-  {
-    parent::boot();
-    self::creating(function ($model) {
-      $model->password = $model->createDefaultPassword();
-      $status_type = StatusType::where('name', 'created')->first();
-
-      if (!is_null($status_type)) {
-        $model->account_status_id = $status_type->id;
-      }
-
-    });
-
-    self::created(function ($model) {
-      $user = User::find($model->id);
-      $user->assign('instructor');//Assign user model a role to return roles and permissions for JWT Claims
-      $model->assign('instructor');
-    });
-  }
-
-  /**
    *  Assign Instructor
   */
   public function assignInstructor(Course $course) 
