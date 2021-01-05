@@ -60,29 +60,29 @@ class Registration extends Model
   public static function boot()
   {
     parent::boot();
-    self::created(function ($model) {
-      if ($model->course->schema) {
-        $course_score = CourseScore::create([
-          'registration_id' => $model->id,
-          'scores' => array_map(
-            function ($item) {
-              $item['score'] = 0;
-              return $item;
-            },
-            $model->course->schema
-          ),
-        ]);
-        $model->course_score_id = $course_score->id;
-        $model->save();
-      }
+    // self::created(function ($model) {
+    //   if ($model->course->schema) {
+    //     $course_score = CourseScore::create([
+    //       'registration_id' => $model->id,
+    //       'scores' => array_map(
+    //         function ($item) {
+    //           $item['score'] = 0;
+    //           return $item;
+    //         },
+    //         $model->course->schema
+    //       ),
+    //     ]);
+    //     $model->course_score_id = $course_score->id;
+    //     $model->save();
+    //   }
 
-      $model->user->allow('view', $model);
-      $model->user->allow('view', $model->course);
+    //   $model->user->allow('view', $model);
+    //   $model->user->allow('view', $model->course);
 
-      if ($model->user->guardian) {
-        $model->user->guardian->allow('view', $model);
-      }
-    });
+    //   if ($model->user->guardian) {
+    //     $model->user->guardian->allow('view', $model);
+    //   }
+    // });
 
     self::deleting(function ($model) {
       if ($model->course_score) {
