@@ -30,12 +30,8 @@ class RegistrationObserver
       $registration->save();
     }
 
-    $registration->user->allow('view', $registration);
-    $registration->user->allow('view', $registration->course);
-
-    if ($registration->user->guardian) {
-      $registration->user->guardian->allow('view', $registration);
-    }
+    $this->grantAccessToRegistration($registration);
+    
   }
 
   /**
@@ -92,5 +88,14 @@ class RegistrationObserver
   public function forceDeleted(Registration $registration)
   {
       //
+  }
+
+  private function grantAccessToRegistration(Registration $registration){
+    $registration->user->allow('view', $registration);
+    $registration->user->allow('view', $registration->course);
+
+    if ($registration->user->guardian) {
+      $registration->user->guardian->allow('view', $registration);
+    }
   }
 }
