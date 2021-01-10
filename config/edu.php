@@ -31,6 +31,14 @@ return [
       [
         'name' => 'third term',
       ]
+    ],
+    'payment_item_types' => [
+      [
+        'name' => 'tuition',
+      ],
+      [
+        'name' => 'administrative',
+      ],
     ]
   ],
   'pagination' => 10

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentItem extends Model
+class PaymentProfileItem extends Model
 {
 	/**
 	* The attributes that are mass assignable.
@@ -20,7 +20,7 @@ class PaymentItem extends Model
 		'type_id'
 	];
 
-	public function PaymentItemType(){
-    return $this->hasOne('App\PaymentItemType');
+	public function type(){
+    return $this->hasOne('App\PaymentProfileItemType');
   }
 }

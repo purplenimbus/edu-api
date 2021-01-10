@@ -10,6 +10,8 @@ use App\Guardian;
 use App\Observers\GuardianObserver;
 use App\Instructor;
 use App\Observers\InstructorObserver;
+use App\Observers\TenantObserver;
+use App\Tenant;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -39,5 +41,6 @@ class EventServiceProvider extends ServiceProvider
     Guardian::observe(GuardianObserver::class);
     BankAccount::observe(BankAccountObserver::class);
     Instructor::observe(InstructorObserver::class);
+    Tenant::observe(TenantObserver::class);
   }
 }
