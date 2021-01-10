@@ -17,7 +17,7 @@ class PaymentProfile extends Model
     'tenant_id',
   ];
 
-  public function PaymentItems()
+  public function items()
   {
     return $this->hasMany('App\PaymentProfileItem');
 	}
