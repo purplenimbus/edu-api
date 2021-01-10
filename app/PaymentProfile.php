@@ -19,7 +19,7 @@ class PaymentProfile extends Model
 
   public function PaymentItems()
   {
-    return $this->hasMany('App\PaymentItem');
+    return $this->hasMany('App\PaymentProfileItem');
 	}
 	
 	public function scopeOfTenant($query, $tenant_id)

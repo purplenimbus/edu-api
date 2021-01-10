@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PaymentItemType extends Model
+class PaymentProfileItemType extends Model
 {
 		/**
    * The attributes that are mass assignable.
