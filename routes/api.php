@@ -219,6 +219,12 @@ Route::group([
     ], function() {
       Route::get('/', 'PaymentProfilesController@index');
       Route::post('/', 'PaymentProfilesController@create');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::put('/', 'PaymentProfilesController@update');
+      });
     });
   });
 });

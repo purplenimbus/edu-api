@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePaymentProfile;
+use App\Http\Requests\UpdatePaymentProfile;
 use App\PaymentProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -40,6 +41,30 @@ class PaymentProfilesController extends Controller
     $tenant = Auth::user()->tenant()->first();
 
     $payment_profile = new PaymentProfile();
+
+    $request->merge([
+      'tenant_id' => $tenant->id,
+    ]);
+
+    $payment_profile->fill($request->all());
+
+    $payment_profile->save();
+
+    return response()->json($payment_profile, 200);
+  }
+
+  /**
+   * Update the specified resource in storage.
+   *
+   * @param  \Illuminate\Http\Request  $request
+   * @param  \App\PaymentProfile  $payment_profile
+   * @return \Illuminate\Http\Response
+   */
+  public function update(UpdatePaymentProfile $request)
+  {
+    $tenant = Auth::user()->tenant()->first();
+
+    $payment_profile = PaymentProfile::find($request->id);
 
     $request->merge([
       'tenant_id' => $tenant->id,
