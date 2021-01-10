@@ -7,7 +7,7 @@ use App\Student;
 use Carbon\Carbon;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Feature\Helpers\Auth\SetupUser;
+use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
 class StudentObserverTest extends TestCase
@@ -72,7 +72,7 @@ class StudentObserverTest extends TestCase
 
     $year = Carbon::now()->year;
 
-    $this->assertEquals("{$year}00{$student->id}", $student->ref_id);
+    $this->assertEquals("{$year}000{$student->id}", $student->ref_id);
   }
 
   /**

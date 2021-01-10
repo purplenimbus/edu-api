@@ -211,5 +211,14 @@ Route::group([
         });
       });
     });
+
+    /* Payment Profiles */
+    Route::group([
+      'prefix' => '/payment_profiles',
+      'middleware' => [],
+    ], function() {
+      Route::get('/', 'PaymentProfilesController@index');
+      Route::post('/', 'PaymentProfilesController@create');
+    });
   });
 });

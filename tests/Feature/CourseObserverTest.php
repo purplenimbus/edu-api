@@ -13,7 +13,7 @@ use App\Subject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\Feature\Helpers\Auth\SetupUser;
+use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
 class CourseObserverTest extends TestCase

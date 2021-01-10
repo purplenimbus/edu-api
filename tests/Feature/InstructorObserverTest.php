@@ -7,7 +7,7 @@ use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\Feature\Helpers\Auth\SetupUser;
+use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 use Bouncer;
 
