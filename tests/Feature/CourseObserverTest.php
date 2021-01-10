@@ -93,7 +93,7 @@ class CourseObserverTest extends TestCase
   }
 
   /**
-   * Test overritten default course attributes
+   * Test overrwitten default course attributes
    *
    * @return void
    */

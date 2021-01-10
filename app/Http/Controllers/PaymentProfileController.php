@@ -41,6 +41,10 @@ class PaymentProfilesController extends Controller
 
     $payment_profile = new PaymentProfile();
 
+    $request->merge([
+      'tenant_id' => $tenant->id,
+    ]);
+
     $payment_profile->fill($request->all());
 
     $payment_profile->save();

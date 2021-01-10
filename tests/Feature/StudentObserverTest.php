@@ -72,7 +72,7 @@ class StudentObserverTest extends TestCase
 
     $year = Carbon::now()->year;
 
-    $this->assertEquals("{$year}000{$student->id}", $student->ref_id);
+    $this->assertEquals("{$year}00{$student->id}", $student->ref_id);
   }
 
   /**
