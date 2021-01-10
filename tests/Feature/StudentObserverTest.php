@@ -7,7 +7,7 @@ use App\Student;
 use Carbon\Carbon;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Feature\Helpers\Auth\SetupUser;
+use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
 class StudentObserverTest extends TestCase
