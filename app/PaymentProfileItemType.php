@@ -15,5 +15,9 @@ class PaymentProfileItemType extends Model
     'name',
     'description',
     'tenant_id',
-	];
+  ];
+  
+  public function scopeOfTenant($query, $tenant_id) {
+    return $query->whereTenantId($tenant_id);
+  }
 }

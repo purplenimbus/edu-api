@@ -226,5 +226,12 @@ Route::group([
         Route::put('/', 'PaymentProfilesController@update');
       });
     });
+
+    /* Payment Profile Item Types */
+    Route::group([
+      'prefix' => '/payment_profile_item_types',
+    ], function() {
+      Route::get('/', 'PaymentProfileItemTypeController@index');
+    });
   });
 });

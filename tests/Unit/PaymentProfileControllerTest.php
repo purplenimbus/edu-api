@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\PaymentProfile;
+use App\PaymentProfileItemType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
