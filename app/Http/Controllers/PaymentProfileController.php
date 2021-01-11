@@ -74,6 +74,14 @@ class PaymentProfilesController extends Controller
 
     $payment_profile->save();
 
+    if ($request->has('items')) {
+      foreach($request->items as $item) {
+        $item['tenant_id'] = $tenant->id;
+
+        $payment_profile->items()->updateOrCreate($item);
+      }
+    }
+
     return response()->json($payment_profile, 200);
   }
 }

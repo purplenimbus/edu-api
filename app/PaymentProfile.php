@@ -26,4 +26,8 @@ class PaymentProfile extends Model
   {
     return $query->where('tenant_id', $tenant_id);
   }
+
+  public function getTotalAttribute() {
+    return $this->items->pluck('amount')->sum();
+  }
 }

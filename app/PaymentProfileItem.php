@@ -12,7 +12,6 @@ class PaymentProfileItem extends Model
 	* @var array
 	*/
 	protected $fillable = [
-		'name',
 		'description',
 		'tenant_id',
 		'amount',
