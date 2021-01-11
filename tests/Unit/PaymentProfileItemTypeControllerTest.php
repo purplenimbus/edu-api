@@ -10,7 +10,7 @@ class PaymentProfileItemTypeControllerTest extends TestCase
 {
   use SetupUser;
   /**
-   * A basic unit test example.
+   * Get a tenants payment profiles item types
    *
    * @return void
    */
