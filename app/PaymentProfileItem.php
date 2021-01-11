@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentProfileItem extends Model
 {
-	/**
-	* The attributes that are mass assignable.
-	*
-	* @var array
-	*/
-	protected $fillable = [
-		'description',
-		'tenant_id',
-		'amount',
-		'payment_profile_id',
-		'type_id'
-	];
+  /**
+  * The attributes that are mass assignable.
+  *
+  * @var array
+  */
+  protected $fillable = [
+    'description',
+    'tenant_id',
+    'amount',
+    'payment_profile_id',
+    'type_id'
+  ];
 
-	public function type(){
+  public function type(){
     return $this->hasOne('App\PaymentProfileItemType');
   }
 }
