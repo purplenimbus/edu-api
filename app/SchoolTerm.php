@@ -37,6 +37,10 @@ class SchoolTerm extends Model
     return $this->belongsTo('App\SchoolTermStatus');
   }
 
+  public function term_types() {
+    return $this->hasMany('App\SchoolTermTypes');
+  }
+
   public function registrations() {
     return $this->hasMany('App\Registration', 'term_id');
   }
