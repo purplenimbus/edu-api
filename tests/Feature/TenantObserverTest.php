@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\PaymentProfileItemType;
+use App\SchoolTermType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
@@ -29,5 +30,24 @@ class TenantObserverTest extends TestCase
 
     $response->assertStatus(200);
     $this->assertEquals(Arr::pluck(config('edu.default.payment_item_types'), 'name'), PaymentProfileItemType::all()->pluck('name')->toArray());
+  }
+
+  /**
+   * Creates a default school term types
+   *
+   * @return void
+   */
+  public function testCreateDefaultSchoolTermTypes()
+  {
+    $response = $this->postJson('/api/v1/register', [
+      'email' => $this->faker->email,
+      'fullName' => $this->faker->name,
+      'name' => $this->faker->company,
+      'password' => '1234abcd',
+      'password_confirmation' => '1234abcd',
+    ]);
+
+    $response->assertStatus(200);
+    $this->assertEquals(Arr::pluck(config('edu.default.school_terms'), 'name'), SchoolTermType::all()->pluck('name')->toArray());
   }
 }
