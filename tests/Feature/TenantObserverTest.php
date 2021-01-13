@@ -7,7 +7,6 @@ use App\SchoolTermType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
-use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
 class TenantObserverTest extends TestCase
