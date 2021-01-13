@@ -31,9 +31,6 @@ class StorePaymentProfile extends FormRequest
       'tenant_id' => 'integer|exists:tenants,id',
       'term_id' => [
         'integer|exists:school_terms,id',
-        Rule::unique('school_terms')->where(function ($query) {
-          return $query->where('account_id', 1);
-        })
       ],
     ];
   }
