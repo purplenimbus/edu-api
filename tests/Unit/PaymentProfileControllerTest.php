@@ -2,8 +2,11 @@
 
 namespace Tests\Unit;
 
+use App\Course;
+use App\CourseGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItemType;
+use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
@@ -63,7 +66,7 @@ class PaymentProfileControllerTest extends TestCase
   }
 
   /**
-   * Update a tenant payment profile
+   * Update a tenant payment profile with payment profile items
    *
    * @return void
    */
@@ -106,5 +109,30 @@ class PaymentProfileControllerTest extends TestCase
     $response->assertStatus(200);
     $this->assertEquals(3, PaymentProfile::first()->items->count());
     $this->assertEquals(450, PaymentProfile::first()->total);
+  }
+
+  /**
+   * Update a tenant payment profile with a course grade
+   *
+   * @return void
+   */
+  public function testUpdateTenantPaymentProfileWithCourseGrade()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $payment_profile = PaymentProfile::create([
+      'name' => 'old default',
+      'tenant_id' => $this->user->tenant->id
+    ]);
+
+    $courseGrade = CourseGrade::first();
+
+    $response = $this->actingAs($this->user)
+      ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
+        'course_grade_id' => $courseGrade->id,
+      ]);
+    
+    $response->assertStatus(200);
+    $this->assertEquals(1, PaymentProfile::first()->whereCourseGradeId($courseGrade->id)->count());
   }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePaymentProfile extends FormRequest
 {
@@ -25,8 +26,15 @@ class StorePaymentProfile extends FormRequest
   {
     return [
       'description' => 'string|nullable|max:255',
+      'course_grade_id' => 'integer|exists:course_grades,id',
       'name' => 'string|required|max:255',
-      'tenant_id' => 'exists:tenants,id',
+      'tenant_id' => 'integer|exists:tenants,id',
+      'term_id' => [
+        'integer|exists:school_terms,id',
+        Rule::unique('school_terms')->where(function ($query) {
+          return $query->where('account_id', 1);
+        })
+      ],
     ];
   }
 }
