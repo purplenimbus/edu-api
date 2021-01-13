@@ -15,11 +15,23 @@ class PaymentProfile extends Model
     'name',
     'description',
     'tenant_id',
+    'term_id',
+    'course_grade_id',
   ];
 
   public function items()
   {
     return $this->hasMany('App\PaymentProfileItem');
+  }
+  
+  public function course_grade()
+  {
+    return $this->belongsTo('App\CourseGrade');
+  }
+  
+  public function term()
+  {
+    return $this->belongsTo('App\SchoolTerm');
 	}
 	
 	public function scopeOfTenant($query, $tenant_id)
