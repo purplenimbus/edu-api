@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Registration;
 use App\CourseScore;
+use Silber\Bouncer\Bouncer as BouncerBouncer;
 
 class RegistrationObserver
 {
@@ -31,7 +32,6 @@ class RegistrationObserver
     }
 
     $this->grantAccessToRegistration($registration);
-    
   }
 
   /**
@@ -49,12 +49,7 @@ class RegistrationObserver
     if ($registration->course_score) {
       $registration->course_score->delete();
     }
-
-    $registration->user->disallow('view', $registration->course);
-
-    if ($registration->user->guardian) {
-      $registration->user->guardian->disallow('view', $registration);
-    }
+    $this->blockAccessToRegistration($registration);
   }
 
   /**
@@ -96,6 +91,14 @@ class RegistrationObserver
 
     if ($registration->user->guardian) {
       $registration->user->guardian->allow('view', $registration);
+    }
+  }
+
+  private function blockAccessToRegistration(Registration $registration){
+    $registration->user->disallow('view', $registration->course);
+
+    if ($registration->user->guardian) {
+      $registration->user->guardian->disallow('view', $registration);
     }
   }
 }
