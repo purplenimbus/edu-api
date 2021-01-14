@@ -30,59 +30,20 @@ class RegistrationObserver
       $registration->course_score_id = $course_score->id;
       $registration->save();
     }
-
     $this->grantAccessToRegistration($registration);
   }
 
   /**
-   * Handle the registration "updated" event.
+   * Handle the registration "deleting" event.
    *
    * @param  \App\Registration  $registration
    * @return void
    */
-  public function updated(Registration $registration)
-  {
-      //
-  }
-
   public function deleting(Registration $registration){
     if ($registration->course_score) {
       $registration->course_score->delete();
     }
     $this->blockAccessToRegistration($registration);
-  }
-
-  /**
-   * Handle the registration "deleted" event.
-   *
-   * @param  \App\Registration  $registration
-   * @return void
-   */
-  public function deleted(Registration $registration)
-  {
-      //
-  }
-
-  /**
-   * Handle the registration "restored" event.
-   *
-   * @param  \App\Registration  $registration
-   * @return void
-   */
-  public function restored(Registration $registration)
-  {
-      //
-  }
-
-  /**
-   * Handle the registration "force deleted" event.
-   *
-   * @param  \App\Registration  $registration
-   * @return void
-   */
-  public function forceDeleted(Registration $registration)
-  {
-      //
   }
 
   private function grantAccessToRegistration(Registration $registration){

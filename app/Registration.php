@@ -53,47 +53,4 @@ class Registration extends Model
   {
     return $this->hasOne('App\CourseScore', 'id', 'course_score_id');
   }
-
-  /**
-   *  Setup model event hooks
-   */
-  public static function boot()
-  {
-    parent::boot();
-    // self::created(function ($model) {
-    //   if ($model->course->schema) {
-    //     $course_score = CourseScore::create([
-    //       'registration_id' => $model->id,
-    //       'scores' => array_map(
-    //         function ($item) {
-    //           $item['score'] = 0;
-    //           return $item;
-    //         },
-    //         $model->course->schema
-    //       ),
-    //     ]);
-    //     $model->course_score_id = $course_score->id;
-    //     $model->save();
-    //   }
-
-    //   $model->user->allow('view', $model);
-    //   $model->user->allow('view', $model->course);
-
-    //   if ($model->user->guardian) {
-    //     $model->user->guardian->allow('view', $model);
-    //   }
-    // });
-
-    // self::deleting(function ($model) {
-    //   if ($model->course_score) {
-    //     $model->course_score->delete();
-    //   }
-
-    //   $model->user->disallow('view', $model->course);
-
-    //   if ($model->user->guardian) {
-    //     $model->user->guardian->disallow('view', $model);
-    //   }
-    // });
-  }
 }
