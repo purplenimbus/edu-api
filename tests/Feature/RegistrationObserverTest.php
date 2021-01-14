@@ -7,16 +7,11 @@ use App\CourseGrade;
 use App\CourseStatus;
 use App\Nimbus\Institution;
 use App\Registration;
-use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\Feature\Helpers\Auth\SetupUser;
+use Tests\Helpers\Auth\SetupUser;;
 use Tests\TestCase;
-use Bouncer;
 use DatabaseSeeder;
 use App\Student;
-use Silber\Bouncer\Bouncer as BouncerBouncer;
 
 class RegistrationObserverTest extends TestCase
 {
@@ -118,7 +113,7 @@ class RegistrationObserverTest extends TestCase
 
     $response->assertStatus(200);
 
-    $this->assertEquals(Registration::find($registration->id), null);
+    $this->assertEquals(Registration::count(), 0);
 
     $this->assertFalse($student->can('view', $course));
   }
