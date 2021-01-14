@@ -108,20 +108,17 @@ class RegistrationObserverTest extends TestCase
     $registration = factory(Registration::class)->create([
       'course_id' => $course->id,
       'tenant_id' => $this->user->tenant_id,
-      'user_id' => $this->user
+      'user_id' => $student->id
     ]);
 
-    dd($registration->toArray());
     $response = $this->actingAs($this->user)
       ->delete("api/v1/registrations", [
         'registration_ids' => [$registration->id],
       ]);
 
-    //Bouncer::refreshFor($student);
-
     $response->assertStatus(200);
 
-    $this->assertEquals(Registration::where('id', $registration->id), 0);
+    $this->assertEquals(Registration::find($registration->id), null);
 
     $this->assertFalse($student->can('view', $course));
   }
