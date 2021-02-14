@@ -268,4 +268,9 @@ class Tenant extends Model
   {
     return $this->hasMany('App\SchoolTermType');
   }
+
+  public function payment_profiles()
+  {
+    return $this->hasMany('App\PaymentProfile');
+  }
 }

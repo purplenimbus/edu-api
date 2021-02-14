@@ -17,6 +17,7 @@ class PaymentProfile extends Model
     'tenant_id',
     'term_id',
     'course_grade_id',
+    'term_type_id',
   ];
 
   public function items()
