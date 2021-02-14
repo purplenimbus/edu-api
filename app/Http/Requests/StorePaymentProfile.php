@@ -29,9 +29,7 @@ class StorePaymentProfile extends FormRequest
       'course_grade_id' => 'integer|exists:course_grades,id',
       'name' => 'string|required|max:255',
       'tenant_id' => 'integer|exists:tenants,id',
-      'term_id' => [
-        'integer|exists:school_terms,id',
-      ],
+      'term_type_id' => 'integer|exists:school_term_types,id',
     ];
   }
 }

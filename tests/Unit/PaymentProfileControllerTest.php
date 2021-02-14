@@ -20,7 +20,7 @@ class PaymentProfileControllerTest extends TestCase
    *
    * @return void
    */
-  public function testGetTenantPaymentProfiles()
+  public function testGetTenantPaymentProfile()
   {
     $response = $this->actingAs($this->user)
       ->getJson('api/v1/payment_profiles');
@@ -77,11 +77,11 @@ class PaymentProfileControllerTest extends TestCase
       'tenant_id' => $this->user->tenant->id
     ]);
 
-    $adminPaymentProfileType = PaymentProfileItemType::whereName('administrative')
+    $adminPaymentProfileType = PaymentProfileItemType::whereName(PaymentProfileItemType::ADMIN)
       ->ofTenant($this->user->tenant->id)
       ->first();
 
-    $tuitionPaymentProfileType = PaymentProfileItemType::whereName('tuition')
+    $tuitionPaymentProfileType = PaymentProfileItemType::whereName(PaymentProfileItemType::TUITION)
       ->ofTenant($this->user->tenant->id)
       ->first();
 
@@ -162,7 +162,54 @@ class PaymentProfileControllerTest extends TestCase
   }
 
   /**
+   * create a tenant payment profile with a course grade
+   *
+   * @return void
+   */
+  public function createTenantPaymentProfileWithTermType()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $termType = $this->user->tenant->term_types()->first();
+
+    $response = $this->actingAs($this->user)
+      ->postJson("api/v1/payment_profiles/", [
+        'name' => 'old default',
+        'term_type_id' => $termType->id,
+      ]);
+    
+    $response->assertStatus(200);
+    $this->assertEquals(1, PaymentProfile::first()->whereTermTypeId($termType->id)->count());
+  }
+
+  /**
    * Create a tenant payment profile with a course grade and type type
+   *
+   * @return void
+   */
+  public function testCreateTenantPaymentProfileWithCourseGradeAndTermType()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $termType = $this->user->tenant->term_types()->first();
+    $courseGrade = CourseGrade::first();
+
+    $response = $this->actingAs($this->user)
+      ->postJson("api/v1/payment_profiles", [
+        'course_grade_id' => $courseGrade->id,
+        'term_type_id' => $termType->id,
+        'name' => 'test',
+      ]);
+    
+    $response->assertStatus(200);
+    $this->assertEquals(1, PaymentProfile::first()->where([
+      'course_grade_id' => $courseGrade->id,
+      'term_type_id' => $termType->id,
+    ])->count());
+  }
+
+  /**
+   * Update a tenant payment profile with a course grade and type type
    *
    * @return void
    */
