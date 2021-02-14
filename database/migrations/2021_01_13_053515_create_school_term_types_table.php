@@ -15,6 +15,8 @@ class CreateSchoolTermTypesTable extends Migration
   {
     Schema::create('school_term_types', function (Blueprint $table) {
       $table->id();
+      $table->dateTime('end_date');
+			$table->dateTime('start_date');
       $table->integer('tenant_id');
 			$table->mediumText('description')->nullable();
 			$table->string('name');

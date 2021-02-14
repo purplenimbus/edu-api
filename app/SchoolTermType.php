@@ -13,7 +13,9 @@ class SchoolTermType extends Model
   */
   protected $fillable = [
     'description',
+    'end_date',
     'name',
+    'start_date',
     'tenant_id'
   ];
 
