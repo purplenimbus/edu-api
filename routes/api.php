@@ -187,7 +187,7 @@ Route::group([
       });
     });
 
-    /* Transaction */
+    /* Guardians */
     Route::group([
       'prefix' => '/guardians',
       'middleware' => ['checksubscription'],
@@ -224,6 +224,7 @@ Route::group([
         'prefix' => '/{id}'
       ], function() {
         Route::put('/', 'PaymentProfilesController@update');
+        Route::delete('/', 'PaymentProfilesController@delete');
       });
     });
 

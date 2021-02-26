@@ -112,9 +112,10 @@ class Tenant extends Model
     }
 
     $data = array_merge([
+      'additional_info' => (object)[],
       'fname' => $this->owner->firstname,
       'lname' => $this->owner->lastname,
-      'email' => $this->owner->email
+      'email' => $this->owner->email,
     ], $options);
 
     $phone_number = Arr::get($this, 'address.phone', null);
@@ -261,5 +262,15 @@ class Tenant extends Model
   public function bank_accounts()
   {
     return $this->hasMany('App\BankAccount');
+  }
+
+  public function term_types()
+  {
+    return $this->hasMany('App\SchoolTermType');
+  }
+
+  public function payment_profiles()
+  {
+    return $this->hasMany('App\PaymentProfile');
   }
 }

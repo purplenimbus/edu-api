@@ -1,5 +1,9 @@
 <?php
 
 return [
-  'schoolTerms' => config('edu.school_terms')
+  'defaultSettings' => [
+    'tenants' => [
+      'school_terms' => config('edu.default.school_terms')
+    ]
+  ]
 ];

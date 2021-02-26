@@ -30,12 +30,14 @@ class UpdatePaymentProfile extends FormRequest
 
     return array_merge($paymentProfileValidation->rules(),
     [
+      'course_grade_id' => 'integer|exists:course_grades,id',
       'id' => 'required|integer|exists:payment_profiles,id',
       'name' => 'string|max:255',
       'items' => 'array',
       'items.*.amount' => $paymentProfileItemValidationRules['amount'],
       'items.*.description' => $paymentProfileItemValidationRules['description'],
       'items.*.type_id' => $paymentProfileItemValidationRules['type_id'],
+      'term_type' => 'integer|exists:school_term_types,id',
     ]);
   }
 

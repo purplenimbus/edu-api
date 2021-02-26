@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Course;
 use App\CourseStatus;
-use App\SchoolTerm;
 use App\SchoolTermStatus;
 use Illuminate\Support\Arr;
 

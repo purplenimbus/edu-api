@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\PaymentProfileItemType;
 use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 

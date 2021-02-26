@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DeletePaymentProfile;
 use App\Http\Requests\StorePaymentProfile;
 use App\Http\Requests\UpdatePaymentProfile;
 use App\PaymentProfile;
@@ -84,4 +85,15 @@ class PaymentProfilesController extends Controller
 
     return response()->json($payment_profile, 200);
   }
+
+  /**
+	 * Delete payment profile
+	 *
+	 * @return void
+	 */
+	public function delete(DeletePaymentProfile $request){
+		PaymentProfile::destroy($request->id);
+
+		return response()->json(true, 200);
+	}
 }
