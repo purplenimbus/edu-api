@@ -76,7 +76,7 @@ class PaymentProfilesController extends Controller
     $payment_profile->save();
 
     if ($request->has('items')) {
-      foreach($request->items as $item) {
+      foreach ($request->items as $item) {
         $item['tenant_id'] = $tenant->id;
 
         $payment_profile->items()->updateOrCreate($item);
@@ -87,13 +87,14 @@ class PaymentProfilesController extends Controller
   }
 
   /**
-	 * Delete payment profile
-	 *
-	 * @return void
-	 */
-	public function delete(DeletePaymentProfile $request){
-		PaymentProfile::destroy($request->id);
+   * Delete payment profile
+   *
+   * @return void
+   */
+  public function delete(DeletePaymentProfile $request)
+  {
+    PaymentProfile::destroy($request->id);
 
-		return response()->json(true, 200);
-	}
+    return response()->json(true, 200);
+  }
 }
