@@ -54,7 +54,7 @@ class PaymentProfileControllerTest extends TestCase
       'name' => 'old default',
       'tenant_id' => $this->user->tenant->id
     ]);
-  
+
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
         'name' => 'new default',
@@ -104,7 +104,7 @@ class PaymentProfileControllerTest extends TestCase
           ],
         ],
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(3, PaymentProfile::first()->items->count());
     $this->assertEquals(450, PaymentProfile::first()->total);
@@ -130,7 +130,7 @@ class PaymentProfileControllerTest extends TestCase
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
         'course_grade_id' => $courseGrade->id,
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->whereCourseGradeId($courseGrade->id)->count());
   }
@@ -155,7 +155,7 @@ class PaymentProfileControllerTest extends TestCase
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
         'term_type_id' => $termType->id,
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->whereTermTypeId($termType->id)->count());
   }
@@ -176,7 +176,7 @@ class PaymentProfileControllerTest extends TestCase
         'name' => 'old default',
         'term_type_id' => $termType->id,
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->whereTermTypeId($termType->id)->count());
   }
@@ -199,7 +199,7 @@ class PaymentProfileControllerTest extends TestCase
         'term_type_id' => $termType->id,
         'name' => 'test',
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
       'course_grade_id' => $courseGrade->id,
@@ -229,7 +229,7 @@ class PaymentProfileControllerTest extends TestCase
         'course_grade_id' => $courseGrade->id,
         'term_type_id' => $termType->id,
       ]);
-    
+
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
       'course_grade_id' => $courseGrade->id,
