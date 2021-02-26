@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Course;
 use App\CourseGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItemType;

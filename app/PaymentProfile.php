@@ -15,7 +15,6 @@ class PaymentProfile extends Model
     'name',
     'description',
     'tenant_id',
-    'term_id',
     'course_grade_id',
     'term_type_id',
   ];
@@ -30,9 +29,9 @@ class PaymentProfile extends Model
     return $this->belongsTo('App\CourseGrade');
   }
   
-  public function term()
+  public function term_type()
   {
-    return $this->belongsTo('App\SchoolTerm');
+    return $this->belongsTo('App\SchoolTermType', 'term_type_id');
 	}
 	
 	public function scopeOfTenant($query, $tenant_id)
