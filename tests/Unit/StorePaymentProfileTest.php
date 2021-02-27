@@ -6,7 +6,6 @@ use App\CourseGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\SchoolTermType;
-use CourseGradeSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Helpers\Auth\SetupUser;
@@ -21,9 +20,7 @@ class StorePaymentProfileTest extends TestCase
    * @return void
    */
   public function testCreatesANewPaymentProfileCorrectly()
-  {
-    $this->seed(CourseGradeSeeder::class);
-  
+  {  
     $courseGrade = CourseGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
@@ -43,9 +40,7 @@ class StorePaymentProfileTest extends TestCase
    * @return void
    */
   public function testUpdatesAnExistingPaymentProfileCorrectly()
-  {
-    $this->seed(CourseGradeSeeder::class);
-  
+  {  
     $courseGrade = CourseGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
@@ -71,9 +66,7 @@ class StorePaymentProfileTest extends TestCase
    * @return void
    */
   public function testDeletesAnExistingPaymentProfileCorrectly()
-  {
-    $this->seed(CourseGradeSeeder::class);
-  
+  {  
     $courseGrade = CourseGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
@@ -100,9 +93,7 @@ class StorePaymentProfileTest extends TestCase
    * @return void
    */
   public function testDoesentCreateAnExistingPaymentProfileWithDuplicate()
-  {
-    $this->seed(CourseGradeSeeder::class);
-  
+  {  
     $courseGrade = CourseGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 

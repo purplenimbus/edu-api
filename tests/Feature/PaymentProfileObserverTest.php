@@ -6,9 +6,7 @@ use App\CourseGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\SchoolTermType;
-use CourseGradeSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\Helpers\Auth\SetupUser;
 use Tests\TestCase;
 
@@ -21,9 +19,7 @@ class PaymentProfileObserverTest extends TestCase
    * @return void
    */
   public function testDeletesAnExistingPaymentProfileCorrectly()
-  {
-    $this->seed(CourseGradeSeeder::class);
-  
+  {  
     $courseGrade = CourseGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 

@@ -24,14 +24,11 @@ class CourseGrade extends Model
    * @var array
    */
   protected $fillable = [
-    'name','meta','alias','description'
+    'name','meta','alias','description','tenant_id'
   ];
 
-  /**
- *  Setup model event hooks
- */
-  public static function boot()
+  public function scopeOfTenant($query, $tenant_id)
   {
-    parent::boot();
-  }	
+    return $query->where('tenant_id', $tenant_id);
+  }
 }

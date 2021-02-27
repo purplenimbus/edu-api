@@ -37,12 +37,6 @@ class Institution
     }
   }
 
-  public function generateClasses() {
-    foreach($this->readJson('course_grades.json') as $courseGrade) {
-      CourseGrade::firstOrCreate(array_only($courseGrade, ['name']), array_except($courseGrade, ['name']));
-    }
-  }
-
   public function generateCurriculum() {
     foreach($this->readJson('curricula.json') as $courseLoad) {
       $this->processCourseLoad($courseLoad);
