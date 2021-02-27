@@ -38,9 +38,7 @@ class CurriculumController extends Controller
    */
   public function subjects(GetSubjects $request){
     if($request->has('subject_id')){
-      response()->json(Subject::find($request->subject_id), 200);
-
-      return $subjects;
+      return response()->json(Subject::find($request->subject_id), 200);
     }
 
     return response()->json(Subject::all(), 200);
@@ -52,7 +50,9 @@ class CurriculumController extends Controller
    * @return void
    */
   public function listClasses(){
-    return response()->json(StudentGrade::get(['alias','description','id','name']), 200);
+    return response()
+      ->json(StudentGrade::ofTenant(Auth::user()->tenant()->first()->id)
+      ->get(['alias','description','id','name']), 200);
   }
   /**
    * List lessons
