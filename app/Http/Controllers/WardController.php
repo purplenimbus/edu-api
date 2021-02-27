@@ -27,7 +27,7 @@ class WardController extends Controller
       ->allowedFilters([
         AllowedFilter::partial('firstname', 'members.user.firstname'),
         AllowedFilter::partial('lastname', 'members.user.lastname'),
-        AllowedFilter::partial('course_grade_id', 'members.user.meta'),
+        AllowedFilter::partial('student_grade_id', 'members.user.meta'),
       ])
       ->allowedIncludes(
         'members.user',

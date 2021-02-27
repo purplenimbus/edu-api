@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\SchoolTermType;
@@ -20,11 +20,11 @@ class PaymentProfileObserverTest extends TestCase
    */
   public function testDeletesAnExistingPaymentProfileCorrectly()
   {  
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     $paymentProfile = factory(PaymentProfile::class)->create([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);

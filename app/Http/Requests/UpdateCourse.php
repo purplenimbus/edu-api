@@ -25,7 +25,7 @@ class UpdateCourse extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => 'integer|exists:course_grades,id',
+      'student_grade_id' => 'integer|exists:student_grades,id',
       'id' => 'required|integer|exists:courses,id',
       'instructor_id' => 'integer|max:255|exists:users,id|nullable',
       'name' => 'string|max:255',

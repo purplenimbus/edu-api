@@ -23,7 +23,7 @@ class Curriculum extends Model
    * @var array
    */
   protected $fillable = [
-    'course_grade_id','description','meta','type_id',
+    'student_grade_id','description','meta','type_id',
   ];
 
   /**
@@ -34,14 +34,14 @@ class Curriculum extends Model
   protected $hidden = [
   ];
 
-  public function scopeOfCourseGrade($query, $course_grade_id)
+  public function scopeOfStudentGrade($query, $student_grade_id)
   {
-    return $query->where('course_grade_id', $course_grade_id);
+    return $query->where('student_grade_id', $student_grade_id);
   }
 
   public function grade()
   {
-    return $this->belongsTo('App\CourseGrade','course_grade_id');
+    return $this->belongsTo('App\StudentGrade','student_grade_id');
   }
 
   public function subjects()

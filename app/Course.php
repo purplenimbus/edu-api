@@ -33,7 +33,7 @@ class Course extends Model
     'instructor_id',
     'subject_id',
     'code',
-    'course_grade_id',
+    'student_grade_id',
     'schema',
     'status_id',
     'start_date',
@@ -96,7 +96,7 @@ class Course extends Model
    */
   public function grade()
   {
-    return $this->belongsTo('App\CourseGrade', 'course_grade_id');
+    return $this->belongsTo('App\StudentGrade', 'student_grade_id');
   }
 
   /**
@@ -139,10 +139,10 @@ class Course extends Model
     return $this->belongsTo('App\CourseStatus');
   }
 
-  public function scopeOfCourseGrade($query, $course_grade_id)
+  public function scopeOfStudentGrade($query, $student_grade_id)
   {
     return $query
-      ->where('course_grade_id', $course_grade_id);
+      ->where('student_grade_id', $student_grade_id);
   }
 
   public function scopeOfTenant($query, $tenant_id)
@@ -155,15 +155,15 @@ class Course extends Model
     $course_ids = Registration::where('user_id', $student->id)->pluck('course_id');
 
     return $query
-      ->ofCourseGrade($student->grade['id'])
+      ->ofStudentGrade($student->grade['id'])
       ->ofTenant($student->tenant_id)
       ->whereNotIn('id', $course_ids);
   }
 
   public function parse_course_code() {
     $subjectCode = Arr::get($this, "subject.code", "");
-    $courseGrade = Arr::get($this, "grade.name", "");
+    $StudentGrade = Arr::get($this, "grade.name", "");
   
-    return strtoupper($subjectCode.'-'.str_replace(' ', '-', $courseGrade));
+    return strtoupper($subjectCode.'-'.str_replace(' ', '-', $StudentGrade));
   }
 }

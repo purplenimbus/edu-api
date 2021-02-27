@@ -9,16 +9,14 @@ use App\Instructor;
 use App\Subject;
 use App\Course;
 use App\Curriculum;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\Registration;
-use App\SchoolTerm;
 use App\CurriculumType;
 use App\UserType;
 use App\StatusType;
 use App\Invoice;
 use App\Guardian;
 use App\Notifications\ActivateUser;
-use App\Notifications\BatchProcessed;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -63,7 +61,7 @@ class NimbusEdu
       $user->save();
 
       switch($user_type){
-        case 'student' : $self->enrollCoreCourses($user, $user->meta->course_grade_id); 
+        case 'student' : $self->enrollCoreCourses($user, $user->meta->student_grade_id); 
 
         break;
 
@@ -124,9 +122,9 @@ class NimbusEdu
     }
   }
 
-  public function processCourseGrade($data, $payload){
+  public function processStudentGrade($data, $payload){
     try{
-      $curriculum = CourseGrade::firstOrNew(array_only($data, ['name']));
+      $curriculum = StudentGrade::firstOrNew(array_only($data, ['name']));
 
       if($curriculum->id){
         $payload['updated'][] = $curriculum;
@@ -186,7 +184,7 @@ class NimbusEdu
     StatusType::where(['name' => $name])->first();
   }
 
-  public function enrollCoreCourses(Student $student, $course_grade_id){
+  public function enrollCoreCourses(Student $student, $student_grade_id){
     try{
       var_dump('Attempting to enroll student: '.$student->id);
 
@@ -197,8 +195,8 @@ class NimbusEdu
         'term_id' => $school_term->id
       ]);
 
-      if ($this->getCourseLoadIds($course_grade_id)['core']) {
-        foreach ($this->getCourseLoadIds($course_grade_id)['core'] as $course) {
+      if ($this->getCourseLoadIds($student_grade_id)['core']) {
+        foreach ($this->getCourseLoadIds($student_grade_id)['core'] as $course) {
 
           var_dump('Enrolling '.$student->ref_id.' in '.$course['code']);
   
@@ -242,9 +240,9 @@ class NimbusEdu
     }
   }
 
-  private function getCourseLoadIds($course_grade_id){
+  private function getCourseLoadIds($student_grade_id){
     try{
-      $curriculum = Curriculum::with('grade')->where('course_grade_id',$course_grade_id)->first();
+      $curriculum = Curriculum::with('grade')->where('student_grade_id',$student_grade_id)->first();
 
       $course_load = [];
 
@@ -268,7 +266,7 @@ class NimbusEdu
         return $course_load;
       }
     }catch(ModelNotFoundException $ex){      
-     throw new Exception('No Curriculum found with grade id '+$course_grade_id);
+     throw new Exception('No Curriculum found with grade id '+$student_grade_id);
     }
   }
 
@@ -307,7 +305,7 @@ class NimbusEdu
         'tenant_id' => $this->tenant->id,
         'name' => $subject->name,
         'code' => $this->parse_course_code($subject->code, $curriculum->grade->name),
-        'course_grade_id' => $curriculum->course_grade_id,
+        'student_grade_id' => $curriculum->student_grade_id,
         'schema' =>  config('edu.default.course_schema')
       ];
 
@@ -330,12 +328,12 @@ class NimbusEdu
       $data = array_merge($request->all(), [
         'address' => $request->address,
         'meta' => [
-          'course_grade_id' => $request->course_grade_id,
+          'student_grade_id' => $request->student_grade_id,
         ],
         'tenant_id' => $this->tenant->id,
       ]);
 
-      unset($data['course_grade_id']);
+      unset($data['student_grade_id']);
 
       $student = Student::create($data);
 

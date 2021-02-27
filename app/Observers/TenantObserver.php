@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfileItemType;
 use App\SchoolTermType;
 use App\Tenant;
@@ -54,7 +54,7 @@ class TenantObserver
         'tenant_id' => $tenant->id,
       ], $grade);
 
-      CourseGrade::create($grade);
+      StudentGrade::create($grade);
     }
   }
 }

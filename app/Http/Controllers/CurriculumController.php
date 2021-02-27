@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\ProcessBatch;
-use App\Http\Requests\GetCourses;
 use App\Http\Requests\GetCurriculum;
 use App\Http\Requests\GetSubjects;
 use App\Lesson;
 use App\Subject;
-use App\Curriculum;
 use App\CurriculumCourseLoad;
-use App\CourseGrade;
+use App\Http\Requests\GenerateCurriculum;
+use App\StudentGrade;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -28,7 +27,7 @@ class CurriculumController extends Controller
   public function generateCurriculum(GenerateCurriculum $request){
     $tenant_id = Auth::user()->tenant()->first()->id;
 
-    ProcessBatch::dispatch($tenant, $request->course_grade_id, $request->type);
+    ProcessBatch::dispatch($tenant, $request->student_grade_id, $request->type);
 
     return response()->json(['message' => 'your request is being processed'],200);
   }
@@ -53,7 +52,7 @@ class CurriculumController extends Controller
    * @return void
    */
   public function listClasses(){
-    return response()->json(CourseGrade::get(['alias','description','id','name']), 200);
+    return response()->json(StudentGrade::get(['alias','description','id','name']), 200);
   }
   /**
    * List lessons
@@ -98,7 +97,7 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function getCourseLoad(GetCurriculum $request, $course_grade_id){
+  public function getCourseLoad(GetCurriculum $request, $student_grade_id){
     $tenant = Auth::user()->tenant()->first();
     $nimbus_syllabus = new Syllabus($tenant);
     $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
@@ -129,8 +128,8 @@ class CurriculumController extends Controller
             );
         })
       ])
-      ->whereHas('curriculum', function($query) use ($course_grade_id){
-        $query->ofCourseGrade($course_grade_id);
+      ->whereHas('curriculum', function($query) use ($student_grade_id){
+        $query->ofStudentGrade($student_grade_id);
       })
       ->paginate($request->paginate ?? config('edu.pagination'));
 

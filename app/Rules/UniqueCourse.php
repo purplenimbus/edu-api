@@ -26,7 +26,7 @@ class UniqueCourse implements Rule
    */
   public function passes($attribute, $value)
   {
-    ValidationRule::unique('courses', 'course_grade_id')
+    ValidationRule::unique('courses', 'student_grade_id')
       ->where(function ($query) {
         return $query->where('subject_id', request()->subject_id)
           ->where('term_id', );

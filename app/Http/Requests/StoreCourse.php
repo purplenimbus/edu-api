@@ -26,10 +26,10 @@ class StoreCourse extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => [
+      'student_grade_id' => [
         'required',
         'integer',
-        'exists:course_grades,id',
+        'exists:student_grades,id',
         // new UniqueCourse()
       ],
       'instructor_id' => 'integer|exists:users,id',

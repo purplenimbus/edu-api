@@ -3,20 +3,20 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\Course;
 
 class ValidCourse implements Rule
 {
-	public $course_grade;
+	public $studentGrade;
 	/**
 	 * Create a new rule instance.
 	 *
 	 * @return void
 	 */
-	public function __construct($course_grade_id)
+	public function __construct($student_grade_id)
 	{
-		$this->course_grade = CourseGrade::find($course_grade_id);
+		$this->studentGrade = StudentGrade::find($student_grade_id);
 	}
 
 	/**
@@ -30,7 +30,7 @@ class ValidCourse implements Rule
 	{
 		$course = Course::find($course_id);
 
-    return $course && $course->grade && $course->grade->id == $this->course_grade->id;
+    return $course && $course->grade && $course->grade->id == $this->studentGrade->id;
 	}
 
 	/**
@@ -40,6 +40,6 @@ class ValidCourse implements Rule
 	 */
 	public function message()
 	{
-		return ":attribute is not a {$this->course_grade->name} course";
+		return ":attribute is not a {$this->studentGrade->name} course";
 	}
 }

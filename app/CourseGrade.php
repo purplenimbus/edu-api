@@ -4,10 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CourseGrade extends Model
+class StudentGrade extends Model
 {
-  public $table = "course_grades";
-
   /**
    * Cast meta property to array
    *

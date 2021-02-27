@@ -2,7 +2,7 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\PaymentProfileItemType;
@@ -12,7 +12,7 @@ use Faker\Generator as Faker;
 
 $factory->define(PaymentProfile::class, function (Faker $faker) {
   return [
-    'course_grade_id' => factory(CourseGrade::class),
+    'student_grade_id' => factory(StudentGrade::class),
     'description' => $faker->text(200),
     'name' => $faker->text(50),
     'tenant_id' => factory(Tenant::class),

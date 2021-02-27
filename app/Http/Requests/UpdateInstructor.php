@@ -25,7 +25,7 @@ class UpdateInstructor extends FormRequest
   {
     return [
       'account_status_id' => 'integer|exists:account_status,id',
-      'course_grade_id' => 'integer|exists:course_grades,id',
+      'student_grade_id' => 'integer|exists:student_grades,id',
       'date_of_birth' => 'date',
       'email'  => 'email',
       'firstname'   => 'max:255',

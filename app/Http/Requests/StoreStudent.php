@@ -27,7 +27,7 @@ class StoreStudent extends FormRequest
   {
     return [
       'account_status_id' => 'integer|exists:account_status,id',
-      'course_grade_id' => 'required|integer|exists:course_grades,id',
+      'student_grade_id' => 'required|integer|exists:student_grades,id',
       'date_of_birth' => 'required|date',
       'email'  => 'required|email|max:255|unique:users,email',
       'firstname'   => 'required|max:255',

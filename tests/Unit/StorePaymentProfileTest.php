@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\SchoolTermType;
@@ -21,12 +21,12 @@ class StorePaymentProfileTest extends TestCase
    */
   public function testCreatesANewPaymentProfileCorrectly()
   {  
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     $response = $this->actingAs($this->user)
       ->postJson('api/v1/payment_profiles', [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'name' => 'default',
         'term_type_id' => $termType->id,
       ]);
@@ -41,18 +41,18 @@ class StorePaymentProfileTest extends TestCase
    */
   public function testUpdatesAnExistingPaymentProfileCorrectly()
   {  
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     $paymentProfile = factory(PaymentProfile::class)->create([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$paymentProfile->id}", [
-        'course_grade_id' => CourseGrade::get()->last()->id,
+        'student_grade_id' => StudentGrade::get()->last()->id,
         'name' => 'new default',
         'term_type_id' => SchoolTermType::ofTenant($this->user->tenant->id)->get()->last()->id,
       ]);
@@ -67,11 +67,11 @@ class StorePaymentProfileTest extends TestCase
    */
   public function testDeletesAnExistingPaymentProfileCorrectly()
   {  
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     $paymentProfile = factory(PaymentProfile::class)->create([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
@@ -94,18 +94,18 @@ class StorePaymentProfileTest extends TestCase
    */
   public function testDoesentCreateAnExistingPaymentProfileWithDuplicate()
   {  
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     factory(PaymentProfile::class)->create([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/payment_profiles/", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'name' => 'new default',
         'term_type_id' => $termType->id,
       ]);

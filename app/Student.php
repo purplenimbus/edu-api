@@ -4,7 +4,7 @@ namespace App;
 
 use App\User;
 use App\StatusType;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\Registration;
 use App\SchoolTerm;
 use App\Scopes\TenantScope;
@@ -19,15 +19,7 @@ class Student extends User
   use HasRolesAndAbilities;
 
   public $table = "users";
-  // /**
-  //  * The "booted" method of the model.
-  //  *
-  //  * @return void
-  //  */
-  // protected static function booted()
-  // {
-  //   static::addGlobalScope(new TenantScope);
-  // }
+
   /**
    * The accessors to append to the model's array form.
    *
@@ -68,11 +60,11 @@ class Student extends User
   {
     $meta = Arr::get($this, 'meta', null);
 
-    if (is_null($meta) || !isset($meta->course_grade_id)) {
+    if (is_null($meta) || !isset($meta->student_grade_id)) {
       return;
     } 
 
-    return CourseGrade::where('id', $this->meta->course_grade_id)
+    return StudentGrade::where('id', $this->meta->student_grade_id)
       ->first()
       ->only('id','name','alias');
   }
@@ -125,9 +117,9 @@ class Student extends User
     });
   }
 
-  public function scopeOfCourseGrade($query, $course_grade_id)
+  public function scopeOfStudentGrade($query, $student_grade_id)
   {
-    return $query->where('meta->course_grade_id', $course_grade_id);
+    return $query->where('meta->student_grade_id', $student_grade_id);
   }
 
 
@@ -137,7 +129,7 @@ class Student extends User
     $registrations = Registration::where('course_id', $course_id)->pluck('user_id');
 
     return $query
-      ->where('meta->course_grade_id', $course->course_grade_id)
+      ->where('meta->student_grade_id', $course->student_grade_id)
       ->ofTenant($course->tenant_id)
       ->whereNotIn('id', $registrations);
   }

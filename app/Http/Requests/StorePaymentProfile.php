@@ -29,11 +29,11 @@ class StorePaymentProfile extends FormRequest
 
     return [
       'description' => 'string|nullable|max:255',
-      'course_grade_id' => [
+      'student_grade_id' => [
         'nullable',
         'integer',
-        'exists:course_grades,id',
-        'unique:payment_profiles,course_grade_id',
+        'exists:student_grades,id',
+        'unique:payment_profiles,student_grade_id',
       ],
       'name' => 'string|required|max:255',
       'tenant_id' => 'integer|exists:tenants,id',

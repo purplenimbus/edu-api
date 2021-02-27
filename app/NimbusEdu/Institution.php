@@ -2,7 +2,6 @@
 
 namespace App\Nimbus;
 
-use App\CourseGrade;
 use App\Curriculum;
 use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
 use App\Nimbus\Helpers\Subject\SubjectHelpers;
@@ -44,18 +43,18 @@ class Institution
   }
 
   public function processCourseLoad(array $course_load): void {
-    $course_grade_id = $course_load['course_grade_id'];
+    $student_grade_id = $course_load['student_grade_id'];
 
-    if ($course_grade_id) {
+    if ($student_grade_id) {
       $curriculum = Curriculum::firstOrCreate([
-        'course_grade_id' => $course_grade_id,
+        'student_grade_id' => $student_grade_id,
         'type_id' => $this->getCurriculumType()->id,
       ]);
 
       if(isset($course_load['core_subjects_code'])) {
         $this->processSubjects(
           $course_load['core_subjects_code'],
-          $course_grade_id,
+          $student_grade_id,
           'core',
           $curriculum
         );
@@ -64,7 +63,7 @@ class Institution
       if(isset($course_load['elective_subjects_code'])) {
         $this->processSubjects(
           $course_load['elective_subjects_code'],
-          $course_grade_id,
+          $student_grade_id,
           'elective',
           $curriculum
         );
@@ -73,7 +72,7 @@ class Institution
       if(isset($course_load['optional_subjects_code'])) {
         $this->processSubjects(
           $course_load['optional_subjects_code'],
-          $course_grade_id,
+          $student_grade_id,
           'optional',
           $curriculum
         );
@@ -83,7 +82,7 @@ class Institution
 
   private function processSubjects(
     $data,
-    $course_grade_id,
+    $student_grade_id,
     $type,
     Curriculum $curriculum){
     $core_subjects_codes = explode(',', $data);

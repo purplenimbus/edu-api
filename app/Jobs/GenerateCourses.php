@@ -59,11 +59,11 @@ class GenerateCourses implements ShouldQueue
                 'tenant_id' => $self->tenant->id,
                 'name' => $subject->name,
                 'code' => strtoupper($subject->code.'-'.str_replace(' ','-',$curriculum->grade->name)),
-                'course_grade_id' => $curriculum->course_grade_id,
+                'student_grade_id' => $curriculum->student_grade_id,
                 'schema' => config('edu.default.course_schema')
               ];
 
-              $course = Course::firstOrNew(array_only($data,['code','tenant_id','course_grade_id']));
+              $course = Course::firstOrNew(array_only($data,['code','tenant_id','student_grade_id']));
 
               if($course->id){
                 $self->payload['updated'][] = $course;

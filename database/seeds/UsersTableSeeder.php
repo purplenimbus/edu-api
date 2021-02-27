@@ -1,9 +1,10 @@
 <?php
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use App\Tenant;
 use App\Guardian;
 use App\Nimbus\NimbusEdu;
+use App\StudentGrade;
+use Illuminate\Support\Facades\Log;
 
 class UsersTableSeeder extends Seeder
 {
@@ -15,20 +16,19 @@ class UsersTableSeeder extends Seeder
   public function run()
   {
     $count = 0;
-
     $nimbus_edu = new NimbusEdu(Tenant::find(1));
 
-    $course_grades = [7,8,9,10,11,12,13];
+    $studentGrades = StudentGrade::ofTenant($nimbus_edu->tenant->id);
   
-    foreach($course_grades as $course_grade){
+    foreach($studentGrades as $studentGrade){
       $students = factory(App\Student::class, 10)
         ->create([
           'tenant_id' => $nimbus_edu->tenant->id,
           'meta' => [
-            'course_grade_id' => $course_grade
+            'student_grade_id' => $studentGrade
           ]
         ])
-        ->each(function($student) use ($nimbus_edu, $course_grade, $count){
+        ->each(function($student) use ($nimbus_edu, $studentGrade, $count){
 
           $parent = factory(Guardian::class)
             ->create([
@@ -37,13 +37,13 @@ class UsersTableSeeder extends Seeder
 
           $parent->assignWards([$student->id]);
 
-          $nimbus_edu->enrollCoreCourses($student, $course_grade);
+          $nimbus_edu->enrollCoreCourses($student, $studentGrade);
 
           $count++;
         });
       
-      \Log::info('Created '.$students->count().' students for course_grade '.$course_grade);
-      var_dump('Created '.$students->count().' students for course_grade '.$course_grade);
+      Log::info('Created '.$students->count().' students for student_grade '.$studentGrade);
+      var_dump('Created '.$students->count().' students for student_grade '.$studentGrade);
     }
   }
 }

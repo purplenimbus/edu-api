@@ -15,7 +15,7 @@ class PaymentProfile extends Model
     'name',
     'description',
     'tenant_id',
-    'course_grade_id',
+    'student_grade_id',
     'term_type_id',
   ];
 
@@ -26,7 +26,7 @@ class PaymentProfile extends Model
   
   public function course_grade()
   {
-    return $this->belongsTo('App\CourseGrade');
+    return $this->belongsTo('App\StudentGrade');
   }
   
   public function term_type()
