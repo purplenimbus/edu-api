@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\CourseGrade;
 use App\PaymentProfileItemType;
 use App\SchoolTermType;
 use App\Tenant;
@@ -17,8 +18,8 @@ class TenantObserver
   public function created(Tenant $tenant)
   {
     $this->createDefaultPaymentItemTypes($tenant);
-
     $this->createDefaultSchoolTermTypes($tenant);
+    $this->createDefaultStudentGrades($tenant);
   }
 
   private function createDefaultPaymentItemTypes(Tenant $tenant) {
@@ -42,6 +43,18 @@ class TenantObserver
       ], $type);
 
       SchoolTermType::create($type);
+    }
+  }
+
+  private function createDefaultStudentGrades(Tenant $tenant) {
+    $defaultStudentGrades = config('edu.default.student_grades');
+
+    foreach($defaultStudentGrades as $grade) {
+      $grade = array_merge([
+        'tenant_id' => $tenant->id,
+      ], $grade);
+
+      CourseGrade::create($grade);
     }
   }
 }

@@ -40,6 +40,7 @@ $factory->define(App\CourseGrade::class, function (Faker $faker) {
   return [
     'description' => $faker->text(200),
     'name' => $faker->text(50),
+    'tenant_id' => factory(Tenant::class),
   ];
 });
 
