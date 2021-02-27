@@ -25,7 +25,7 @@ class GetInstructors extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => 'integer|exists:course_grades,id',
+      'student_grade_id' => 'integer|exists:student_grades,id',
       'status' => Rule::in(['assigned' , 'terminated', 'created', 'archived']),
     ];
   }

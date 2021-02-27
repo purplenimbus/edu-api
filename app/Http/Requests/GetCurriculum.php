@@ -24,7 +24,7 @@ class GetCurriculum extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => 'required|exists:course_grades,id',
+      'student_grade_id' => 'required|exists:student_grades,id',
     ];
   }
 

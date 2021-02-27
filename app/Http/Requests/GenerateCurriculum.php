@@ -24,7 +24,7 @@ class GenerateCurriculum extends FormRequest
   public function rules()
   {
     return [
-      'course_grade_id' => 'integer|required|exists:course_grade,id|max:255'
+      'student_grade_id' => 'integer|required|exists:student_grade,id|max:255'
     ];
   }
 }

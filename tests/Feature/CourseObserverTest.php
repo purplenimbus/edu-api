@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Course;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\CourseStatus;
 use App\Instructor;
 use App\Nimbus\Institution;
@@ -19,7 +19,7 @@ use Tests\TestCase;
 class CourseObserverTest extends TestCase
 {
   use RefreshDatabase, SetupUser, WithoutMiddleware;
-   /**
+  /**
    * Test default course name
    *
    * @return void
@@ -29,11 +29,11 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
-        "course_grade_id" => $courseGrade->id,
+        "student_grade_id" => $studentGrade->id,
         "subject_id" => $subject->id,
       ]);
 
@@ -53,11 +53,11 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
-        "course_grade_id" => $courseGrade->id,
+        "student_grade_id" => $studentGrade->id,
         "subject_id" => $subject->id,
       ]);
 
@@ -77,12 +77,12 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $courseStatus = CourseStatus::whereName('created')->first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
-        "course_grade_id" => $courseGrade->id,
+        "student_grade_id" => $studentGrade->id,
         "subject_id" => $subject->id,
       ]);
 
@@ -102,12 +102,12 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
         'code' => 'CODE',
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'name' => 'course name',
         'subject_id' => $subject->id,
       ]);
@@ -129,14 +129,14 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $instructor = factory(Instructor::class)->create([
       'tenant_id' => $this->user->tenant_id,
     ]);
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'subject_id' => $subject->id,
         'instructor_id' => $instructor->id
       ]);
@@ -157,7 +157,7 @@ class CourseObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $subject = Subject::first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
@@ -166,7 +166,7 @@ class CourseObserverTest extends TestCase
 
     $this->actingAs($this->user)
       ->putJson("api/v1/courses/{$course->id}", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'status_id' => CourseStatus::whereName('complete')->first()->id,
         'subject_id' => $subject->id,
       ]);

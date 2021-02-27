@@ -4,20 +4,20 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 use App\Student;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\Http\Requests\RegisterStudent;
 
 class ValidRegistration implements Rule
 {
-  public $course_grade;
+  public $studentGrade;
   /**
    * Create a new rule instance.
    *
    * @return void
    */
-  public function __construct($course_grade_id)
+  public function __construct($student_grade_id)
   {
-    $this->course_grade = CourseGrade::find($course_grade_id);
+    $this->studentGrade = StudentGrade::find($student_grade_id);
   }
 
   /**
@@ -31,7 +31,7 @@ class ValidRegistration implements Rule
   {
     $student = Student::find($student_id);
 
-    return $student && $student->grade && $student->grade['id'] == $this->course_grade->id;
+    return $student && $student->grade && $student->grade['id'] == $this->studentGrade->id;
   }
 
   /**
@@ -41,6 +41,6 @@ class ValidRegistration implements Rule
    */
   public function message()
   {
-    return ":attribute is not a {$this->course_grade->name} student";
+    return ":attribute is not a {$this->studentGrade->name} student";
   }
 }

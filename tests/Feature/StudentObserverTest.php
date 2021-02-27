@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\Student;
 use Carbon\Carbon;
 use DatabaseSeeder;
@@ -27,13 +27,13 @@ class StudentObserverTest extends TestCase
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toString(),
-      'course_grade_id' => CourseGrade::first()->id,
+      'student_grade_id' => StudentGrade::first()->id,
     ]);
 
     $this
       ->actingAs($this->user)
       ->postJson('api/v1/students', $person->only([
-        'course_grade_id',
+        'student_grade_id',
         'date_of_birth',
         'email',
         'firstname',
@@ -56,12 +56,12 @@ class StudentObserverTest extends TestCase
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toIso8601String(),
-      'course_grade_id' => CourseGrade::first()->id,
+      'student_grade_id' => StudentGrade::first()->id,
     ]);
 
     $this->actingAs($this->user)
       ->postJson('api/v1/students', $person->only([
-        'course_grade_id',
+        'student_grade_id',
         'date_of_birth',
         'email',
         'firstname',
@@ -88,13 +88,13 @@ class StudentObserverTest extends TestCase
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toString(),
-      'course_grade_id' => CourseGrade::first()->id,
+      'student_grade_id' => StudentGrade::first()->id,
     ]);
 
     $this->actingAs($this->user)
       ->postJson("api/v1/students",
         $person->only([
-          'course_grade_id',
+          'student_grade_id',
           'date_of_birth',
           'email',
           'firstname',

@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Course;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\CourseStatus;
 use App\Nimbus\Institution;
 use App\Registration;
@@ -28,12 +28,12 @@ class RegistrationObserverTest extends TestCase
     $school = new Institution();
     $school->newSchoolTerm($this->user->tenant);
 
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $student = factory(Student::class)->create([
       'tenant_id' => $this->user->tenant_id,
       'meta' => [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
       ],
     ]);
 
@@ -41,7 +41,7 @@ class RegistrationObserverTest extends TestCase
 
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant_id,
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
     ]);
     $course->update(['status_id'=> $courseStatus->id]);
 
@@ -49,7 +49,7 @@ class RegistrationObserverTest extends TestCase
     ->postJson("api/v1/registrations/batch", [
       'course_ids' => [$course->id],
       'student_ids' => [$student->id],
-      'course_grade_id'=> $student->grade["id"]
+      'student_grade_id'=> $student->grade["id"]
     ]);
 
     $response->assertStatus(200);
@@ -87,12 +87,12 @@ class RegistrationObserverTest extends TestCase
   public function testForDeletedRegistration(){
     $this->seed(DatabaseSeeder::class);
 
-    $courseGrade = CourseGrade::first(); 
+    $studentGrade = StudentGrade::first(); 
 
     $student = factory(Student::class)->create([
       'tenant_id' => $this->user->tenant_id,
       'meta' => [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
       ],
     ]);
 

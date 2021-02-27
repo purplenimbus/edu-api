@@ -45,7 +45,7 @@ class CurriculumCourseLoad extends Model
   {
     return Course::where([
       //['tenant_id', $this->tenant_id], // need to scope to tenant?
-      ['course_grade_id', $this->curriculum->grade->id],
+      ['student_grade_id', $this->curriculum->grade->id],
       ['subject_id', $this->subject->id],
     ])->first() ? true : false;
   }

@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItemType;
 use DatabaseSeeder;
@@ -115,7 +115,7 @@ class PaymentProfileControllerTest extends TestCase
    *
    * @return void
    */
-  public function testUpdateTenantPaymentProfileWithCourseGrade()
+  public function testUpdateTenantPaymentProfileWithStudentGrade()
   {
     $this->seed(DatabaseSeeder::class);
 
@@ -124,15 +124,15 @@ class PaymentProfileControllerTest extends TestCase
       'tenant_id' => $this->user->tenant->id
     ]);
 
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
       ]);
 
     $response->assertStatus(200);
-    $this->assertEquals(1, PaymentProfile::first()->whereCourseGradeId($courseGrade->id)->count());
+    $this->assertEquals(1, PaymentProfile::first()->whereStudentGradeId($studentGrade->id)->count());
   }
 
   /**
@@ -186,23 +186,23 @@ class PaymentProfileControllerTest extends TestCase
    *
    * @return void
    */
-  public function testCreateTenantPaymentProfileWithCourseGradeAndTermType()
+  public function testCreateTenantPaymentProfileWithStudentGradeAndTermType()
   {
     $this->seed(DatabaseSeeder::class);
 
     $termType = $this->user->tenant->term_types()->first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/payment_profiles", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'term_type_id' => $termType->id,
         'name' => 'test',
       ]);
 
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
     ])->count());
   }
@@ -212,7 +212,7 @@ class PaymentProfileControllerTest extends TestCase
    *
    * @return void
    */
-  public function testUpdateTenantPaymentProfileWithCourseGradeAndTermType()
+  public function testUpdateTenantPaymentProfileWithStudentGradeAndTermType()
   {
     $this->seed(DatabaseSeeder::class);
 
@@ -222,17 +222,17 @@ class PaymentProfileControllerTest extends TestCase
     ]);
 
     $termType = $this->user->tenant->term_types()->first();
-    $courseGrade = CourseGrade::first();
+    $studentGrade = StudentGrade::first();
 
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
-        'course_grade_id' => $courseGrade->id,
+        'student_grade_id' => $studentGrade->id,
         'term_type_id' => $termType->id,
       ]);
 
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
-      'course_grade_id' => $courseGrade->id,
+      'student_grade_id' => $studentGrade->id,
       'term_type_id' => $termType->id,
     ])->count());
   }

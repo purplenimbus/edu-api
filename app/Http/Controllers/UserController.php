@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\User as User;
 use App\StatusType as StatusType;
@@ -48,9 +47,9 @@ class UserController extends Controller
             $query->whereNotNull('image') :
             $query->whereNull('image');
         }),
-        AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
+        AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
           $query->where(
-            'meta->course_grade_id',
+            'meta->student_grade_id',
             '=',
             (int)$value
           );

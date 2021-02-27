@@ -50,9 +50,9 @@ class StudentController extends Controller
               $query->whereNotNull('image') :
               $query->whereNull('image');
         }),
-        AllowedFilter::callback('course_grade_id', function (Builder $query, $value) {
+        AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
             $query->where(
-              'meta->course_grade_id',
+              'meta->student_grade_id',
               '=',
               (int)$value
             );

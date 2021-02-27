@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\CourseGrade;
+use App\StudentGrade;
 use App\PaymentProfileItemType;
 use App\SchoolTermType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -67,6 +67,6 @@ class TenantObserverTest extends TestCase
     ]);
 
     $response->assertStatus(200);
-    $this->assertEquals(Arr::pluck(config('edu.default.student_grades'), 'name'), CourseGrade::all()->pluck('name')->toArray());
+    $this->assertEquals(Arr::pluck(config('edu.default.student_grades'), 'name'), StudentGrade::all()->pluck('name')->toArray());
   }
 }

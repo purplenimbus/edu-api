@@ -1,7 +1,7 @@
 <?php
 
 use App\Course;
-use App\CourseGrade;
+use App\StudentGrade;
 use App\CourseStatus;
 use App\Instructor;
 use App\Student;
@@ -11,7 +11,7 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Course::class, function (Faker $faker) {
   return [
-    'course_grade_id' => factory(CourseGrade::class),
+    'student_grade_id' => factory(StudentGrade::class),
     'description' => $faker->text(200),
     'instructor_id' => factory(Instructor::class),
     'name' => $faker->text(200),
@@ -36,7 +36,7 @@ $factory->define(App\Subject::class, function (Faker $faker) {
   ];
 });
 
-$factory->define(App\CourseGrade::class, function (Faker $faker) {
+$factory->define(App\StudentGrade::class, function (Faker $faker) {
   return [
     'description' => $faker->text(200),
     'name' => $faker->text(50),
