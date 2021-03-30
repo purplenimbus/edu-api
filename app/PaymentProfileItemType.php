@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentProfileItemType extends Model
 {
   const ADMIN = 'administrative';
-  const TUITION = 'administrative';
+  const TUITION = 'tuition';
   /**
    * The attributes that are mass assignable.
    *

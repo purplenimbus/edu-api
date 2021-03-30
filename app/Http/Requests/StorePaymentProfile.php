@@ -25,7 +25,8 @@ class StorePaymentProfile extends FormRequest
    */
   public function rules()
   {
-    $tenant = Auth::user()->tenant;
+    $paymentProfileItemValidation = new StorePaymentProfileItem();
+    $paymentProfileItemValidationRules = $paymentProfileItemValidation->rules();
 
     return [
       'description' => 'string|nullable|max:255',
@@ -36,6 +37,10 @@ class StorePaymentProfile extends FormRequest
         'unique:payment_profiles,student_grade_id',
       ],
       'name' => 'string|required|max:255',
+      'items' => 'array',
+      'items.*.amount' => $paymentProfileItemValidationRules['amount'],
+      'items.*.description' => $paymentProfileItemValidationRules['description'],
+      'items.*.type_id' => $paymentProfileItemValidationRules['type_id'],
       'tenant_id' => 'integer|exists:tenants,id',
       'term_type_id' => [
         'nullable',

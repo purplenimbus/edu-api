@@ -6,8 +6,10 @@ use App\Http\Requests\DeletePaymentProfile;
 use App\Http\Requests\StorePaymentProfile;
 use App\Http\Requests\UpdatePaymentProfile;
 use App\PaymentProfile;
+use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class PaymentProfilesController extends Controller
@@ -23,11 +25,22 @@ class PaymentProfilesController extends Controller
 
     $profiles = QueryBuilder::for(PaymentProfile::class)
       ->defaultSort('name')
-      ->ofTenant($tenant->id);
+      ->allowedFilters([
+        AllowedFilter::exact('student_grade_id'),
+        AllowedFilter::exact('school_term_type_id'),
+      ])
+      ->allowedFields([
+        'student_grade'
+      ])
+      ->allowedIncludes([
+        'term_type',
+        'items',
+        'items.type',
+      ])
+      ->ofTenant($tenant->id)
+      ->paginate($request->paginate ?? config('edu.pagination'));
 
-    $data = isset($request->paginate) ? $profiles->paginate($request->paginate) : $profiles->get();
-
-    return response()->json($data, 200);
+    return response()->json($profiles, 200);
   }
 
   /**
@@ -48,10 +61,18 @@ class PaymentProfilesController extends Controller
     ]);
 
     $payment_profile->fill($request->all());
-
+    
     $payment_profile->save();
 
-    return response()->json($payment_profile, 200);
+    if ($request->has('items')) {
+      foreach ($request->items as $item) {
+        $item['tenant_id'] = $tenant->id;
+
+        $payment_profile->items()->updateOrCreate($item);
+      }
+    }
+
+    return response()->json($payment_profile->load('items'), 200);
   }
 
   /**

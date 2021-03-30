@@ -153,7 +153,7 @@ class PaymentProfileControllerTest extends TestCase
 
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
       ]);
 
     $response->assertStatus(200);
@@ -174,7 +174,7 @@ class PaymentProfileControllerTest extends TestCase
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/payment_profiles/", [
         'name' => 'old default',
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
       ]);
 
     $response->assertStatus(200);
@@ -196,14 +196,14 @@ class PaymentProfileControllerTest extends TestCase
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/payment_profiles", [
         'student_grade_id' => $studentGrade->id,
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
         'name' => 'test',
       ]);
 
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $termType->id,
     ])->count());
   }
 
@@ -227,13 +227,13 @@ class PaymentProfileControllerTest extends TestCase
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
         'student_grade_id' => $studentGrade->id,
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
       ]);
 
     $response->assertStatus(200);
     $this->assertEquals(1, PaymentProfile::first()->where([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $termType->id,
     ])->count());
   }
 }

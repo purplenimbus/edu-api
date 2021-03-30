@@ -25,19 +25,13 @@ class UpdatePaymentProfile extends FormRequest
   public function rules()
   {
     $paymentProfileValidation = new StorePaymentProfile();
-    $paymentProfileItemValidation = new StorePaymentProfileItem();
-    $paymentProfileItemValidationRules = $paymentProfileItemValidation->rules();
 
     return array_merge($paymentProfileValidation->rules(),
     [
       'student_grade_id' => 'integer|exists:student_grades,id',
       'id' => 'required|integer|exists:payment_profiles,id',
       'name' => 'string|max:255',
-      'items' => 'array',
-      'items.*.amount' => $paymentProfileItemValidationRules['amount'],
-      'items.*.description' => $paymentProfileItemValidationRules['description'],
-      'items.*.type_id' => $paymentProfileItemValidationRules['type_id'],
-      'term_type' => 'integer|exists:school_term_types,id',
+      'school_term_type_id' => 'integer|exists:school_term_types,id',
     ]);
   }
 

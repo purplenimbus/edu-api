@@ -15,7 +15,7 @@ class AddPaymentProfileGradesTable extends Migration
   {
     Schema::table('payment_profiles', function (Blueprint $table) {
       $table->integer('student_grade_id')->nullable();
-      $table->integer('term_type_id')->nullable();
+      $table->integer('school_term_type_id')->nullable();
     });
   }
 
@@ -28,7 +28,7 @@ class AddPaymentProfileGradesTable extends Migration
   {
     Schema::table('payment_profiles', function (Blueprint $table) {
       $table->dropColumn('student_grade_id');
-      $table->dropColumn('term_type_id');
+      $table->dropColumn('school_term_type_id');
     });
   }
 }

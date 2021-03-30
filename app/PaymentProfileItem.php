@@ -20,6 +20,6 @@ class PaymentProfileItem extends Model
   ];
 
   public function type(){
-    return $this->hasOne('App\PaymentProfileItemType');
+    return $this->hasOne('App\PaymentProfileItemType', 'id', 'type_id');
   }
 }

@@ -22,7 +22,11 @@ class TenantController extends BaseController
       ->allowedAppends([
         'current_term',
         'owner',
-        'payment_details'
+        'payment_details',
+      ])
+      ->allowedIncludes([
+        'school_term_types',
+        'payment_profile_item_types'
       ])
       ->where([
         ['id', '=', $request->tenant_id]

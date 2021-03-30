@@ -29,4 +29,9 @@ class StudentGrade extends Model
   {
     return $query->where('tenant_id', $tenant_id);
   }
+
+  public function paymentProfiles()
+  {
+    return $this->hasMany('App\PaymentProfile');
+  }
 }

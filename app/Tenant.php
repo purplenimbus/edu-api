@@ -264,7 +264,13 @@ class Tenant extends Model
     return $this->hasMany('App\BankAccount');
   }
 
+  //need to deprecate this relationship for the schoolTerms method below
   public function term_types()
+  {
+    return $this->hasMany('App\SchoolTermType');
+  }
+
+  public function schoolTermTypes()
   {
     return $this->hasMany('App\SchoolTermType');
   }
@@ -272,5 +278,10 @@ class Tenant extends Model
   public function payment_profiles()
   {
     return $this->hasMany('App\PaymentProfile');
+  }
+
+  public function paymentProfileItemTypes()
+  {
+    return $this->hasMany('App\PaymentProfileItemType');
   }
 }
