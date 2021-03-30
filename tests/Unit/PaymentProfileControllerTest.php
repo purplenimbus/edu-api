@@ -157,7 +157,7 @@ class PaymentProfileControllerTest extends TestCase
       ]);
 
     $response->assertStatus(200);
-    $this->assertEquals(1, PaymentProfile::first()->whereTermTypeId($termType->id)->count());
+    $this->assertEquals(1, PaymentProfile::first()->whereSchoolTermTypeId($termType->id)->count());
   }
 
   /**
@@ -178,7 +178,7 @@ class PaymentProfileControllerTest extends TestCase
       ]);
 
     $response->assertStatus(200);
-    $this->assertEquals(1, PaymentProfile::first()->whereTermTypeId($termType->id)->count());
+    $this->assertEquals(1, PaymentProfile::first()->whereSchoolTermTypeId($termType->id)->count());
   }
 
   /**
@@ -208,7 +208,7 @@ class PaymentProfileControllerTest extends TestCase
   }
 
   /**
-   * Update a tenant payment profile with a course grade and type type
+   * Update a tenant payment profile with a course grade and term type
    *
    * @return void
    */
@@ -216,7 +216,7 @@ class PaymentProfileControllerTest extends TestCase
   {
     $this->seed(DatabaseSeeder::class);
 
-    $payment_profile = PaymentProfile::create([
+    $payment_profile = factory(PaymentProfile::class)->create([
       'name' => 'old default',
       'tenant_id' => $this->user->tenant->id
     ]);

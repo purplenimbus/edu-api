@@ -28,7 +28,7 @@ class StorePaymentProfileTest extends TestCase
       ->postJson('api/v1/payment_profiles', [
         'student_grade_id' => $studentGrade->id,
         'name' => 'default',
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
       ]);
     
     $response->assertOk();
@@ -46,7 +46,7 @@ class StorePaymentProfileTest extends TestCase
 
     $paymentProfile = factory(PaymentProfile::class)->create([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
@@ -54,7 +54,7 @@ class StorePaymentProfileTest extends TestCase
       ->putJson("api/v1/payment_profiles/{$paymentProfile->id}", [
         'student_grade_id' => StudentGrade::get()->last()->id,
         'name' => 'new default',
-        'term_type_id' => SchoolTermType::ofTenant($this->user->tenant->id)->get()->last()->id,
+        'school_term_type_id' => SchoolTermType::ofTenant($this->user->tenant->id)->get()->last()->id,
       ]);
     
     $response->assertOk();
@@ -72,7 +72,7 @@ class StorePaymentProfileTest extends TestCase
 
     $paymentProfile = factory(PaymentProfile::class)->create([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
@@ -99,7 +99,7 @@ class StorePaymentProfileTest extends TestCase
 
     factory(PaymentProfile::class)->create([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $termType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
@@ -107,7 +107,7 @@ class StorePaymentProfileTest extends TestCase
       ->postJson("api/v1/payment_profiles/", [
         'student_grade_id' => $studentGrade->id,
         'name' => 'new default',
-        'term_type_id' => $termType->id,
+        'school_term_type_id' => $termType->id,
       ]);
     
     $response->assertStatus(422);

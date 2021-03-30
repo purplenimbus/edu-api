@@ -16,7 +16,7 @@ $factory->define(PaymentProfile::class, function (Faker $faker) {
     'description' => $faker->text(200),
     'name' => $faker->text(50),
     'tenant_id' => factory(Tenant::class),
-    'term_type_id' => factory(SchoolTermType::class),
+    'school_term_type_id' => factory(SchoolTermType::class),
   ];
 });
 

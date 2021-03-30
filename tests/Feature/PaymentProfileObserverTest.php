@@ -21,11 +21,11 @@ class PaymentProfileObserverTest extends TestCase
   public function testDeletesAnExistingPaymentProfileCorrectly()
   {  
     $studentGrade = StudentGrade::first();
-    $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
+    $schoolTermType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
 
     $paymentProfile = factory(PaymentProfile::class)->create([
       'student_grade_id' => $studentGrade->id,
-      'term_type_id' => $termType->id,
+      'school_term_type_id' => $schoolTermType->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
