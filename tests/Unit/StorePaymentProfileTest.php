@@ -35,6 +35,33 @@ class StorePaymentProfileTest extends TestCase
   }
 
   /**
+   * Create a new payment profile
+   *
+   * @return void
+   */
+  public function testCreatesANewPaymentProfileCorrectlyForANewTerm()
+  {  
+    $studentGrade = StudentGrade::first();
+    $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
+    $termType2 = SchoolTermType::ofTenant($this->user->tenant->id)->get()->last();
+
+    factory(PaymentProfile::class)->create([
+      'student_grade_id' => $studentGrade->id,
+      'school_term_type_id' => $termType->id,
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+      ->postJson('api/v1/payment_profiles', [
+        'student_grade_id' => $studentGrade->id,
+        'name' => 'default',
+        'school_term_type_id' => $termType2->id,
+      ]);
+    
+    $response->assertOk();
+  }
+
+  /**
    * Update a existing payment profile
    *
    * @return void
@@ -96,10 +123,16 @@ class StorePaymentProfileTest extends TestCase
   {  
     $studentGrade = StudentGrade::first();
     $termType = SchoolTermType::ofTenant($this->user->tenant->id)->first();
+    $termType2 = SchoolTermType::ofTenant($this->user->tenant->id)->get()->last();
 
     factory(PaymentProfile::class)->create([
       'student_grade_id' => $studentGrade->id,
       'school_term_type_id' => $termType->id,
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    factory(PaymentProfile::class)->create([
+      'student_grade_id' => $studentGrade->id,
+      'school_term_type_id' => $termType2->id,
       'tenant_id' => $this->user->tenant->id,
     ]);
 
@@ -107,7 +140,7 @@ class StorePaymentProfileTest extends TestCase
       ->postJson("api/v1/payment_profiles/", [
         'student_grade_id' => $studentGrade->id,
         'name' => 'new default',
-        'school_term_type_id' => $termType->id,
+        'school_term_type_id' => $termType2->id,
       ]);
     
     $response->assertStatus(422);
