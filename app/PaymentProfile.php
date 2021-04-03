@@ -19,6 +19,8 @@ class PaymentProfile extends Model
     'school_term_type_id',
   ];
 
+  protected $appends = ['total'];
+
   public function items()
   {
     return $this->hasMany('App\PaymentProfileItem');
@@ -27,6 +29,11 @@ class PaymentProfile extends Model
   public function student_grade()
   {
     return $this->belongsTo('App\StudentGrade');
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo('App\Tenant');
   }
   
   public function term_type()

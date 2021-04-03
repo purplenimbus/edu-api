@@ -54,25 +54,34 @@ class PaymentProfilesController extends Controller
   {
     $tenant = Auth::user()->tenant()->first();
 
-    $payment_profile = new PaymentProfile();
+    if ($tenant->schoolTermTypes->count() > 0) {
+      $this->createPaymentProfilesForAllTerms($request);
 
-    $request->merge([
-      'tenant_id' => $tenant->id,
-    ]);
+      $paymentProfile = $tenant->payment_profiles->last()->load('items');
+    } else {
+      $paymentProfile = new PaymentProfile();
 
-    $payment_profile->fill($request->all());
-    
-    $payment_profile->save();
+      $request->merge([
+        'tenant_id' => $tenant->id,
+      ]);
 
-    if ($request->has('items')) {
-      foreach ($request->items as $item) {
-        $item['tenant_id'] = $tenant->id;
+      $paymentProfile->fill($request->except('items'));
+      
+      $paymentProfile->save();
 
-        $payment_profile->items()->updateOrCreate($item);
+      if ($request->has('items')) {
+        foreach ($request->items as $item) {
+          $item['tenant_id'] = $tenant->id;
+
+          $paymentProfile->items()->create($item);
+        }
+
+        $paymentProfile->load('items');
       }
     }
+    
 
-    return response()->json($payment_profile->load('items'), 200);
+    return response()->json($paymentProfile, 200);
   }
 
   /**
@@ -92,19 +101,21 @@ class PaymentProfilesController extends Controller
       'tenant_id' => $tenant->id,
     ]);
 
-    $payment_profile->fill($request->all());
+    $payment_profile->fill($request->except('items'));
 
     $payment_profile->save();
 
     if ($request->has('items')) {
+      $payment_profile->items()->delete();
+
       foreach ($request->items as $item) {
         $item['tenant_id'] = $tenant->id;
 
-        $payment_profile->items()->updateOrCreate($item);
+        $payment_profile->items()->create($item);
       }
     }
 
-    return response()->json($payment_profile, 200);
+    return response()->json($payment_profile->load('items'), 200);
   }
 
   /**
@@ -117,5 +128,30 @@ class PaymentProfilesController extends Controller
     PaymentProfile::destroy($request->id);
 
     return response()->json(true, 200);
+  }
+
+  private function createPaymentProfilesForAllTerms($request) {
+    $tenant = Auth::user()->tenant()->first();
+
+    foreach ($tenant->schoolTermTypes as $schoolTermType) {
+      $payment_profile = new PaymentProfile();
+
+      $request->merge([
+        'tenant_id' => $tenant->id,
+        'school_term_type_id' => $schoolTermType->id,
+      ]);
+
+      $payment_profile->fill($request->except('items'));
+      
+      $payment_profile->save();
+
+      if ($request->has('items')) {
+        foreach ($request->items as $item) {
+          $item['tenant_id'] = $tenant->id;
+
+          $payment_profile->items()->updateOrCreate($item);
+        }
+      }
+    }
   }
 }
