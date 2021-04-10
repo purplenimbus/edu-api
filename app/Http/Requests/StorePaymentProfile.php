@@ -30,11 +30,11 @@ class StorePaymentProfile extends FormRequest
 
     return [
       'description' => 'string|nullable|max:255',
+      'flat_fee' => 'boolean',
       'student_grade_id' => [
         'nullable',
         'integer',
         'exists:student_grades,id',
-        // 'unique:payment_profiles,student_grade_id',
         Rule::unique('payment_profiles')->where(function ($query) {
           return $query->where('student_grade_id', request()->student_grade_id)
             ->where('school_term_type_id', request()->school_term_type_id);

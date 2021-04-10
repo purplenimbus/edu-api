@@ -54,7 +54,7 @@ class PaymentProfilesController extends Controller
   {
     $tenant = Auth::user()->tenant()->first();
 
-    if ($tenant->schoolTermTypes->count() > 0) {
+    if ($tenant->schoolTermTypes->count() > 0 && $request->flat_fee == true) {
       $this->createPaymentProfilesForAllTerms($request);
 
       $paymentProfile = $tenant->payment_profiles->last()->load('items');
