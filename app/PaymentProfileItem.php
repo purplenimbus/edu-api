@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentProfileItem extends Model
 {
+  const Administrative = 'administrative';
+  const Tuition = 'tuition';
+  const Types = [
+    self::Administrative,
+    self::Tuition,
+  ];
   /**
   * The attributes that are mass assignable.
   *
@@ -16,10 +22,6 @@ class PaymentProfileItem extends Model
     'tenant_id',
     'amount',
     'payment_profile_id',
-    'type_id'
+    'type'
   ];
-
-  public function type(){
-    return $this->hasOne('App\PaymentProfileItemType', 'id', 'type_id');
-  }
 }

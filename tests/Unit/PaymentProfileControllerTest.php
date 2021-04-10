@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\StudentGrade;
 use App\PaymentProfile;
+use App\PaymentProfileItem;
 use App\PaymentProfileItemType;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -76,31 +77,23 @@ class PaymentProfileControllerTest extends TestCase
       'tenant_id' => $this->user->tenant->id
     ]);
 
-    $adminPaymentProfileType = PaymentProfileItemType::whereName(PaymentProfileItemType::ADMIN)
-      ->ofTenant($this->user->tenant->id)
-      ->first();
-
-    $tuitionPaymentProfileType = PaymentProfileItemType::whereName(PaymentProfileItemType::TUITION)
-      ->ofTenant($this->user->tenant->id)
-      ->first();
-
     $response = $this->actingAs($this->user)
       ->putJson("api/v1/payment_profiles/{$payment_profile->id}", [
         'items' => [
           [
             'amount' => 100,
             'description' => 'test',
-            'type_id' => $adminPaymentProfileType->id,
+            'type' => PaymentProfileItem::Administrative,
           ],
           [
             'amount' => 200,
             'description' => 'test 2',
-            'type_id' => $adminPaymentProfileType->id,
+            'type' => PaymentProfileItem::Administrative,
           ],
           [
             'amount' => 150,
             'description' => 'test 3',
-            'type_id' => $tuitionPaymentProfileType->id,
+            'type' => PaymentProfileItem::Tuition,
           ],
         ],
       ]);

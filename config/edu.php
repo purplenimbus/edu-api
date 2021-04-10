@@ -40,14 +40,6 @@ return [
         'start_date' => Carbon::createFromDate(null, 4, 20)->toDateString(),
       ]
     ],
-    'payment_item_types' => [
-      [
-        'name' => 'tuition',
-      ],
-      [
-        'name' => 'administrative',
-      ],
-    ],
     'student_grades' => [
       [
         'alias' => 'primary 1',

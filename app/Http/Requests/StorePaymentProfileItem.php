@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\PaymentProfileItem;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePaymentProfileItem extends FormRequest
 {
@@ -27,7 +29,7 @@ class StorePaymentProfileItem extends FormRequest
       'amount' => 'integer|required|nullable|min:1',
       'description' => 'string|required|distinct|max:255',
       'payment_profile_id' => 'integer|required|exists:payment_profiles,id',
-      'type_id' => 'integer|required|exists:payment_profile_item_types,id',
+      'type' => ['required', 'string', Rule::in(PaymentProfileItem::Types)],
       'tenant_id' => 'integer|required|exists:tenants,id',
     ];
   }

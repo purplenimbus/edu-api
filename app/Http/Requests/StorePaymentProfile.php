@@ -44,7 +44,7 @@ class StorePaymentProfile extends FormRequest
       'items' => 'array',
       'items.*.amount' => $paymentProfileItemValidationRules['amount'],
       'items.*.description' => $paymentProfileItemValidationRules['description'],
-      'items.*.type_id' => $paymentProfileItemValidationRules['type_id'],
+      'items.*.type' => $paymentProfileItemValidationRules['type'],
       'tenant_id' => 'integer|exists:tenants,id',
       'term_type_id' => [
         'nullable',

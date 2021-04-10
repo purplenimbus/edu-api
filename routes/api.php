@@ -227,12 +227,5 @@ Route::group([
         Route::delete('/', 'PaymentProfilesController@delete');
       });
     });
-
-    /* Payment Profile Item Types */
-    Route::group([
-      'prefix' => '/payment_profile_item_types',
-    ], function() {
-      Route::get('/', 'PaymentProfileItemTypeController@index');
-    });
   });
 });

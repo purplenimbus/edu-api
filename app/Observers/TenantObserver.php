@@ -17,21 +17,8 @@ class TenantObserver
    */
   public function created(Tenant $tenant)
   {
-    $this->createDefaultPaymentItemTypes($tenant);
     $this->createDefaultSchoolTermTypes($tenant);
     $this->createDefaultStudentGrades($tenant);
-  }
-
-  private function createDefaultPaymentItemTypes(Tenant $tenant) {
-    $defaultPaymentItemTypes = config('edu.default.payment_item_types');
-
-    foreach($defaultPaymentItemTypes as $type) {
-      $type = array_merge([
-        'tenant_id' => $tenant->id,
-      ], $type);
-
-      PaymentProfileItemType::create($type);
-    }
   }
 
   private function createDefaultSchoolTermTypes(Tenant $tenant) {

@@ -26,7 +26,7 @@ $factory->define(PaymentProfileItem::class, function (Faker $faker) {
     'description' => $faker->text(200),
     'payment_profile_id' => factory(PaymentProfileItem::class),
     'tenant_id' => factory(Tenant::class),
-    'type_id' => factory(PaymentProfileItemType::class),
+    'type' => PaymentProfileItem::Types[$faker->numberBetween(0, count(PaymentProfileItem::Types) - 1)],
   ];
 });
 
