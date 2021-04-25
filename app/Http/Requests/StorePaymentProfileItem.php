@@ -29,7 +29,7 @@ class StorePaymentProfileItem extends FormRequest
       'amount' => 'integer|required|nullable|min:1',
       'description' => 'string|required|distinct|max:255',
       'payment_profile_id' => 'integer|required|exists:payment_profiles,id',
-      'type' => ['required', 'string', Rule::in(PaymentProfileItem::Types)],
+      'type' => ['required', 'integer', Rule::in(array_values(PaymentProfileItem::Types))],
       'tenant_id' => 'integer|required|exists:tenants,id',
     ];
   }

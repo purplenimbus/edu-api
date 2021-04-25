@@ -34,7 +34,7 @@ class PaymentProfileObserverTest extends TestCase
       'tenant_id' => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
+    $this->actingAs($this->user)
       ->deleteJson("api/v1/payment_profiles/{$paymentProfile->id}");
     
     $this->assertEquals(0, PaymentProfile::count());
