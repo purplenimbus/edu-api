@@ -31,7 +31,7 @@ class UpdatePaymentProfile extends FormRequest
       'student_grade_id' => 'integer|exists:student_grades,id',
       'id' => 'required|integer|exists:payment_profiles,id',
       'name' => 'string|max:255',
-      'school_term_type_id' => 'integer|exists:school_term_types,id',
+      'school_term_type_id' => 'integer|exists:school_term_types,id|nullable',
     ]);
   }
 

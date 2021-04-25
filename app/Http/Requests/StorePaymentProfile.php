@@ -46,11 +46,12 @@ class StorePaymentProfile extends FormRequest
       'items.*.description' => $paymentProfileItemValidationRules['description'],
       'items.*.type' => $paymentProfileItemValidationRules['type'],
       'tenant_id' => 'integer|exists:tenants,id',
-      'term_type_id' => [
+      'school_term_type_id' => [
         'nullable',
         'integer',
         'exists:school_term_types,id',
-        'unique:payment_profiles,term_type_id',
+        'unique:payment_profiles,school_term_type_id',
+        'required_if:flat_fee,null'
       ]
     ];
   }

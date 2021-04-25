@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Nimbus\Institution;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
@@ -278,10 +277,5 @@ class Tenant extends Model
   public function payment_profiles()
   {
     return $this->hasMany('App\PaymentProfile');
-  }
-
-  public function paymentProfileItemTypes()
-  {
-    return $this->hasMany('App\PaymentProfileItemType');
   }
 }

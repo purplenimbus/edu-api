@@ -6,7 +6,6 @@ use App\Http\Requests\DeletePaymentProfile;
 use App\Http\Requests\StorePaymentProfile;
 use App\Http\Requests\UpdatePaymentProfile;
 use App\PaymentProfile;
-use Illuminate\Database\Eloquent\Builder as Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -35,7 +34,7 @@ class PaymentProfilesController extends Controller
       ->allowedIncludes([
         'term_type',
         'items',
-        'items.type',
+        'items',
       ])
       ->ofTenant($tenant->id)
       ->paginate($request->paginate ?? config('edu.pagination'));
@@ -95,27 +94,31 @@ class PaymentProfilesController extends Controller
   {
     $tenant = Auth::user()->tenant()->first();
 
-    $payment_profile = PaymentProfile::find($request->id);
+    $paymentProfile = PaymentProfile::find($request->id);
 
     $request->merge([
       'tenant_id' => $tenant->id,
     ]);
 
-    $payment_profile->fill($request->except('items'));
+    if ($tenant->schoolTermTypes->count() > 0 && $request->flat_fee == true) {
+      $this->updatePaymentProfilesForAllTerms($request, $paymentProfile);
+    } else {
+      $paymentProfile->fill($request->except('items'));
 
-    $payment_profile->save();
+      $paymentProfile->save();
 
-    if ($request->has('items')) {
-      $payment_profile->items()->delete();
+      if ($request->has('items')) {
+        $paymentProfile->items()->delete();
 
-      foreach ($request->items as $item) {
-        $item['tenant_id'] = $tenant->id;
+        foreach ($request->items as $item) {
+          $item['tenant_id'] = $tenant->id;
 
-        $payment_profile->items()->create($item);
+          $paymentProfile->items()->create($item);
+        }
       }
     }
 
-    return response()->json($payment_profile->load('items'), 200);
+    return response()->json($paymentProfile->load('items'), 200);
   }
 
   /**
@@ -150,6 +153,31 @@ class PaymentProfilesController extends Controller
           $item['tenant_id'] = $tenant->id;
 
           $payment_profile->items()->updateOrCreate($item);
+        }
+      }
+    }
+  }
+
+  private function updatePaymentProfilesForAllTerms($request, $paymentProfile) {
+    $tenant = Auth::user()->tenant()->first();
+
+    foreach ($tenant->schoolTermTypes as $schoolTermType) {
+      $request->merge([
+        'tenant_id' => $tenant->id,
+        'school_term_type_id' => $schoolTermType->id,
+      ]);
+
+      $paymentProfile->fill($request->except('items'));
+      
+      $paymentProfile->save();
+
+      if ($request->has('items')) {
+        $paymentProfile->items()->delete();
+
+        foreach ($request->items as $item) {
+          $item['tenant_id'] = $tenant->id;
+
+          $paymentProfile->items()->updateOrCreate($item);
         }
       }
     }

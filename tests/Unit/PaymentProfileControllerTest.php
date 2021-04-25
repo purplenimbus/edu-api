@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use App\StudentGrade;
 use App\PaymentProfile;
 use App\PaymentProfileItem;
-use App\PaymentProfileItemType;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
