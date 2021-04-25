@@ -34,7 +34,6 @@ class PaymentProfilesController extends Controller
       ->allowedIncludes([
         'term_type',
         'items',
-        'items',
       ])
       ->ofTenant($tenant->id)
       ->paginate($request->paginate ?? config('edu.pagination'));
