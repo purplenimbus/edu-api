@@ -82,17 +82,17 @@ class PaymentProfileControllerTest extends TestCase
           [
             'amount' => 100,
             'description' => 'test',
-            'type' => PaymentProfileItem::Administrative,
+            'type' => PaymentProfileItem::Types["administrative"],
           ],
           [
             'amount' => 200,
             'description' => 'test 2',
-            'type' => PaymentProfileItem::Administrative,
+            'type' => PaymentProfileItem::Types["administrative"],
           ],
           [
             'amount' => 150,
             'description' => 'test 3',
-            'type' => PaymentProfileItem::Tuition,
+            'type' => PaymentProfileItem::Types["tuition"],
           ],
         ],
       ]);

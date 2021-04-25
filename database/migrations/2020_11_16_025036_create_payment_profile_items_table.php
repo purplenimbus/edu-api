@@ -19,7 +19,7 @@ class CreatePaymentProfileItemsTable extends Migration
 			$table->mediumText('description')->nullable(); 
 			$table->decimal('amount', 13, 2);
 			$table->integer('payment_profile_id');
-			$table->string('type');
+			$table->integer('type');
 			$table->timestamps();
 		});
 	}
