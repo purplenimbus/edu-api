@@ -51,7 +51,7 @@ class StorePaymentProfile extends FormRequest
         'integer',
         'exists:school_term_types,id',
         'unique:payment_profiles,school_term_type_id',
-        'required_if:flat_fee,null'
+        'required_if:flat_fee,0'
       ]
     ];
   }

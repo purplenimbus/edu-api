@@ -26,7 +26,7 @@ class PaymentProfile extends Model
     return $this->hasMany('App\PaymentProfileItem');
   }
   
-  public function student_grade()
+  public function studentGrade()
   {
     return $this->belongsTo('App\StudentGrade');
   }
@@ -36,7 +36,7 @@ class PaymentProfile extends Model
     return $this->belongsTo('App\Tenant');
   }
   
-  public function term_type()
+  public function schoolTermType()
   {
     return $this->belongsTo('App\SchoolTermType', 'school_term_type_id');
 	}

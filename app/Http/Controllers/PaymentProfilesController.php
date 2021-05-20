@@ -32,7 +32,8 @@ class PaymentProfilesController extends Controller
         'student_grade'
       ])
       ->allowedIncludes([
-        'term_type',
+        'student_grade',
+        'school_term_type',
         'items',
       ])
       ->ofTenant($tenant->id)
@@ -99,21 +100,17 @@ class PaymentProfilesController extends Controller
       'tenant_id' => $tenant->id,
     ]);
 
-    if ($tenant->schoolTermTypes->count() > 0 && $request->flat_fee == true) {
-      $this->updatePaymentProfilesForAllTerms($request, $paymentProfile);
-    } else {
-      $paymentProfile->fill($request->except('items'));
+    $paymentProfile->fill($request->except('items'));
 
-      $paymentProfile->save();
+    $paymentProfile->save();
 
-      if ($request->has('items')) {
-        $paymentProfile->items()->delete();
+    if ($request->has('items')) {
+      $paymentProfile->items()->delete();
 
-        foreach ($request->items as $item) {
-          $item['tenant_id'] = $tenant->id;
+      foreach ($request->items as $item) {
+        $item['tenant_id'] = $tenant->id;
 
-          $paymentProfile->items()->create($item);
-        }
+        $paymentProfile->items()->create($item);
       }
     }
 
@@ -152,31 +149,6 @@ class PaymentProfilesController extends Controller
           $item['tenant_id'] = $tenant->id;
 
           $payment_profile->items()->updateOrCreate($item);
-        }
-      }
-    }
-  }
-
-  private function updatePaymentProfilesForAllTerms($request, $paymentProfile) {
-    $tenant = Auth::user()->tenant()->first();
-
-    foreach ($tenant->schoolTermTypes as $schoolTermType) {
-      $request->merge([
-        'tenant_id' => $tenant->id,
-        'school_term_type_id' => $schoolTermType->id,
-      ]);
-
-      $paymentProfile->fill($request->except('items'));
-      
-      $paymentProfile->save();
-
-      if ($request->has('items')) {
-        $paymentProfile->items()->delete();
-
-        foreach ($request->items as $item) {
-          $item['tenant_id'] = $tenant->id;
-
-          $paymentProfile->items()->updateOrCreate($item);
         }
       }
     }
