@@ -26,7 +26,7 @@ class RegistrationObserverTest extends TestCase
     $this->seed(DatabaseSeeder::class);
 
     $school = new Institution();
-    $school->newSchoolTerm($this->user->tenant);
+    $school->newSchoolTerm($this->user->tenant, 'first term');
 
     $studentGrade = StudentGrade::first();
 

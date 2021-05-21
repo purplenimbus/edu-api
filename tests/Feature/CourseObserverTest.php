@@ -162,7 +162,7 @@ class CourseObserverTest extends TestCase
       'tenant_id' => $this->user->tenant->id,
     ]);
     $institution = new Institution();
-    $institution->newSchoolTerm($this->user->tenant);
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
 
     $this->actingAs($this->user)
       ->putJson("api/v1/courses/{$course->id}", [

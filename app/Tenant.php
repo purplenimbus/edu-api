@@ -278,4 +278,9 @@ class Tenant extends Model
   {
     return $this->hasMany('App\PaymentProfile');
   }
+
+  public function students()
+  {
+    return $this->hasMany('App\Student');
+  }
 }

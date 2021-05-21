@@ -56,8 +56,7 @@ class SchoolTerm extends Model
     return $this->registrations()
       ->pluck('user_id')
       ->filter(function ($value) { return !is_null($value); })
-      ->unique()
-      ->count();
+      ->unique();
   }
 
   public function instructors() {
@@ -66,8 +65,7 @@ class SchoolTerm extends Model
       ->get()
       ->pluck('course.instructor_id')
       ->filter(function ($value) { return !is_null($value); })
-      ->unique()
-      ->count();
+      ->unique();
   }
 
   public function getCoursesCompletedAttribute() {

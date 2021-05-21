@@ -4,6 +4,7 @@ namespace App\Nimbus;
 
 use App\Curriculum;
 use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
+use App\Nimbus\Helpers\SchoolTerm\SchoolTermHelper;
 use App\Nimbus\Helpers\Subject\SubjectHelpers;
 use App\SchoolTerm;
 use App\SchoolTermStatus;
@@ -14,16 +15,16 @@ use Exception;
 
 class Institution
 {
-  use CurriculumHelpers, SubjectHelpers;
+  use CurriculumHelpers, SubjectHelpers, SchoolTermHelper;
 
-  public function newSchoolTerm(Tenant $tenant, $options = []) {
+  public function newSchoolTerm(Tenant $tenant, $termName, $options = []) {
     $status_id = SchoolTermStatus::whereName('in progress')->first()->id;
 
     $data = array_merge([
-      'end_date' => Carbon::now()->addMonths(4),
+      'end_date' => $this->getTermEndDate($termName),
       'name' => 'first term',
       'status_id' => $status_id,
-      'start_date' => Carbon::now(),
+      'start_date' => $this->getTermStartDate($termName),
       'tenant_id' => $tenant->id,
     ], $options);
 
