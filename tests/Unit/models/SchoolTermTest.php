@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 use Tests\Helpers\Auth\SetupUser;
 
-class PaymentProfileControllerTest extends TestCase
+class SchoolTermTest extends TestCase
 {
   use RefreshDatabase, SetupUser, WithoutMiddleware;
 
@@ -21,8 +21,9 @@ class PaymentProfileControllerTest extends TestCase
   public function testRegisteredStudents()
   {
     $this->seed(DatabaseSeeder::class);
-
     $institution = new Institution();
     $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    dd($this->user->tenant->current_term());
   }
 }

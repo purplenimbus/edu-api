@@ -2,12 +2,16 @@
 
 namespace App\Nimbus\Helpers\SchoolTerm;
 
+use Illuminate\Support\Arr;
+
 trait SchoolTermHelper {
-  public function getTermStartDate($termName) {
-    return config("edu.default.school_terms.{$termName}.start_date");
+  public function getSchoolTerm($termName) {
+    return Arr::first($this->schoolTerms(), function($term) use ($termName){
+      return $term["name"] === $termName;
+    });
   }
 
-  public function getTermEndDate($termName) {
-    return config("edu.default.school_terms.{$termName}.end_date");
+  private function schoolTerms() {
+    return config("edu.default.school_terms");
   }
 }

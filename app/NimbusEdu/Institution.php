@@ -21,14 +21,14 @@ class Institution
     $status_id = SchoolTermStatus::whereName('in progress')->first()->id;
 
     $data = array_merge([
-      'end_date' => $this->getTermEndDate($termName),
-      'name' => 'first term',
+      'end_date' => $this->getSchoolTerm($termName)["end_date"],
+      'name' => $termName,
       'status_id' => $status_id,
-      'start_date' => $this->getTermStartDate($termName),
+      'start_date' => $this->getSchoolTerm($termName)["start_date"],
       'tenant_id' => $tenant->id,
     ], $options);
 
-    SchoolTerm::create($data);
+    return SchoolTerm::create($data);
   }
 
   public function generateSubjects() {
