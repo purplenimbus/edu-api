@@ -61,7 +61,7 @@ class SchoolTermTest extends TestCase
    *
    * @return void
    */
-  public function testRegisterations()
+  public function testRegistrations()
   {
     $this->seed(DatabaseSeeder::class);
     $institution = new Institution();
