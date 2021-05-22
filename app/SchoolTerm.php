@@ -53,20 +53,16 @@ class SchoolTerm extends Model
     );
   }
 
-  public function students() {
-    return $this->registrations()
-      ->pluck('user_id')
-      ->filter(function ($value) { return !is_null($value); })
-      ->unique();
+  public function getRegisteredStudentsCountAttribute() {
+    return $this->registrations->unique('id')->count();
   }
 
-  public function instructors() {
-    return $this->registrations()
-      ->with('course')
-      ->get()
-      ->pluck('course.instructor_id')
+  public function getAssignedInstructorsCountAttribute() {
+    return $this->courses()
+      ->pluck('instructor_id')
       ->filter(function ($value) { return !is_null($value); })
-      ->unique();
+      ->unique()
+      ->count();
   }
 
   public function getCoursesCompletedAttribute() {

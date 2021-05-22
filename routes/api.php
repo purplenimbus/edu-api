@@ -98,9 +98,14 @@ Route::group([
       'middleware' => ['checksubscription']
     ], function() {
       Route::get('', 'SchoolTermController@index')->middleware('can:view-terms');
-      Route::get('/show', 'SchoolTermController@show');
-      Route::put('', 'SchoolTermController@update');
       Route::post('', 'SchoolTermController@create');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('', 'SchoolTermController@show');
+        Route::put('', 'SchoolTermController@update');
+      });
     });
 
     /* Courses */

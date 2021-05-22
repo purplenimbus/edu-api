@@ -46,11 +46,16 @@ class SchoolTermController extends Controller
         'courses',
         'registrations',
         'status',
-        AllowedInclude::count('instructorsCount'),
-        AllowedInclude::count('studentsCount')
+        // 'students',
+        AllowedInclude::count('coursesCount'),
+        // AllowedInclude::count('instructorsCount'),
+        // AllowedInclude::count('studentsCount'),
+        AllowedInclude::count('registrationsCount'),
       ])
       ->allowedAppends([
+        'assigned_instructors',
         'courses_completed',
+        'registered_students',
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]
@@ -67,7 +72,14 @@ class SchoolTermController extends Controller
    */
   public function show(GetTerm $request)
   {
-    $term = SchoolTerm::find($request->id);
+    $term = QueryBuilder::for(SchoolTerm::class)
+      ->allowedAppends([
+        'assigned_instructors_count',
+        'courses_completed',
+        'registered_students_count',
+      ])
+      ->whereId($request->id)
+      ->first();
 
     return response()->json($term, 200);
   }
