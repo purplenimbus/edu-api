@@ -7,6 +7,7 @@ use App\Nimbus\Institution;
 use App\Registration;
 use App\SchoolTerm;
 use App\SchoolTermStatus;
+use App\SchoolTermType;
 use App\Student;
 use App\StudentGrade;
 use DatabaseSeeder;
@@ -38,7 +39,25 @@ class SchoolTermTest extends TestCase
   }
 
   /**
-   * Get registrations
+   * Get school term status
+   *
+   * @return void
+   */
+  public function testSchoolTermType()
+  {
+    $this->seed(DatabaseSeeder::class);
+    $institution = new Institution();
+    $schoolTerm = $institution->newSchoolTerm($this->user->tenant, 'first term');
+    $schoolTermType = factory(SchoolTermType::class)->create();
+    $schoolTerm->update([
+      'type_id' => $schoolTermType->id,
+    ]);
+
+    $this->assertEquals($schoolTermType->id, $schoolTerm->type->id);
+  }
+
+  /**
+   * registrations
    *
    * @return void
    */
@@ -64,7 +83,7 @@ class SchoolTermTest extends TestCase
   }
 
   /**
-   * Get registered students
+   * registered students
    *
    * @return void
    */
@@ -101,7 +120,7 @@ class SchoolTermTest extends TestCase
   }
 
   /**
-   * Get instructors
+   * instructors
    *
    * @return void
    */
@@ -144,7 +163,7 @@ class SchoolTermTest extends TestCase
       'student_grade_id' => $studentGrade->id,
     ]);
     $course3 = factory(Course::class)->create([
-      'instructor_id' => $instructor2,
+      'instructor_id' => $instructor3,
       'tenant_id' => $this->user->tenant_id,
       'student_grade_id' => $studentGrade->id,
     ]);

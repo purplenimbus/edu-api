@@ -18,7 +18,8 @@ class SchoolTerm extends Model
     'meta',
     'start_date',
     'status_id',
-    'tenant_id'
+    'tenant_id',
+    'type_id',
   ];
   
   /**
@@ -37,8 +38,8 @@ class SchoolTerm extends Model
     return $this->belongsTo('App\SchoolTermStatus');
   }
 
-  public function term_type() {
-    return $this->hasOne('App\SchoolTermTypes');
+  public function type() {
+    return $this->hasOne('App\SchoolTermType', 'id', 'type_id');
   }
 
   public function registrations() {
