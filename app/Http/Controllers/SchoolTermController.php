@@ -38,24 +38,19 @@ class SchoolTermController extends Controller
       ])
       ->allowedFields([
         'courses',
-        'instructors',
         'registrations',
-        'students',
       ])
       ->allowedIncludes([
         'courses',
         'registrations',
         'status',
-        // 'students',
         AllowedInclude::count('coursesCount'),
-        // AllowedInclude::count('instructorsCount'),
-        // AllowedInclude::count('studentsCount'),
         AllowedInclude::count('registrationsCount'),
       ])
       ->allowedAppends([
-        'assigned_instructors',
+        'assigned_instructors_count',
         'courses_completed',
-        'registered_students',
+        'registered_students_count',
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]
