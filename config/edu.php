@@ -27,7 +27,7 @@ return [
       [
         'end_date' => Carbon::createFromDate(null, 12, 16)->toDateString(),
         'name' => 'first term',
-        'start_date' => Carbon::createFromDate(null, 12, 9)->toDateString(),
+        'start_date' => Carbon::createFromDate(null, 8, 9)->toDateString(),
       ],
       [
         'end_date' => Carbon::createFromDate(null, 4, 6)->toDateString(),

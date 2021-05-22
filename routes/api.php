@@ -94,13 +94,18 @@ Route::group([
 
     /* Terms */
     Route::group([
-      'prefix' => '/terms',
+      'prefix' => '/school_terms',
       'middleware' => ['checksubscription']
     ], function() {
-      Route::get('', 'TermController@index')->middleware('can:view-terms');
-      Route::get('/show', 'TermController@show');
-      Route::put('', 'TermController@update');
-      Route::post('', 'TermController@create');
+      Route::get('', 'SchoolTermController@index')->middleware('can:view-terms');
+      Route::post('', 'SchoolTermController@create');
+
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('', 'SchoolTermController@show');
+        Route::put('', 'SchoolTermController@update');
+      });
     });
 
     /* Courses */

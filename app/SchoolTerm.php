@@ -18,7 +18,8 @@ class SchoolTerm extends Model
     'meta',
     'start_date',
     'status_id',
-    'tenant_id'
+    'tenant_id',
+    'type_id',
   ];
   
   /**
@@ -37,8 +38,8 @@ class SchoolTerm extends Model
     return $this->belongsTo('App\SchoolTermStatus');
   }
 
-  public function term_types() {
-    return $this->hasMany('App\SchoolTermTypes');
+  public function type() {
+    return $this->hasOne('App\SchoolTermType', 'id', 'type_id');
   }
 
   public function registrations() {
@@ -52,19 +53,13 @@ class SchoolTerm extends Model
     );
   }
 
-  public function students() {
-    return $this->registrations()
-      ->pluck('user_id')
-      ->filter(function ($value) { return !is_null($value); })
-      ->unique()
-      ->count();
+  public function getRegisteredStudentsCountAttribute() {
+    return $this->registrations->unique('id')->count();
   }
 
-  public function instructors() {
-    return $this->registrations()
-      ->with('course')
-      ->get()
-      ->pluck('course.instructor_id')
+  public function getAssignedInstructorsCountAttribute() {
+    return $this->courses()
+      ->pluck('instructor_id')
       ->filter(function ($value) { return !is_null($value); })
       ->unique()
       ->count();

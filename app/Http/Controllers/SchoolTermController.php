@@ -7,7 +7,6 @@ use App\Http\Requests\StoreTerm;
 use App\SchoolTerm;
 use App\SchoolTermStatus;
 use App\Jobs\CompleteTerm;
-use App\Http\Requests\GetTenant;
 use App\Http\Requests\GetTerm;
 use App\Http\Requests\UpdateTerm;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -15,7 +14,7 @@ use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 
-class TermController extends Controller
+class SchoolTermController extends Controller
 {
   /**
    * List terms
@@ -45,11 +44,13 @@ class TermController extends Controller
         'courses',
         'registrations',
         'status',
-        AllowedInclude::count('instructorsCount'),
-        AllowedInclude::count('studentsCount')
+        AllowedInclude::count('coursesCount'),
+        AllowedInclude::count('registrationsCount'),
       ])
       ->allowedAppends([
+        'assigned_instructors_count',
         'courses_completed',
+        'registered_students_count',
       ])
       ->where([
         ['tenant_id', '=', $tenant->id]
@@ -66,9 +67,14 @@ class TermController extends Controller
    */
   public function show(GetTerm $request)
   {
-    $tenant = Auth::user()->tenant()->first();
-
-    $term = SchoolTerm::find($request->id);
+    $term = QueryBuilder::for(SchoolTerm::class)
+      ->allowedAppends([
+        'assigned_instructors_count',
+        'courses_completed',
+        'registered_students_count',
+      ])
+      ->whereId($request->id)
+      ->first();
 
     return response()->json($term, 200);
   }
@@ -92,13 +98,9 @@ class TermController extends Controller
   }
 
   public function create(StoreTerm $request){
-    
     $tenant = Auth::user()->tenant()->first();
-
     $data = $request->all();
-
     $data['tenant_id'] = $tenant->id;
-
     $term = SchoolTerm::create($data);
     
     return response()->json($term, 200);
