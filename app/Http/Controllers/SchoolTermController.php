@@ -73,6 +73,13 @@ class SchoolTermController extends Controller
         'courses_completed',
         'registered_students_count',
       ])
+      ->allowedIncludes([
+        'courses',
+        'registrations',
+        'status',
+        AllowedInclude::count('coursesCount'),
+        AllowedInclude::count('registrationsCount'),
+      ])
       ->whereId($request->id)
       ->first();
 

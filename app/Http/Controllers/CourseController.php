@@ -116,6 +116,10 @@ class CourseController extends Controller
 
     $data['tenant_id'] = $tenant->id;
 
+    if (!is_null($tenant->current_term)) {
+      $data['term_id'] = $tenant->current_term->id;
+    }
+
     $course = Course::create($data);
     
     return response()->json($course, 200);

@@ -54,7 +54,7 @@ class SchoolTerm extends Model
   }
 
   public function getRegisteredStudentsCountAttribute() {
-    return $this->registrations->unique('id')->count();
+    return $this->registrations->unique('user_id')->count();
   }
 
   public function getAssignedInstructorsCountAttribute() {

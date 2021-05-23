@@ -33,7 +33,6 @@ class RegisterStudent extends FormRequest
       'course_ids.*' => [
         'required','integer','distinct','exists:courses,id',
         new ValidCourse($this->input('student_grade_id')),
-        new CourseInProgress()
       ],
       'student_ids' => 'required|array|max:10',
       'student_ids.*' => [
