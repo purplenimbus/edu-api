@@ -3,14 +3,10 @@
 namespace App;
 
 use App\User;
-use App\StatusType;
 use App\StudentGrade;
 use App\Registration;
 use App\SchoolTerm;
-use App\Scopes\TenantScope;
-use App\UserGroup;
 use App\UserGroupMember;
-use Bouncer;
 use Illuminate\Support\Arr;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -97,11 +93,7 @@ class Student extends User
     self::creating(function ($model) {
       $model->password = $model->createDefaultPassword();
 
-      $status_type = StatusType::where('name', 'unenrolled')->first();
-
-      if (!is_null($status_type)) {
-        $model->account_status_id = $status_type->id;
-      }
+      $model->account_status_id = User::Statuses['unenrolled'];
     });
 
     self::created(function ($model) {

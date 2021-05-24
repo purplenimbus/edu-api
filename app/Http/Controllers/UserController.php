@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\User as User;
-use App\StatusType as StatusType;
 use App\Http\Requests\GetUser as GetUser;
 use App\Http\Requests\GetUsers as GetUsers;
 use App\Http\Requests\StoreUser as StoreUser;
@@ -129,6 +128,6 @@ class UserController extends Controller
 
   public function getAccountStatuses()
   {
-    return response()->json(StatusType::get(['id', 'name']), 200);
+    return response()->json(User::Statuses, 200);
   }
 }
