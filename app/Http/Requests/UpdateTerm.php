@@ -3,7 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\TermComplete;
+use App\SchoolTerm;
+use Illuminate\Validation\Rule;
 
 class UpdateTerm extends FormRequest
 {
@@ -28,7 +29,7 @@ class UpdateTerm extends FormRequest
       'status_id'  => [
         'number',
         'required',
-        'exists:school_term_statuses,id'
+        Rule::in(array_values(SchoolTerm::Statuses))
       ],
     ];
   }

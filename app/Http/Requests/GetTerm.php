@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\SchoolTerm;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GetTerm extends FormRequest
 {
@@ -25,7 +27,7 @@ class GetTerm extends FormRequest
   {
     return [
       'id' => 'integer|exists:school_terms,id',
-      'status_id' => 'integer|exists:school_term_statuses,id',
+      'status_id' => ['integer', Rule::in(array_values(SchoolTerm::Statuses))],
     ];
   }
 }

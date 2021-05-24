@@ -15,7 +15,7 @@ $factory->define(SchoolTerm::class, function (Faker $faker) {
     'end_date' => Carbon::now()->addMonths(4),
     'name' => $faker->text(200),
     'start_date' => Carbon::now(),
-    'status_id' => factory(SchoolTermStatus::class),
+    'status_id' => SchoolTerm::Statuses['in progress'],
     'tenant_id' => factory(Tenant::class),
     'type_id' => factory(SchoolTermType::class),
   ];

@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Course;
 use App\CourseStatus;
-use App\SchoolTermStatus;
+use App\SchoolTerm;
 use Illuminate\Support\Arr;
 
 class CourseObserver
@@ -66,7 +66,6 @@ class CourseObserver
     if ($courseStatus == 'complete')
     {
       $courseStatus = CourseStatus::whereName('in progress')->first();
-      $termStatus = SchoolTermStatus::whereName('complete')->first();
 
       $otherCourses = $course->where([	
         ['tenant_id', '=', $course->tenant->id],	
@@ -75,7 +74,7 @@ class CourseObserver
 
       if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
         $course->tenant->current_term->update([
-          'status_id'=> $termStatus->id
+          'status_id'=> SchoolTerm::Statuses['complete'],
         ]);	
       }	
     }

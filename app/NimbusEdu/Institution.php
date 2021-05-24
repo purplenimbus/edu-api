@@ -7,11 +7,9 @@ use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
 use App\Nimbus\Helpers\SchoolTerm\SchoolTermHelper;
 use App\Nimbus\Helpers\Subject\SubjectHelpers;
 use App\SchoolTerm;
-use App\SchoolTermStatus;
 use App\SchoolTermType;
 use App\Subject;
 use App\Tenant;
-use Carbon\Carbon;
 use Exception;
 
 class Institution
@@ -19,13 +17,12 @@ class Institution
   use CurriculumHelpers, SubjectHelpers, SchoolTermHelper;
 
   public function newSchoolTerm(Tenant $tenant, $termName, $options = []) {
-    $statusId = SchoolTermStatus::whereName('in progress')->first()->id;
     $typeId = SchoolTermType::whereName($termName)->first()->id;
 
     $data = array_merge([
       'end_date' => $this->getSchoolTerm($termName)["end_date"],
       'name' => $termName,
-      'status_id' => $statusId,
+      'status_id' => SchoolTerm::Statuses['in progress'],
       'start_date' => $this->getSchoolTerm($termName)["start_date"],
       'tenant_id' => $tenant->id,
       'type_id' => $typeId,

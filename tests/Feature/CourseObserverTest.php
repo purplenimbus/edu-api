@@ -171,7 +171,7 @@ class CourseObserverTest extends TestCase
         'subject_id' => $subject->id,
       ]);
 
-    $this->assertEquals('complete', SchoolTerm::ofTenant($this->user->tenant->id)->first()->status->name);
+    $this->assertEquals('complete', SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
   }
 
   /**

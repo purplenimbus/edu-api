@@ -28,9 +28,7 @@ class SchoolTermController extends Controller
     $terms = QueryBuilder::for(SchoolTerm::class)
       ->allowedFilters([
         AllowedFilter::callback('status', function (Builder $query, $value) {
-          $status = SchoolTermStatus::where('name', $value)->first();
-
-          return $query->where('status_id', '=', isset($status->id) ? (int)$status->id : false);
+          return $query->where('status_id', '=', SchoolTerm::Statuses[$value]);
         }),
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
           return $query->where('status_id', '=', (int)$value);

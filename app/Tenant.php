@@ -61,11 +61,9 @@ class Tenant extends Model
 
   public function getCurrentTermAttribute()
   {
-    $termStatus = SchoolTermStatus::whereName('in progress')->first();
-
     return SchoolTerm::where([
       'tenant_id' => $this->id,
-      'status_id' => $termStatus->id
+      'status_id' => SchoolTerm::Statuses['in progress'],
     ])
     ->first();
   }
