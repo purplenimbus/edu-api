@@ -187,6 +187,7 @@ class SchoolTermControllerTest extends TestCase
     ]);
     $response = $this->actingAs($this->user)
       ->postJson('api/v1/school_terms', $data->toArray());
+
     $schoolTerm = SchoolTerm::first();
 
     $response->assertStatus(200)

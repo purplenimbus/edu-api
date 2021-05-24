@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SchoolTerm extends Model
 {
+  const Statuses = [
+    'in progress' => 1,
+    'complete' => 2,
+    'archived' => 3,
+  ];
   /**
      * The attributes that are mass assignable.
      *
@@ -33,10 +38,6 @@ class SchoolTerm extends Model
     'meta' => 'object',
     'start_date' => 'date',
   ];
-  
-  public function status() {
-    return $this->belongsTo('App\SchoolTermStatus');
-  }
 
   public function type() {
     return $this->hasOne('App\SchoolTermType', 'id', 'type_id');
@@ -51,6 +52,10 @@ class SchoolTerm extends Model
       "App\Course",
       "term_id"
     );
+  }
+
+  public function getStatusAttribute() {
+    return array_flip(SchoolTerm::Statuses)[$this->status_id];
   }
 
   public function getRegisteredStudentsCountAttribute() {

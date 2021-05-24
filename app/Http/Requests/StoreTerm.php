@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\SchoolTerm;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreTerm extends FormRequest
@@ -29,7 +31,7 @@ class StoreTerm extends FormRequest
       'name' => 'nullable|string',
       'meta' => 'nullable',
       'start_date' => 'date',
-      'status_id' => 'integer|exists:school_term_statuses,id',
+      'status_id' => ['integer', Rule::in(array_values(SchoolTerm::Statuses))],
       'tenant_id' => 'integer|exists:tenants,id'
     ];
   }
