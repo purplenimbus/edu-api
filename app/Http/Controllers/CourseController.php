@@ -15,7 +15,6 @@ use App\Http\Requests\StoreBatch;
 use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Student;
-use App\CourseStatus;
 use App\Http\Requests\DeleteCourse;
 use App\Http\Requests\GetNotRegistered;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -45,26 +44,24 @@ class CourseController extends Controller
       ->allowedFilters([
         'name',
         AllowedFilter::callback('instructor_id', function (Builder $query, $value) {
-            return $query->where('instructor_id', '=', (int)$value);
+          return $query->where('instructor_id', '=', (int)$value);
         }),
         AllowedFilter::callback('status', function (Builder $query, $value) {
-            $status = CourseStatus::where('name', $value)->first();
-
-            return $query->where('status_id', '=', isset($status->id) ? (int)$status->id: false);
+          return $query->where('status_id', '=', Course::Statuses[$value]);
         }),
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
-            return $query->where('status_id', '=', (int)$value);
+          return $query->where('status_id', '=', (int)$value);
         }),
         AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
-            return $query->where('student_grade_id', '=', (int)$value);
+          return $query->where('student_grade_id', '=', (int)$value);
         }),
         AllowedFilter::callback('course_id', function (Builder $query, $value) {
-            return $query->where('id', '=', (int)$value);
+          return $query->where('id', '=', (int)$value);
         }),
         AllowedFilter::callback('has_instructor', function (Builder $query, $value) {
-            return $value ?
-              $query->whereNotNull('instructor_id') :
-              $query->whereNull('instructor_id');
+          return $value ?
+            $query->whereNotNull('instructor_id') :
+            $query->whereNull('instructor_id');
         }),
       ])
       ->allowedFields([
@@ -72,35 +69,39 @@ class CourseController extends Controller
         'registrations.user',
         'grade:id,name',
         'instructor:id,firstname,lastname,meta',
-        'status:id,name'
+        'status'
       ])
       ->allowedIncludes(
         'grade',
         'instructor',
-        'registrations','registrations.user',
-        'subject',
+        'registrations',
+        'registrations.user',
+        'subject'
+      )
+      ->allowedAppend(
         'status'
       )
       ->where([
         ['tenant_id', '=', $tenant->id]
       ])
       ->paginate($request->paginate ?? config('edu.pagination'));
-    
-    return response()->json($courses, 200);   
+
+    return response()->json($courses, 200);
   }
-  
+
   /**
    * Update a course
    *
    * @return void
    */
-  public function update(UpdateCourse $request){
+  public function update(UpdateCourse $request)
+  {
     $course = Course::find($request->id);
 
     $course->fill($request->all());
 
     $course->save();
-    
+
     return response()->json($course, 200);
   }
 
@@ -109,9 +110,10 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function create(StoreCourse $request){
+  public function create(StoreCourse $request)
+  {
     $tenant = Auth::user()->tenant()->first();
-    
+
     $data = $request->all();
 
     $data['tenant_id'] = $tenant->id;
@@ -121,7 +123,7 @@ class CourseController extends Controller
     }
 
     $course = Course::create($data);
-    
+
     return response()->json($course, 200);
   }
 
@@ -147,7 +149,8 @@ class CourseController extends Controller
       ->allowedIncludes(
         'grade',
         'instructor',
-        'registrations','registrations.user',
+        'registrations',
+        'registrations.user',
         'subject',
         'status'
       )
@@ -165,7 +168,8 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function batch(StoreCourseBatch $request) {
+  public function batch(StoreCourseBatch $request)
+  {
     $syllabus = new Syllabus(Auth::user()->tenant()->first());
 
     $data = $syllabus->processCourses($request->data);
@@ -180,7 +184,8 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function generate($tenant_id, Request $request){
+  public function generate($tenant_id, Request $request)
+  {
     GenerateCourses::dispatch(Auth::user()->tenant()->first(), Curriculum::with('grade')->get());
 
     return response()->json(['message' => 'your request is being processed'], 200);
@@ -191,8 +196,9 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function not_registered(GetNotRegistered $request){
-    $students = Student::ofUnregistered($request->course_id)->paginate($request->paginate ?? config('edu.pagination')); 
+  public function not_registered(GetNotRegistered $request)
+  {
+    $students = Student::ofUnregistered($request->course_id)->paginate($request->paginate ?? config('edu.pagination'));
 
     return response()->json($students, 200);
   }
@@ -202,18 +208,20 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function course_statuses(){
-    return response()->json(CourseStatus::all(), 200);
+  public function course_statuses()
+  {
+    return response()->json(Course::Statuses, 200);
   }
 
   /**
-	 * Delete courses
-	 *
-	 * @return void
-	 */
-	public function delete(DeleteCourse $request){
-		Course::destroy($request->course_ids);
+   * Delete courses
+   *
+   * @return void
+   */
+  public function delete(DeleteCourse $request)
+  {
+    Course::destroy($request->course_ids);
 
-		return response()->json(true, 200);
-	}
+    return response()->json(true, 200);
+  }
 }

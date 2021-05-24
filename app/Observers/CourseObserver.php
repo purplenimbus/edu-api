@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Course;
-use App\CourseStatus;
 use App\SchoolTerm;
 use Illuminate\Support\Arr;
 
@@ -42,11 +41,7 @@ class CourseObserver
       $course->schema = config('edu.default.course_schema');	
     }
 
-    $courseStatus = CourseStatus::where('name', 'created')->first();
-
-    if ($courseStatus) {
-      $course->status_id = $courseStatus->id;
-    }
+    $course->status_id = Course::Statuses['created'];
   }
 
   /**
@@ -61,15 +56,11 @@ class CourseObserver
       $course->instructor->assignInstructor($course);	
     }
 
-    $courseStatus = Arr::get($course, "status.name", null);
-
-    if ($courseStatus == 'complete')
+    if ($course->status == 'complete')
     {
-      $courseStatus = CourseStatus::whereName('in progress')->first();
-
       $otherCourses = $course->where([	
         ['tenant_id', '=', $course->tenant->id],	
-        ['status_id', '=', $courseStatus->id],	
+        ['status_id', '=', Course::Statuses['in progress']],	
       ]);	
 
       if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
