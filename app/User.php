@@ -18,7 +18,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
   protected $guard_name = 'api';
 
-  const Statuses = [
+  const StatusTypes = [
     'created' => 1,
     'unenrolled' => 2,
     'registered' => 3,
@@ -212,7 +212,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   }
 
   public function getStatusAttribute() {
-    return array_flip(self::Statuses)[$this->status_id];
+    return array_flip(self::StatusTypes)[$this->status_id];
   }
 
   public static function boot() 

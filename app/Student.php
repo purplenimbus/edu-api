@@ -93,7 +93,7 @@ class Student extends User
     self::creating(function ($model) {
       $model->password = $model->createDefaultPassword();
 
-      $model->account_status_id = User::Statuses['unenrolled'];
+      $model->account_status_id = User::StatusTypes['unenrolled'];
     });
 
     self::created(function ($model) {

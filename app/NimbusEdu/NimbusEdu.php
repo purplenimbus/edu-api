@@ -201,7 +201,7 @@ class NimbusEdu
             'invoice_id' => $invoice->id
           ]);
   
-          $student->account_status_id = User::Statuses['registered'];
+          $student->account_status_id = User::StatusTypes['registered'];
   
           $student->save();
   

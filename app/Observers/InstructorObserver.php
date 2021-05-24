@@ -17,7 +17,7 @@ class InstructorObserver
   public function creating(Instructor $instructor){
     $instructor->password = $instructor->createDefaultPassword();
 
-    $instructor->account_status_id = User::Statuses['created'];
+    $instructor->account_status_id = User::StatusTypes['created'];
   }
   
   /**

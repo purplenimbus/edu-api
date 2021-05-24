@@ -128,6 +128,6 @@ class UserController extends Controller
 
   public function getAccountStatuses()
   {
-    return response()->json(User::Statuses, 200);
+    return response()->json(User::StatusTypes, 200);
   }
 }
