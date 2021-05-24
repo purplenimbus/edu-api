@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Course;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidCourseSchema;
+use Illuminate\Validation\Rule;
 
 class UpdateCourse extends FormRequest
 {
@@ -34,7 +36,7 @@ class UpdateCourse extends FormRequest
       'schema.*.score' => 'required|integer|max:100',
       'subject_id' => 'integer|exists:subjects,id',
       'schema' => new ValidCourseSchema(),
-      'status_id' => 'integer|exists:course_statuses,id',
+      'status_id' => ['integer', Rule::in(array_values(Course::Statuses))],
     ];
   }
 

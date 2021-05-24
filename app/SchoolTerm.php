@@ -55,7 +55,7 @@ class SchoolTerm extends Model
   }
 
   public function getStatusAttribute() {
-    return array_flip(SchoolTerm::Statuses)[$this->status_id];
+    return array_flip(self::Statuses)[$this->status_id];
   }
 
   public function getRegisteredStudentsCountAttribute() {

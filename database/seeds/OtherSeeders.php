@@ -72,18 +72,6 @@ class OtherSeeders extends Seeder
       App\TransactionStatus::create($transaction_status);
     }
 
-    $course_statuses = [
-      [ 'name' => 'created' ],
-      [ 'name' => 'in progress' ],
-      [ 'name' => 'complete' ],
-      [ 'name' => 'archived'  ],
-    ];
-    
-    //Create Course Statues
-    foreach($course_statuses as $course_status){
-      App\CourseStatus::create($course_status);
-    }
-
     $course_load_types = [
       [ 'name' => 'core' ],
       [ 'name' => 'elective'  ],

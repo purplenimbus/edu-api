@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Course;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GetCourses extends FormRequest
 {
@@ -28,7 +30,7 @@ class GetCourses extends FormRequest
       'student_grade_id' => 'integer|exists:student_grades,id',
       'instructor_id' => 'integer|exists:users,id',
       'name' => 'string',
-      'status_id' => 'integer|exists:course_statuses,id',
+      'status_id' => ['integer', Rule::in(array_values(Course::Statuses))],
     ];
   }
 }

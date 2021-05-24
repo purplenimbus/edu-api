@@ -2,22 +2,17 @@
 
 namespace App;
 
-use App\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Model;
-use Bouncer;
 use Illuminate\Support\Arr;
 
 class Course extends Model
 {
-  // /**
-  //  * The "booted" method of the model.
-  //  *
-  //  * @return void
-  //  */
-  // protected static function booted()
-  // {
-  //   static::addGlobalScope(new TenantScope);
-  // }
+  const Statuses = [
+    'created' => 1,
+    'in progress' => 2,
+    'complete' => 3,
+    'archived' => 4,
+  ];
 
   /**
    * The attributes that are mass assignable.
@@ -129,14 +124,8 @@ class Course extends Model
     return $this->hasMany('App\Registration');
   }
 
-  /**
-   * Get course status
-   *
-   * @var array
-   */
-  public function status()
-  {
-    return $this->belongsTo('App\CourseStatus');
+  public function getStatusAttribute() {
+    return array_flip(self::Statuses)[$this->status_id];
   }
 
   public function scopeOfStudentGrade($query, $student_grade_id)

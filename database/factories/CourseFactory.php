@@ -2,7 +2,6 @@
 
 use App\Course;
 use App\StudentGrade;
-use App\CourseStatus;
 use App\Instructor;
 use App\Student;
 use App\Subject;
@@ -15,7 +14,7 @@ $factory->define(App\Course::class, function (Faker $faker) {
     'description' => $faker->text(200),
     'instructor_id' => factory(Instructor::class),
     'name' => $faker->text(200),
-    'status_id' => factory(CourseStatus::class),
+    'status_id' => Course::Statuses['created'],
     'subject_id' => factory(Subject::class),
     'tenant_id' => factory(Tenant::class),
   ];
@@ -41,13 +40,6 @@ $factory->define(App\StudentGrade::class, function (Faker $faker) {
     'description' => $faker->text(200),
     'name' => $faker->text(50),
     'tenant_id' => factory(Tenant::class),
-  ];
-});
-
-$factory->define(App\CourseStatus::class, function (Faker $faker) {
-  return [
-    'description' => $faker->text(200),
-    'name' => $faker->text(50),
   ];
 });
 

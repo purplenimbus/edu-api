@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Course;
 use App\StudentGrade;
-use App\CourseStatus;
 use App\Nimbus\Institution;
 use App\Registration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -37,13 +36,11 @@ class RegistrationObserverTest extends TestCase
       ],
     ]);
 
-    $courseStatus = CourseStatus::whereName('in progress')->first();
-
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant_id,
       'student_grade_id' => $studentGrade->id,
     ]);
-    $course->update(['status_id'=> $courseStatus->id]);
+    $course->update(['status_id'=> Course::Statuses['in progress']]);
 
    $response =  $this->actingAs($this->user)
     ->postJson("api/v1/registrations/batch", [

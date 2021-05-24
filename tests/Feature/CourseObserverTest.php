@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Course;
 use App\StudentGrade;
-use App\CourseStatus;
 use App\Instructor;
 use App\Nimbus\Institution;
 use App\Registration;
@@ -78,7 +77,6 @@ class CourseObserverTest extends TestCase
 
     $subject = Subject::first();
     $studentGrade = StudentGrade::first();
-    $courseStatus = CourseStatus::whereName('created')->first();
 
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/courses", [
@@ -88,7 +86,7 @@ class CourseObserverTest extends TestCase
 
     $response->assertStatus(200)
       ->assertJson([
-        'status_id' => $courseStatus->id,
+        'status_id' => Course::Statuses['created'],
       ]);
   }
 
@@ -167,7 +165,7 @@ class CourseObserverTest extends TestCase
     $this->actingAs($this->user)
       ->putJson("api/v1/courses/{$course->id}", [
         'student_grade_id' => $studentGrade->id,
-        'status_id' => CourseStatus::whereName('complete')->first()->id,
+        'status_id' => Course::Statuses['complete'],
         'subject_id' => $subject->id,
       ]);
 
