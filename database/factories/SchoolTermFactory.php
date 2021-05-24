@@ -3,7 +3,6 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
 use App\SchoolTerm;
-use App\SchoolTermStatus;
 use App\SchoolTermType;
 use App\Tenant;
 use Carbon\Carbon;

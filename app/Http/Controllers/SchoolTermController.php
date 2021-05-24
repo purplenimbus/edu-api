@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTerm;
 use App\SchoolTerm;
-use App\SchoolTermStatus;
 use App\Jobs\CompleteTerm;
 use App\Http\Requests\GetTerm;
 use App\Http\Requests\UpdateTerm;

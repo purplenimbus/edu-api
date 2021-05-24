@@ -6,7 +6,6 @@ use App\Course;
 use App\Nimbus\Institution;
 use App\Registration;
 use App\SchoolTerm;
-use App\SchoolTermStatus;
 use App\SchoolTermType;
 use App\Student;
 use App\StudentGrade;
@@ -30,12 +29,11 @@ class SchoolTermTest extends TestCase
     $this->seed(DatabaseSeeder::class);
     $institution = new Institution();
     $schoolTerm = $institution->newSchoolTerm($this->user->tenant, 'first term');
-    $schoolTermStatus = factory(SchoolTermStatus::class)->create();
     $schoolTerm->update([
-      'status_id' => $schoolTermStatus->id,
+      'status_id' => SchoolTerm::Statuses['complete'],
     ]);
 
-    $this->assertEquals($schoolTermStatus->id, $schoolTerm->status->id);
+    $this->assertEquals('complete', $schoolTerm->status);
   }
 
   /**
@@ -87,7 +85,7 @@ class SchoolTermTest extends TestCase
    *
    * @return void
    */
-  public function testRegisteredStudents()
+  public function testRegisteredStudentsCount()
   {
     $this->seed(DatabaseSeeder::class);
     $institution = new Institution();
@@ -116,7 +114,7 @@ class SchoolTermTest extends TestCase
     $this->registerStudent($schoolTerm, $student1, $course1);
     $this->registerStudent($schoolTerm, $student2, $course2);
 
-    $this->assertEquals(2, $schoolTerm->students()->count());
+    $this->assertEquals(2, $schoolTerm->registered_students_count);
   }
 
   /**
@@ -124,7 +122,7 @@ class SchoolTermTest extends TestCase
    *
    * @return void
    */
-  public function testRegisteredInstructors()
+  public function testAssignedInstructorsCount()
   {
     $this->seed(DatabaseSeeder::class);
     $institution = new Institution();
@@ -155,24 +153,26 @@ class SchoolTermTest extends TestCase
     $course1 = factory(Course::class)->create([
       'instructor_id' => $instructor1,
       'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm1->id,
       'student_grade_id' => $studentGrade->id,
     ]);
     $course2 = factory(Course::class)->create([
       'instructor_id' => $instructor2,
       'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm1->id,
       'student_grade_id' => $studentGrade->id,
     ]);
     $course3 = factory(Course::class)->create([
       'instructor_id' => $instructor3,
       'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm2->id,
       'student_grade_id' => $studentGrade->id,
     ]);
     $this->registerStudent($schoolTerm1, $student1, $course1);
     $this->registerStudent($schoolTerm1, $student2, $course2);
     $this->registerStudent($schoolTerm2, $student2, $course3);
-
-    $this->assertEquals(2, $schoolTerm1->instructors()->count());
-    $this->assertEquals(1, $schoolTerm2->instructors()->count());
+    $this->assertEquals(2, $schoolTerm1->assigned_instructors_count);
+    $this->assertEquals(1, $schoolTerm2->assigned_instructors_count);
   }
 
   private function registerStudent(SchoolTerm $schoolTerm, Student $student, Course $course) {
