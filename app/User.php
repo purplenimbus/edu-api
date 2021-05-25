@@ -212,7 +212,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   }
 
   public function getStatusAttribute() {
-    return array_flip(self::StatusTypes)[$this->status_id];
+    return $this->account_status_id ? array_flip(self::StatusTypes)[$this->account_status_id] : null;
   }
 
   public static function boot() 

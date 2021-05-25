@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +26,7 @@ class GetUsers extends FormRequest
   public function rules()
   {
     return [
-      'account_status_id' => 'exists:status_types,id|integer',
+      'account_status_id' => ['integer', Rule::in(array_values(User::StatusTypes))],
       'student_grade_id' => 'exists:student_grades,id|integer',
       'user_type' => Rule::in([
         'admin',

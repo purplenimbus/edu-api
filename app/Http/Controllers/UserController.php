@@ -8,8 +8,8 @@ use App\Http\Requests\GetUser as GetUser;
 use App\Http\Requests\GetUsers as GetUsers;
 use App\Http\Requests\StoreUser as StoreUser;
 use App\Http\Requests\StoreBatch as StoreBatch;
+use App\Http\Requests\UpdateUser;
 use App\Jobs\ProcessBatch;
-use App\Nimbus\NimbusEdu;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\Builder as Builder;
@@ -19,8 +19,6 @@ class UserController extends Controller
   public function index(GetUsers $request)
   {
     $tenant = Auth::user()->tenant()->first();
-
-    $nimbus_edu = new NimbusEdu($tenant);
 
     $users = QueryBuilder::for(User::class)
       ->defaultSort('firstname')
@@ -46,23 +44,17 @@ class UserController extends Controller
             $query->whereNotNull('image') :
             $query->whereNull('image');
         }),
-        AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
-          $query->where(
-            'meta->student_grade_id',
-            '=',
-            (int)$value
-          );
-        }),
-        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
+        AllowedFilter::callback('account_status', function (Builder $query, $value) {
           $query->where(
             'account_status_id',
             '=',
-            (int)$nimbus_edu->getStatusID($value)->id
+            User::StatusTypes[array_flip(User::StatusTypes)[$value]]
           );
         }),
       ])
       ->allowedAppends([
-        'type'
+        'type',
+        'status'
       ])
       ->allowedFields([
         'address',
@@ -76,9 +68,6 @@ class UserController extends Controller
         'image',
         'ref_id'
       ])
-      ->allowedIncludes(
-        'status'
-      )
       ->where([
         ['tenant_id', '=', $tenant->id]
       ])
@@ -87,34 +76,67 @@ class UserController extends Controller
     return response()->json($users, 200);
   }
 
-  public function getUser(GetUser $request)
+  public function show(GetUser $request)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
-    $query = [
-      ['tenant_id', '=', $tenant_id],
-      ['id', '=', $request->user_id]
-    ];
-
-    if ($request->has('email')) {
-      array_push($query, ['email', '=', $request->email]);
-    }
-
-    $user = User::with(['status:name,id'])
-      ->where($query)->first();
+    $user = QueryBuilder::for(User::class)
+      ->allowedAppends([
+        'type',
+        'status'
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id'
+      ])
+      ->where('id', $request->id)
+      ->first();
 
     return response()->json($user, 200);
   }
 
-  public function saveUser(StoreUser $request)
+  public function update(UpdateUser $request)
   {
-    $user = Auth::user();
+    $user = QueryBuilder::for(User::class)
+      ->allowedAppends([
+        'type',
+        'status'
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'password',
+        'image',
+        'ref_id'
+      ])
+      ->where('id', $request->id)
+      ->first();
 
-    $user->fill($request->all());
+    $user->update($request->all());
 
-    $user->save();
+    return response()->json($user, 200);
+  }
 
-    $user->load(['status:name,id']);
+  public function create(StoreUser $request)
+  {
+    $tenant = Auth::user()->tenant()->first();
+
+    $request->merge([
+      'tenant_id' => $tenant->id,
+    ]);
+
+    $user = User::create($request->all());
 
     return response()->json($user, 200);
   }

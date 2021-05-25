@@ -47,7 +47,7 @@ class CourseController extends Controller
           return $query->where('instructor_id', '=', (int)$value);
         }),
         AllowedFilter::callback('status', function (Builder $query, $value) {
-          return $query->where('status_id', '=', Course::Statuses[$value]);
+          return $query->where('status_id', '=', Course::Statuses[array_flip(Course::Statuses)[$value]]);
         }),
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
           return $query->where('status_id', '=', (int)$value);

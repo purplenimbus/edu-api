@@ -153,10 +153,21 @@ Route::group([
     });
 
     /* Users */
-    Route::get('/users', 'UserController@index')->middleware('can:view-users');
-    Route::get('/user', 'UserController@getUser');
-    Route::post('/users/batch', 'UserController@batchUpdate');
-    Route::post('/user', 'UserController@saveUser');
+    Route::group([
+      'prefix' => '/users',
+      'middleware' => ['can:view-users'],
+    ], function() {
+      Route::get('/', 'UserController@index');
+      Route::post('/', 'UserController@create');
+      Route::post('/batch', 'UserController@batchUpdate');
+      
+      Route::group([
+        'prefix' => '/{id}'
+      ], function() {
+        Route::get('/', 'UserController@show');
+        Route::put('/', 'UserController@update');
+      });
+    });
 
     /* Instructors */
     Route::group([

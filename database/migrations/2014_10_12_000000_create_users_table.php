@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -26,7 +27,7 @@ class CreateUsersTable extends Migration
       $table->string('image')->nullable();
       $table->json('meta')->nullable();
       $table->json('address')->nullable();
-      $table->integer('account_status_id')->default(1);
+      $table->integer('account_status_id')->default(User::StatusTypes['created']);
       $table->string('ref_id')->nullable();
       $table->dateTime('email_verified_at')->nullable();
       $table->rememberToken();
