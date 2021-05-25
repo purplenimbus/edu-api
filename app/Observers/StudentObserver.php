@@ -28,7 +28,7 @@ class StudentObserver
     $user = User::find($student->id);
     $user->assign('student');//Assign user model a role to return roles and permissions for JWT Claims
     $student->assign('student');
-    //New to do this after the model is created so a user id is available to use in the student id
+
     if (is_null($student->ref_id)) {
       $student->ref_id = $student->generateStudentId();
       $student->save();
