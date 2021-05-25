@@ -13,7 +13,6 @@ use App\StudentGrade;
 use App\Registration;
 use App\CurriculumType;
 use App\UserType;
-use App\StatusType;
 use App\Invoice;
 use App\Guardian;
 use App\Notifications\ActivateUser;
@@ -178,12 +177,6 @@ class NimbusEdu
     CurriculumType::where(['country' => $this->tenant->country])->first();
   }
 
-  public function getStatusID($name,$new = false){
-    return  $new ? 
-    StatusType::firstOrCreate(['name' => $name]) : 
-    StatusType::where(['name' => $name])->first();
-  }
-
   public function enrollCoreCourses(Student $student, $student_grade_id){
     try{
       var_dump('Attempting to enroll student: '.$student->id);
@@ -208,7 +201,7 @@ class NimbusEdu
             'invoice_id' => $invoice->id
           ]);
   
-          $student->account_status_id = $this->getStatusID('registered')->id;
+          $student->account_status_id = User::StatusTypes['registered'];
   
           $student->save();
   

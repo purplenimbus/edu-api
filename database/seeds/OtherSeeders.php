@@ -33,20 +33,6 @@ class OtherSeeders extends Seeder
       App\CurriculumType::create($curricula_type);
     }
 
-    $account_status_types = [
-      [ 'name' => 'created' ],
-      [ 'name' => 'unenrolled'  ],
-      [ 'name' => 'registered'  ],
-      [ 'name' => 'assigned'  ],
-      [ 'name' => 'terminated'  ],
-      [ 'name' => 'archived'  ],
-    ];
-    
-    //Create Account Status Types
-    foreach($account_status_types as $account_status_type){
-      App\StatusType::create($account_status_type);
-    }
-
     $invoice_status_types = [
       [ 'name' => 'pending' ],
       [ 'name' => 'past_due' ],

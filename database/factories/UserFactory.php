@@ -29,7 +29,6 @@ $factory->define(User::class, function (Faker $faker) {
     'email' => $faker->email,
     'password' => '123456',
     'tenant_id' => factory(Tenant::class),
-		//'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
   ];
 });
 

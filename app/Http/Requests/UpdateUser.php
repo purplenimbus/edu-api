@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetUser extends FormRequest
+class UpdateUser extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -23,10 +23,12 @@ class GetUser extends FormRequest
    */
   public function rules()
   {
-    return [
-      'email' => 'email|exists:users,email',
+    $validation = new StoreUser();
+  
+    return array_merge($validation->rules(), [
+      'email'  => 'email',
       'id' => 'required|integer|exists:users,id',
-    ];
+    ]);
   }
 
   public function validationData() {

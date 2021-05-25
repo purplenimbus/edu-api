@@ -3,14 +3,10 @@
 namespace App;
 
 use App\User;
-use App\StatusType;
 use App\StudentGrade;
 use App\Registration;
 use App\SchoolTerm;
-use App\Scopes\TenantScope;
-use App\UserGroup;
 use App\UserGroupMember;
-use Bouncer;
 use Illuminate\Support\Arr;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -86,35 +82,6 @@ class Student extends User
     ])
     ->whereTenantId($this->tenant->id)
     ->get();
-  }
-
-  /**
-   *  Setup model event hooks
-  */
-  public static function boot()
-  {
-    parent::boot();
-    self::creating(function ($model) {
-      $model->password = $model->createDefaultPassword();
-
-      $status_type = StatusType::where('name', 'unenrolled')->first();
-
-      if (!is_null($status_type)) {
-        $model->account_status_id = $status_type->id;
-      }
-    });
-
-    self::created(function ($model) {
-      $user = User::find($model->id);
-      $user->assign('student');//Assign user model a role to return roles and permissions for JWT Claims
-      $model->assign('student');
-
-      if (is_null($model->ref_id)) {
-        $model->ref_id = $model->generateStudentId();
-
-        $model->save();
-      }
-    });
   }
 
   public function scopeOfStudentGrade($query, $student_grade_id)

@@ -15,7 +15,11 @@ use App\Observers\TenantObserver;
 use App\Tenant;
 use App\Registration;
 use App\Observers\RegistrationObserver;
+use App\Observers\StudentObserver;
+use App\Observers\UserObserver;
 use App\PaymentProfile;
+use App\Student;
+use App\User;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -41,12 +45,14 @@ class EventServiceProvider extends ServiceProvider
   {
     parent::boot();
 
+    BankAccount::observe(BankAccountObserver::class);
     Course::observe(CourseObserver::class);
     Guardian::observe(GuardianObserver::class);
-    BankAccount::observe(BankAccountObserver::class);
     Instructor::observe(InstructorObserver::class);
-    Tenant::observe(TenantObserver::class);
-    Registration::observe(RegistrationObserver::class);
     PaymentProfile::observe(PaymentProfileObserver::class);
+    Registration::observe(RegistrationObserver::class);
+    Student::observe(StudentObserver::class);
+    Tenant::observe(TenantObserver::class);
+    User::observe(UserObserver::class);
   }
 }

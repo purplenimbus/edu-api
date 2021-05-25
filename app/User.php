@@ -18,6 +18,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
   protected $guard_name = 'api';
 
+  const StatusTypes = [
+    'created' => 1,
+    'unenrolled' => 2,
+    'registered' => 3,
+    'assigned' => 4,
+    'terminated' => 5,
+    'archived' => 6,
+  ];
+
   /**
    * The attributes that should be mutated to dates.
    *
@@ -59,7 +68,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     'created_at',
     'updated_at',
     'remember_token',
-    'account_status_id',
     'meta'
   ];
 
@@ -202,8 +210,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     return $this->belongsTo('App\Tenant');
   }
 
-  function status(){
-    return $this->belongsTo('App\StatusType','account_status_id');
+  public function getStatusAttribute() {
+    return $this->account_status_id ? array_flip(self::StatusTypes)[$this->account_status_id] : null;
   }
 
   public static function boot() 
