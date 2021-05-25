@@ -84,31 +84,6 @@ class Student extends User
     ->get();
   }
 
-  /**
-   *  Setup model event hooks
-  */
-  public static function boot()
-  {
-    parent::boot();
-    self::creating(function ($model) {
-      $model->password = $model->createDefaultPassword();
-
-      $model->account_status_id = User::StatusTypes['unenrolled'];
-    });
-
-    self::created(function ($model) {
-      $user = User::find($model->id);
-      $user->assign('student');//Assign user model a role to return roles and permissions for JWT Claims
-      $model->assign('student');
-
-      if (is_null($model->ref_id)) {
-        $model->ref_id = $model->generateStudentId();
-
-        $model->save();
-      }
-    });
-  }
-
   public function scopeOfStudentGrade($query, $student_grade_id)
   {
     return $query->where('meta->student_grade_id', $student_grade_id);

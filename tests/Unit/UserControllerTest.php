@@ -174,10 +174,14 @@ class UserControllerTest extends TestCase
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
+    $user1->update([
+      'account_status_id' => User::StatusTypes['archived'],
+    ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
       'tenant_id' => $tenant2,
     ]);
+
     $response = $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[account_status]={$user1->account_status_id}");
 

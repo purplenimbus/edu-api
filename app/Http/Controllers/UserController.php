@@ -48,7 +48,7 @@ class UserController extends Controller
           $query->where(
             'account_status_id',
             '=',
-            User::StatusTypes[array_flip(User::StatusTypes)[$value]]
+            $value
           );
         }),
       ])

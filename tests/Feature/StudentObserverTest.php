@@ -30,8 +30,7 @@ class StudentObserverTest extends TestCase
       'student_grade_id' => StudentGrade::first()->id,
     ]);
 
-    $this
-      ->actingAs($this->user)
+    $this->actingAs($this->user)
       ->postJson('api/v1/students', $person->only([
         'student_grade_id',
         'date_of_birth',
@@ -44,11 +43,11 @@ class StudentObserverTest extends TestCase
   }
 
   /**
-   * Test the default password
+   * Test the default student id
    *
    * @return void
    */
-  public function testSetsStudentId()
+  public function testSetsDefaultStudentIdIfNotPresent()
   {
     $this->seed(DatabaseSeeder::class);
 
@@ -73,6 +72,40 @@ class StudentObserverTest extends TestCase
     $year = Carbon::now()->year;
 
     $this->assertEquals("{$year}00{$student->id}", $student->ref_id);
+  }
+
+  /**
+   * Test the custom student id
+   *
+   * @return void
+   */
+  public function testSetsCustomStudentId()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $this->user->tenant->setOwner($this->user);
+
+    $person = factory(Student::class)->make([
+      'date_of_birth' => Carbon::now()->toIso8601String(),
+      'ref_id' => '111111',
+      'student_grade_id' => StudentGrade::first()->id,
+    ]);
+
+    $this->actingAs($this->user)
+      ->postJson('api/v1/students', $person->only([
+        'student_grade_id',
+        'date_of_birth',
+        'email',
+        'firstname',
+        'lastname',
+        'ref_id'
+      ]));
+
+    $student = Student::first();
+
+    $year = Carbon::now()->year;
+
+    $this->assertEquals("111111", $student->ref_id);
   }
 
   /**
