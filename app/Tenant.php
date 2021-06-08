@@ -47,7 +47,8 @@ class Tenant extends Model
    * @var array
    */
   protected $appends = [
-    'email'
+    'email',
+    'owner',
   ];
 
   /**
@@ -61,11 +62,9 @@ class Tenant extends Model
 
   public function getCurrentTermAttribute()
   {
-    return SchoolTerm::where([
-      'tenant_id' => $this->id,
-      'status_id' => SchoolTerm::Statuses['in progress'],
-    ])
-    ->first();
+    return SchoolTerm::ofTenant($this->id)
+      ->whereCurrentTerm(true)
+      ->first();
   }
 
   public function getOwnerAttribute()
@@ -77,7 +76,7 @@ class Tenant extends Model
 
   public function getPaymentDetailsAttribute()
   {
-    return $this->defaultBankAccount();
+    return $this->default_bank_account;
   }
 
   public function getEmailAttribute()
@@ -94,7 +93,7 @@ class Tenant extends Model
     $user->assign('admin');
   }
 
-  public function defaultBankAccount()
+  public function getDefaultBankAccountAttribute()
   {
     return BankAccount::where([
       'tenant_id' => $this->id,
@@ -173,7 +172,7 @@ class Tenant extends Model
         return $this->getAsPayStackAccount();
       }
 
-      $bank_account = $this->defaultBankAccount();
+      $bank_account = $this->default_bank_account;
 
       if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
         request()->merge($this->getPaystackPayload()); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
@@ -202,7 +201,7 @@ class Tenant extends Model
     }
 
     try {
-      $bank_account = $this->defaultBankAccount();
+      $bank_account = $this->default_bank_account;
 
       if ($bank_account && $bank_account->account_number && $bank_account->bank_code) {
         request()->merge($this->getPaystackPayload($options)); // required cause Paystack uses the request object https://github.com/unicodeveloper/laravel-paystack/blob/a6e8c790b16a947e5d2369ad77d2082e892c326b/src/Paystack.php#L631
@@ -232,7 +231,7 @@ class Tenant extends Model
 
   private function getPaystackPayload(array $options = [])
   {
-    $bank_account = $this->defaultBankAccount();
+    $bank_account = $this->default_bank_account;
 
     $payload = array_merge([
       'account_number' => strval($bank_account->account_number),
@@ -253,7 +252,7 @@ class Tenant extends Model
   }
 
   public function getHasBankAccountAttribute(){
-    return ($this->defaultBankAccount() ? true : false);
+    return ($this->default_bank_account ? true : false);
   }
 
   public function bank_accounts()
