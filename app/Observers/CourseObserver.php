@@ -55,20 +55,6 @@ class CourseObserver
     if (request()->has('instructor_id') && $course->wasChanged('instructor_id') && isset($course->instructor_id)) {	
       $course->instructor->assignInstructor($course);	
     }
-
-    if ($course->status == 'complete')
-    {
-      $otherCourses = $course->where([	
-        ['tenant_id', '=', $course->tenant->id],	
-        ['status_id', '=', Course::Statuses['in progress']],	
-      ]);	
-
-      if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
-        $course->tenant->current_term->update([
-          'status_id'=> SchoolTerm::Statuses['complete'],
-        ]);	
-      }	
-    }
   }
 
   /**
