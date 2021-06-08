@@ -57,6 +57,7 @@ class InstructorController extends Controller
         }),
       ])
       ->allowedAppends([
+        'status',
         'type'
       ])
       ->allowedFields([
@@ -71,9 +72,6 @@ class InstructorController extends Controller
         'image',
         'ref_id'
       ])
-      ->allowedIncludes(
-        'status'
-      )
       ->where([
         ['tenant_id', '=', $tenant->id]
       ]);
@@ -110,8 +108,6 @@ class InstructorController extends Controller
     $nimbus_edu = new NimbusEdu($tenant);
 
     $student = $nimbus_edu->create_instructor($request);
-
-    $student->load(['status:id,name']);
 
     return response()->json($student, 200);
   }

@@ -78,7 +78,7 @@ class CourseController extends Controller
         'registrations.user',
         'subject'
       )
-      ->allowedAppend(
+      ->allowedAppends(
         'status'
       )
       ->where([
@@ -139,6 +139,9 @@ class CourseController extends Controller
     $tenant_id = Auth::user()->tenant()->first()->id;
 
     $course = QueryBuilder::for(Course::class)
+      ->allowedAppends(
+        'status'
+      )
       ->allowedFields([
         'registrations',
         'registrations.user',
@@ -151,8 +154,7 @@ class CourseController extends Controller
         'instructor',
         'registrations',
         'registrations.user',
-        'subject',
-        'status'
+        'subject'
       )
       ->where([
         ['tenant_id', '=', $tenant_id],

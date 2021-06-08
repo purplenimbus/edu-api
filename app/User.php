@@ -91,6 +91,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
   protected $appends = [
     'fullname',
     'type',
+    'status'
   ];
 
 	/**

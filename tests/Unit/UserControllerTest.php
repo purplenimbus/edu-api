@@ -21,10 +21,12 @@ class UserControllerTest extends TestCase
   public function testGetUsers()
   {
     $user1 = factory(User::class)->create([
+      'firstname' => 'james',
       'tenant_id' => $this->user->tenant->id,
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
+      'firstname' => 'anthony',
       'tenant_id' => $tenant2,
     ]);
     $response = $this->actingAs($this->user)
@@ -34,12 +36,12 @@ class UserControllerTest extends TestCase
       ->assertJson([
         "data" => [
           [
-            "id" => $this->user->id,
-            "firstname" => $this->user->firstname,
-          ],
-          [
             "id" => $user1->id,
             "firstname" => $user1->firstname,
+          ],
+          [
+            "id" => $this->user->id,
+            "firstname" => $this->user->firstname,
           ],
         ],
       ]);
@@ -115,10 +117,11 @@ class UserControllerTest extends TestCase
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
       'tenant_id' => $tenant2,
+      'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
     ]);
     $response = $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[has_image]=false");
-
+    
     $response->assertStatus(200)
       ->assertJson([
         "data" => [
