@@ -65,6 +65,10 @@ class Course extends Model
     'tenant_id'
   ];
 
+  protected $appends = [
+    'status'
+  ];
+
   /**
    * Get tenant
    *

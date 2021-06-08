@@ -44,19 +44,16 @@ class CourseController extends Controller
       ->allowedFilters([
         'name',
         AllowedFilter::callback('instructor_id', function (Builder $query, $value) {
-          return $query->where('instructor_id', '=', (int)$value);
+          return $query->whereInstructorId((int)$value);
         }),
         AllowedFilter::callback('status', function (Builder $query, $value) {
-          return $query->where('status_id', '=', Course::Statuses[$value]);
+          return $query->whereStatusId(Course::Statuses[$value]);
         }),
         AllowedFilter::callback('status_id', function (Builder $query, $value) {
           return $query->where('status_id', '=', (int)$value);
         }),
         AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
           return $query->where('student_grade_id', '=', (int)$value);
-        }),
-        AllowedFilter::callback('course_id', function (Builder $query, $value) {
-          return $query->where('id', '=', (int)$value);
         }),
         AllowedFilter::callback('has_instructor', function (Builder $query, $value) {
           return $value ?

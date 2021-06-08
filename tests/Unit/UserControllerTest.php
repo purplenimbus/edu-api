@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Student;
 use App\Tenant;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
