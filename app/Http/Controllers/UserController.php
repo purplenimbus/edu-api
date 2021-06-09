@@ -18,8 +18,6 @@ class UserController extends Controller
 {
   public function index(GetUsers $request)
   {
-    $tenant = Auth::user()->tenant()->first();
-
     $users = QueryBuilder::for(User::class)
       ->defaultSort('firstname')
       ->allowedSorts(
@@ -67,9 +65,6 @@ class UserController extends Controller
         'password',
         'image',
         'ref_id'
-      ])
-      ->where([
-        ['tenant_id', '=', $tenant->id]
       ])
       ->paginate($request->paginate ?? config('edu.pagination'));
 
@@ -130,12 +125,6 @@ class UserController extends Controller
 
   public function create(StoreUser $request)
   {
-    $tenant = Auth::user()->tenant()->first();
-
-    $request->merge([
-      'tenant_id' => $tenant->id,
-    ]);
-
     $user = User::create($request->all());
 
     return response()->json($user, 200);

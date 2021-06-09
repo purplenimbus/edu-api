@@ -19,29 +19,26 @@ class UserControllerTest extends TestCase
    */
   public function testGetUsers()
   {
+    $this->user->update(['first_name' => 'anthony']);
     $user1 = factory(User::class)->create([
       'firstname' => 'james',
-      'tenant_id' => $this->user->tenant->id,
+      'tenant_id' => $this->user->tenant_id,
     ]);
     $tenant2 = factory(Tenant::class)->create();
-    factory(User::class)->create([
-      'firstname' => 'anthony',
-      'tenant_id' => $tenant2,
+    $user2 = factory(User::class)->create([
+      'firstname' => 'benjamin',
+      'tenant_id' => $tenant2->id,
     ]);
+    // dd($this->user->toArray(), $user1->toArray(), $user2->toArray());
     $response = $this->actingAs($this->user)
       ->getJson('api/v1/users');
-
+    dd($response->content());
     $response->assertStatus(200)
       ->assertJson([
         "data" => [
-          [
-            "id" => $user1->id,
-            "firstname" => $user1->firstname,
-          ],
-          [
-            "id" => $this->user->id,
-            "firstname" => $this->user->firstname,
-          ],
+          $this->user->only(['id', 'firstname']),
+          $user2->only(['id', 'firstname']),
+          $user1->only(['id', 'firstname']),
         ],
       ]);
   }
@@ -58,7 +55,7 @@ class UserControllerTest extends TestCase
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2,
+      'tenant_id' => $tenant2->id,
     ]);
     $response = $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[firstname]={$user1->firstname}");
@@ -111,11 +108,13 @@ class UserControllerTest extends TestCase
   public function testFilterUsersWithoutImage()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      'first_name' => 'james',
+      'tenant_id' => $this->user->tenant_id,
     ]);
+    $this->user->update(['first_name' => 'anthony']);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2,
+      'tenant_id' => $tenant2->id,
       'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
     ]);
     $response = $this->actingAs($this->user)
@@ -181,7 +180,7 @@ class UserControllerTest extends TestCase
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2,
+      'tenant_id' => $tenant2->id,
     ]);
 
     $response = $this->actingAs($this->user)

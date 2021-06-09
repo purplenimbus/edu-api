@@ -20,6 +20,7 @@ class Institution
     $typeId = SchoolTermType::whereName($termName)->first()->id;
 
     $data = array_merge([
+      'current_term' => true,
       'end_date' => $this->getSchoolTerm($termName)["end_date"],
       'name' => $termName,
       'status_id' => SchoolTerm::Statuses['in progress'],

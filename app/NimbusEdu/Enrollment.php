@@ -34,7 +34,7 @@ class Enrollment
       'tenant_id' => $this->tenant->id ,
       'user_id' => $student->id,
       'course_id' => $course_id,
-      'term_id' => $school_term->id,
+      'term_id' => is_null($school_term->id) ? null : $school_term->id,
     ]);
 
     return $registration;

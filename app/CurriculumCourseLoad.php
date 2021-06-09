@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class CurriculumCourseLoad extends Model
 {
@@ -43,11 +44,9 @@ class CurriculumCourseLoad extends Model
 
   public function getHasCourseAttribute()
   {
-    return Course::where([
-      //['tenant_id', $this->tenant_id], // need to scope to tenant?
-      ['student_grade_id', $this->curriculum->grade->id],
-      ['subject_id', $this->subject->id],
-    ])->first() ? true : false;
+    return Course::whereSubjectId($this->subject->id)
+      ->ofStudentGrade($this->curriculum->grade->id)
+      ->first() ? true : false;
   }
 
   public function scopeOfTenant($query, $tenant_id)

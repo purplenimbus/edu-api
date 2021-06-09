@@ -28,6 +28,10 @@ class Syllabus
     foreach($coursesData as $courseData) {
       $courseData["tenant_id"] = $this->tenant->id;
 
+      if ($this->tenant->current_term) {
+        $courseData["term_id"] = $this->tenant->current_term->id;
+      }
+
       $course = Course::firstOrNew($courseData);
 
       if (is_null($course->id)) {
