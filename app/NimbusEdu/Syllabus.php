@@ -30,13 +30,13 @@ class Syllabus
 
       $course = Course::firstOrNew($courseData);
 
-      if ($course->id) {
-        $this->payload['updated'][] = $course;
+      if (is_null($course->id)) {
+        $course->save();
+        $this->payload['created'][] = $course->toArray();
       } else {
-        $this->payload['created'][] = $course;
+        $course->save();
+        $this->payload['updated'][] = $course->toArray();
       }
-
-      $course->save();
     }
 
     return $this->payload;

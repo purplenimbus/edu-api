@@ -27,8 +27,6 @@ class StoreCourse extends FormRequest
   public function rules()
   {
     return [
-      'status' => ['integer', Rule::in(array_values(array_flip(Course::Statuses)))],
-      'status_id' => ['integer', Rule::in(array_values(Course::Statuses))],
       'student_grade_id' => [
         'required',
         'integer',

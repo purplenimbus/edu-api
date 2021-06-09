@@ -9,7 +9,7 @@ use App\Curriculum;
 use App\Http\Requests\GetCourse;
 use App\Http\Requests\GetCourses;
 use App\Http\Requests\StoreCourse;
-use App\Http\Requests\StoreCourseBatch;
+use App\Http\Requests\StoreBatchCourses;
 use App\Http\Requests\UpdateCourse;
 use App\Http\Requests\StoreBatch;
 use App\Jobs\ProcessBatch;
@@ -134,7 +134,6 @@ class CourseController extends Controller
   public function show(GetCourse $request)
   {
     $tenant_id = Auth::user()->tenant()->first()->id;
-
     $course = QueryBuilder::for(Course::class)
       ->allowedAppends(
         'status'
@@ -153,10 +152,8 @@ class CourseController extends Controller
         'registrations.user',
         'subject'
       )
-      ->where([
-        ['tenant_id', '=', $tenant_id],
-        ['id', '=', $request->id],
-      ])
+      ->whereTenantId($tenant_id)
+      ->whereId($request->id)
       ->first();
 
     return response()->json($course, 200);
@@ -167,15 +164,13 @@ class CourseController extends Controller
    *
    * @return void
    */
-  public function batch(StoreCourseBatch $request)
+  public function batch(StoreBatchCourses $request)
   {
     $syllabus = new Syllabus(Auth::user()->tenant()->first());
 
     $data = $syllabus->processCourses($request->data);
 
-    var_dump($data);
-
-    //return response()->json(['message' => 'your request is being processed'], 200);
+    return response()->json($data, 200);
   }
 
   /**

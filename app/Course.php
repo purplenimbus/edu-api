@@ -62,7 +62,6 @@ class Course extends Model
    * @var array
    */
   protected $hidden = [
-    'tenant_id'
   ];
 
   protected $appends = [
