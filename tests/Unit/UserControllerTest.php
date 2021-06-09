@@ -19,7 +19,7 @@ class UserControllerTest extends TestCase
    */
   public function testGetUsers()
   {
-    $this->user->update(['first_name' => 'anthony']);
+    $this->user->update(['firstname' => 'anthony']);
     $user1 = factory(User::class)->create([
       'firstname' => 'james',
       'tenant_id' => $this->user->tenant_id,
@@ -29,11 +29,10 @@ class UserControllerTest extends TestCase
       'firstname' => 'benjamin',
       'tenant_id' => $tenant2->id,
     ]);
-    // dd($this->user->toArray(), $user1->toArray(), $user2->toArray());
-    $response = $this->actingAs($this->user)
-      ->getJson('api/v1/users');
-    dd($response->content());
-    $response->assertStatus(200)
+
+    $this->actingAs($this->user)
+      ->getJson('api/v1/users')
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           $this->user->only(['id', 'firstname']),
@@ -57,10 +56,10 @@ class UserControllerTest extends TestCase
     factory(User::class)->create([
       'tenant_id' => $tenant2->id,
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users?filter[firstname]={$user1->firstname}");
-
-    $response->assertStatus(200)
+    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users?filter[firstname]={$user1->firstname}")
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           [
@@ -85,10 +84,10 @@ class UserControllerTest extends TestCase
     factory(User::class)->create([
       'tenant_id' => $tenant2,
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users?filter[lastname]={$user1->lastname}");
-
-    $response->assertStatus(200)
+    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users?filter[lastname]={$user1->lastname}")
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           [
@@ -108,19 +107,19 @@ class UserControllerTest extends TestCase
   public function testFilterUsersWithoutImage()
   {
     $user1 = factory(User::class)->create([
-      'first_name' => 'james',
+      'firstname' => 'james',
       'tenant_id' => $this->user->tenant_id,
     ]);
-    $this->user->update(['first_name' => 'anthony']);
+    $this->user->update(['firstname' => 'anthony']);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
       'tenant_id' => $tenant2->id,
       'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users?filter[has_image]=false");
     
-    $response->assertStatus(200)
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users?filter[has_image]=false")
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           [
@@ -150,10 +149,10 @@ class UserControllerTest extends TestCase
     factory(User::class)->create([
       'tenant_id' => $tenant2,
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users?filter[has_image]=true");
-
-    $response->assertStatus(200)
+    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users?filter[has_image]=true")
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           [
@@ -183,10 +182,9 @@ class UserControllerTest extends TestCase
       'tenant_id' => $tenant2->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users?filter[account_status]={$user1->account_status_id}");
-
-    $response->assertStatus(200)
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users?filter[account_status]={$user1->account_status_id}")
+      ->assertStatus(200)
       ->assertJson([
         "data" => [
           [
@@ -207,10 +205,10 @@ class UserControllerTest extends TestCase
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/users/{$user1->id}");
-
-    $response->assertStatus(200)
+    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users/{$user1->id}")
+      ->assertStatus(200)
       ->assertJson([
         "id" => $user1->id,
         "firstname" => $user1->firstname,
@@ -227,13 +225,13 @@ class UserControllerTest extends TestCase
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
-    $response = $this->actingAs($this->user)
+
+    $this->actingAs($this->user)
       ->putJson("api/v1/users/{$user1->id}", [
         'firstname' => 'melinda',
         'lastname' => 'epifano',
-      ]);
-
-    $response->assertStatus(200)
+      ])
+      ->assertStatus(200)
       ->assertJson([
         "id" => $user1->id,
         "firstname" => 'melinda',
@@ -262,16 +260,17 @@ class UserControllerTest extends TestCase
       ->postJson(
         "api/v1/users/",
         $data->only([
+          'address',
           'email',
           'firstname',
           'lastname',
-          'address'
+          'tenant_id',
         ])
-      );
+      )->assertStatus(200);
     
     $user = User::all()->last();
 
-    $response->assertStatus(200)
+    $response
       ->assertJson([
         "id" => $user->id,
         "firstname" => $user->firstname,

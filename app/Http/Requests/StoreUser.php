@@ -36,7 +36,7 @@ class StoreUser extends FormRequest
       'address.country' => 'string|required_with:address.street',
       'address.state' => 'string|required_with:address.street',
       'address.phone_number' => 'string',
-      'tenant_id' => 'exists:tenants,id',
+      'tenant_id' => 'integer|exists:tenants,id',
     ];
   }
 }
