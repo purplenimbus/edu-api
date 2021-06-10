@@ -15,12 +15,16 @@ use App\CurriculumType;
 use App\UserType;
 use App\Invoice;
 use App\Guardian;
+use App\NimbusEdu\Helpers\CourseHelpers;
 use App\Notifications\ActivateUser;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class NimbusEdu
 {
+  use CourseHelpers;
+
   var $tenant;
 
   public function __construct(Tenant $tenant)

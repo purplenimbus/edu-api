@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Requests\StoreCourse;
 use Illuminate\Support\Arr;
 
-class StoreCourseBatch extends FormRequest
+class StoreBatchCourses extends FormRequest
 {
 	/**
 	 * Determine if the user is authorized to make this request.

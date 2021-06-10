@@ -22,7 +22,7 @@ Route::group([
   Route::get('/grades/list', 'CurriculumController@listClasses');
   Route::get('/curriculum/{student_grade_id}','CurriculumController@getCourseLoad');
   Route::get('/account_status','UserController@getAccountStatuses');
-  Route::get('/course_status','CourseController@course_statuses');
+  Route::get('/course_statuses','CourseController@course_statuses');
 
   Route::post('/register','Auth\RegisterController@create');
   Route::get('/email/resend','Auth\VerificationController@resend')
@@ -31,7 +31,7 @@ Route::group([
 		->name('verification.verify');
 	// Password Reset
   Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-  Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');;
+  Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
   Route::get('/password/reset', 'Auth\ResetPasswordController@getToken');
 
   Route::group([

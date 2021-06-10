@@ -42,14 +42,13 @@ class RegistrationObserverTest extends TestCase
     ]);
     $course->update(['status_id'=> Course::Statuses['in progress']]);
 
-   $response =  $this->actingAs($this->user)
-    ->postJson("api/v1/registrations/batch", [
-      'course_ids' => [$course->id],
-      'student_ids' => [$student->id],
-      'student_grade_id'=> $student->grade["id"]
-    ]);
-
-    $response->assertStatus(200);
+    $this->actingAs($this->user)
+      ->postJson("api/v1/registrations/batch", [
+        'course_ids' => [$course->id],
+        'student_ids' => [$student->id],
+        'student_grade_id'=> $student->grade["id"]
+      ])
+      ->assertStatus(200);
 
     $this->assertContains(
       [

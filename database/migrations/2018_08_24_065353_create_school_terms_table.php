@@ -24,6 +24,7 @@ class CreateSchoolTermsTable extends Migration
       $table->integer('status_id');
       $table->integer('type_id');
       $table->dateTime('end_date');
+      $table->boolean('current_term')->nullable();
     });
   }
 

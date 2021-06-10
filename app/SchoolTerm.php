@@ -18,6 +18,7 @@ class SchoolTerm extends Model
      */
   protected $fillable = [
     'description',
+    'current_term',
     'end_date',
     'name',
     'meta',

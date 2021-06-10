@@ -68,7 +68,8 @@ class StudentController extends Controller
       ->allowedAppends([
         'grade',
         'guardian',
-        'type'
+        'type',
+        'status'
       ])
       ->allowedFields([
         'address',
@@ -82,9 +83,6 @@ class StudentController extends Controller
         'image',
         'ref_id'
       ])
-      ->allowedIncludes(
-        'status'
-      )
       ->where([
         ['tenant_id', '=', $tenant->id]
       ])

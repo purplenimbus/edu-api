@@ -28,6 +28,7 @@ class UpdateUser extends FormRequest
     return array_merge($validation->rules(), [
       'email'  => 'email',
       'id' => 'required|integer|exists:users,id',
+      'tenant_id' => 'integer|exists:tenants,id',
     ]);
   }
 

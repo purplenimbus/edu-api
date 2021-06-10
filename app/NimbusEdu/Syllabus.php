@@ -28,15 +28,19 @@ class Syllabus
     foreach($coursesData as $courseData) {
       $courseData["tenant_id"] = $this->tenant->id;
 
-      $course = Course::firstOrNew($courseData);
-
-      if ($course->id) {
-        $this->payload['updated'][] = $course;
-      } else {
-        $this->payload['created'][] = $course;
+      if ($this->tenant->current_term) {
+        $courseData["term_id"] = $this->tenant->current_term->id;
       }
 
-      $course->save();
+      $course = Course::firstOrNew($courseData);
+
+      if (is_null($course->id)) {
+        $course->save();
+        $this->payload['created'][] = $course->toArray();
+      } else {
+        $course->save();
+        $this->payload['updated'][] = $course->toArray();
+      }
     }
 
     return $this->payload;
