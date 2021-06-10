@@ -20,7 +20,7 @@ use App\Http\Requests\GetNotRegistered;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Nimbus\Syllabus;
+use App\NimbusEdu\Syllabus;
 
 class CourseController extends Controller
 {

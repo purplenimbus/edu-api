@@ -3,13 +3,11 @@
 namespace App\Observers;
 
 use App\Course;
-use App\NimbusEdu\Helpers\CourseHelpers;
-use App\SchoolTerm;
-use Illuminate\Support\Arr;
+use App\NimbusEdu\Helpers\CourseHelper;
 
 class CourseObserver
 {
-  use CourseHelpers;
+  use CourseHelper;
   /**
    * Handle the course "created" event.
    *

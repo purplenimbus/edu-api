@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Nimbus\Helpers\Curriculum;
+namespace App\NimbusEdu\Helpers;
 
 use App\CurriculumCourseLoadType;
 use App\CurriculumType;
 
-trait CurriculumHelpers
+trait CurriculumHelper
 {
   public function getCurriculumType($new = false, $country = null){
     $country = $country ?? config("edu.default.country");

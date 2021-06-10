@@ -13,8 +13,8 @@ use App\Notifications\BatchProcessed;
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant;
-use App\Nimbus\NimbusEdu;
-use App\Nimbus\Syllabus;
+use App\NimbusEdu\NimbusEdu;
+use App\NimbusEdu\Syllabus;
 
 class ProcessBatch implements ShouldQueue
 {

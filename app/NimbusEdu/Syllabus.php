@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Nimbus;
+namespace App\NimbusEdu;
 
 use App\Tenant;
 use App\Course;
-use App\Curriculum;
-use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
-use App\Nimbus\Helpers\Subject\SubjectHelpers;
+use App\NimbusEdu\Helpers\CurriculumHelper;
+use App\NimbusEdu\Helpers\SubjectHelper;
 
 class Syllabus
 {
-  use SubjectHelpers, CurriculumHelpers;
+  use SubjectHelper, CurriculumHelper;
   
   public $tenant;
   public $curriculum_type;

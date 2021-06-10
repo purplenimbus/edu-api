@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Guardian;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 
 class GuardianObserverTest extends TestCase

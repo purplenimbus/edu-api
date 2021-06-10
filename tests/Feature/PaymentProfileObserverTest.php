@@ -7,7 +7,7 @@ use App\PaymentProfile;
 use App\PaymentProfileItem;
 use App\SchoolTermType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 
 class PaymentProfileObserverTest extends TestCase

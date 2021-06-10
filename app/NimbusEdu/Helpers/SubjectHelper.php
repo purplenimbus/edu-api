@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Nimbus\Helpers\Subject;
+namespace App\NimbusEdu\Helpers;
 
-use App\Curriculum;
 use App\Subject;
 
-trait SubjectHelpers
+trait SubjectHelper
 {
   public function getSubject($code){
     return Subject::where('code', $code)

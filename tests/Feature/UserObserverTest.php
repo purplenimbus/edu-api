@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\User;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 
 class UserObserverTest extends TestCase

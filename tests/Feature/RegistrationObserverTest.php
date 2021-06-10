@@ -4,10 +4,10 @@ namespace Tests\Feature;
 
 use App\Course;
 use App\StudentGrade;
-use App\Nimbus\Institution;
+use App\NimbusEdu\Institution;
 use App\Registration;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\Helpers\Auth\SetupUser;;
+use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 use DatabaseSeeder;
 use App\Student;

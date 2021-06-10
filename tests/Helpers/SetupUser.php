@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Helpers\Auth;
+namespace Tests\Helpers;
 
 use App\Tenant;
 use App\User;

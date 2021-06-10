@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Registration;
 use App\CourseScore;
-use Silber\Bouncer\Bouncer as BouncerBouncer;
 
 class RegistrationObserver
 {

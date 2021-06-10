@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nimbus;
+namespace App\NimbusEdu;
 
 use App\Tenant;
 use App\User;
@@ -15,7 +15,7 @@ use App\CurriculumType;
 use App\UserType;
 use App\Invoice;
 use App\Guardian;
-use App\NimbusEdu\Helpers\CourseHelpers;
+use App\NimbusEdu\Helpers\CourseHelper;
 use App\Notifications\ActivateUser;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -23,7 +23,7 @@ use Illuminate\Http\Request;
 
 class NimbusEdu
 {
-  use CourseHelpers;
+  use CourseHelper;
 
   var $tenant;
 
