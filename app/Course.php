@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 class Course extends Model
 {
@@ -150,12 +149,5 @@ class Course extends Model
       ->ofStudentGrade($student->grade['id'])
       ->ofTenant($student->tenant_id)
       ->whereNotIn('id', $course_ids);
-  }
-
-  public function parse_course_code() {
-    $subjectCode = Arr::get($this, "subject.code", "");
-    $StudentGrade = Arr::get($this, "grade.name", "");
-  
-    return strtoupper($subjectCode.'-'.str_replace(' ', '-', $StudentGrade));
   }
 }

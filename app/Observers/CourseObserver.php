@@ -3,11 +3,13 @@
 namespace App\Observers;
 
 use App\Course;
+use App\NimbusEdu\Helpers\CourseHelpers;
 use App\SchoolTerm;
 use Illuminate\Support\Arr;
 
 class CourseObserver
 {
+  use CourseHelpers;
   /**
    * Handle the course "created" event.
    *
@@ -34,7 +36,7 @@ class CourseObserver
     }	
 
     if (is_null($course->code)) {	
-      $course->code = $course->parse_course_code();	
+      $course->code = $this->parseCourseCode($course);	
     }	
 
     if (is_null($course->schema)) {	
