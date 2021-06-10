@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nimbus\Helpers\SchoolTerm;
+namespace App\NimbusEdu\Helpers;
 
 use Illuminate\Support\Arr;
 

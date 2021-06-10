@@ -2,7 +2,7 @@
 use Illuminate\Database\Seeder;
 use App\Tenant;
 use App\Guardian;
-use App\Nimbus\NimbusEdu;
+use App\NimbusEdu\NimbusEdu;
 use App\StudentGrade;
 use Illuminate\Support\Facades\Log;
 

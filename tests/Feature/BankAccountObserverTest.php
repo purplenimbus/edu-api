@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Unicodeveloper\Paystack\Facades\Paystack;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 
 class BankAccountObserverTest extends TestCase
 {

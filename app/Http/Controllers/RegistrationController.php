@@ -11,7 +11,7 @@ use App\Http\Requests\RegisterStudent;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Nimbus\Enrollment;
+use App\NimbusEdu\Enrollment;
 
 class RegistrationController extends Controller
 {

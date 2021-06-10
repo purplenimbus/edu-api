@@ -12,7 +12,7 @@ use Carbon\Carbon;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 
 class CourseControllerTest extends TestCase

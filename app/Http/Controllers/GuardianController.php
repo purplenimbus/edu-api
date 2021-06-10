@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Guardian;
-use App\Nimbus\NimbusEdu;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
@@ -12,6 +11,7 @@ use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
 use App\Http\Requests\DeleteGuardian;
 use App\Http\Requests\GetUsers;
+use App\NimbusEdu\NimbusEdu;
 
 class GuardianController extends Controller
 {

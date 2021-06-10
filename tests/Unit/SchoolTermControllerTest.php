@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use App\Course;
 use App\Instructor;
-use App\Nimbus\Institution;
+use App\NimbusEdu\Institution;
 use App\Registration;
 use App\SchoolTerm;
 use App\Student;
@@ -13,7 +13,7 @@ use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
-use Tests\Helpers\Auth\SetupUser;
+use Tests\Helpers\SetupUser;
 
 class SchoolTermControllerTest extends TestCase
 {

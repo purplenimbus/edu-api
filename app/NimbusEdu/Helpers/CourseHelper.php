@@ -5,7 +5,7 @@ namespace App\NimbusEdu\Helpers;
 use App\Course;
 use Illuminate\Support\Arr;
 
-trait CourseHelpers
+trait CourseHelper
 {
   public function parseCourseCode(Course $course) {
     $subjectCode = Arr::get($course, "subject.code", "");

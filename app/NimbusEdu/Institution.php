@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Nimbus;
+namespace App\NimbusEdu;
 
 use App\Curriculum;
-use App\Nimbus\Helpers\Curriculum\CurriculumHelpers;
-use App\Nimbus\Helpers\SchoolTerm\SchoolTermHelper;
-use App\Nimbus\Helpers\Subject\SubjectHelpers;
+use App\NimbusEdu\Helpers\CurriculumHelper;
+use App\NimbusEdu\Helpers\SchoolTermHelper;
+use App\NimbusEdu\Helpers\SubjectHelper;
 use App\SchoolTerm;
 use App\SchoolTermType;
 use App\Subject;
@@ -14,7 +14,7 @@ use Exception;
 
 class Institution
 {
-  use CurriculumHelpers, SubjectHelpers, SchoolTermHelper;
+  use CurriculumHelper, SubjectHelper, SchoolTermHelper;
 
   public function newSchoolTerm(Tenant $tenant, $termName, $options = []) {
     $typeId = SchoolTermType::whereName($termName)->first()->id;

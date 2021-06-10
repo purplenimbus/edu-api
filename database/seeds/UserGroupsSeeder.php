@@ -3,10 +3,8 @@
 use Illuminate\Database\Seeder;
 use App\Student;
 use App\Guardian;
-use App\UserGroup;
-use App\UserGroupMember;
 use App\Tenant as Tenant;
-use App\Nimbus\NimbusEdu;
+use App\NimbusEdu\NimbusEdu;
 
 class UserGroupsSeeder extends Seeder
 {

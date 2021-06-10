@@ -1,6 +1,6 @@
 <?php
 
-use App\Nimbus\Institution;
+use App\NimbusEdu\Institution;
 use Illuminate\Database\Seeder;
 
 class SubjectsSeeder extends Seeder

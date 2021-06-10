@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nimbus;
+namespace App\NimbusEdu;
 
 use App\Registration;
 use App\Student;
