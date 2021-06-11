@@ -26,7 +26,8 @@ class SchoolTermInProgress implements Rule
    */
   public function passes($attribute, $value)
   {
-    $schoolTerm = SchoolTerm::whereStatusId(SchoolTerm::Statuses['in progress'])->first();
+    $schoolTerm = SchoolTerm::ofTenant(auth()->user()->tenant->id)
+      ->whereStatusId(SchoolTerm::Statuses['in progress'])->first();
 
     return is_null($schoolTerm);
   }

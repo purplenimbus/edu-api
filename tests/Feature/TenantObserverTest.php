@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\StudentGrade;
-use App\PaymentProfileItemType;
 use App\SchoolTermType;
+use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
@@ -28,9 +28,10 @@ class TenantObserverTest extends TestCase
       'password' => '1234abcd',
       'password_confirmation' => '1234abcd',
     ]);
+    $tenant = Tenant::latest()->first();
 
     $response->assertStatus(200);
-    $this->assertEquals(Arr::pluck(config('edu.default.school_terms'), 'name'), SchoolTermType::all()->pluck('name')->toArray());
+    $this->assertEquals(Arr::pluck(config('edu.default.school_terms'), 'name'), SchoolTermType::ofTenant($tenant->id)->first()->pluck('name')->toArray());
   }
 
   /**

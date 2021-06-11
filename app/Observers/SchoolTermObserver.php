@@ -14,6 +14,8 @@ class SchoolTermObserver
    */
   public function creating(SchoolTerm $schoolTerm)
   {
-    $schoolTerm->status_id = SchoolTerm::Statuses['in progress'];
+    if (is_null($schoolTerm->status_id)) {
+      $schoolTerm->status_id = SchoolTerm::Statuses['in progress'];
+    }
   }
 }
