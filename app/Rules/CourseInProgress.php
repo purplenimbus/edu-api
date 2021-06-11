@@ -28,7 +28,7 @@ class CourseInProgress implements Rule
 	{
     $course_in_progress = Course::find($value);
     
-    return $course_in_progress->status->name == 'in progress';
+    return $course_in_progress->status == Course::Statuses['in progress'];
 	}
 
 	/**

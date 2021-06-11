@@ -125,15 +125,18 @@ return [
 		*/
 
 	'custom' => [
-		'course' => [
-			'complete' => 'this course cannot be edited because it is completed or archived',
-		],
 		'admin' => [
 			'exists' => 'Account owner already exists, remove the admin to set a new account owner',
 		],
+		'course' => [
+			'complete' => 'this course cannot be edited because it is completed or archived',
+		],
 		'bank_account' => [
 			'dosent_belong' => 'The selected bank account does not belong to this tenant.',
-		]
+		],
+		'school_term' => [
+			'already_in_progress' => 'Another school term is still in progress, ensure all courses are completed before starting a new school term',
+		],
 	],
 
 	/*

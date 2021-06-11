@@ -15,9 +15,11 @@ use App\Observers\TenantObserver;
 use App\Tenant;
 use App\Registration;
 use App\Observers\RegistrationObserver;
+use App\Observers\SchoolTermObserver;
 use App\Observers\StudentObserver;
 use App\Observers\UserObserver;
 use App\PaymentProfile;
+use App\SchoolTerm;
 use App\Student;
 use App\User;
 use Illuminate\Support\Facades\Event;
@@ -54,5 +56,6 @@ class EventServiceProvider extends ServiceProvider
     Student::observe(StudentObserver::class);
     Tenant::observe(TenantObserver::class);
     User::observe(UserObserver::class);
+    SchoolTerm::observe(SchoolTermObserver::class);
   }
 }

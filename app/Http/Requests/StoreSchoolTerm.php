@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SchoolTermInProgress;
 use App\SchoolTerm;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTerm extends FormRequest
+class StoreSchoolTerm extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -32,7 +33,8 @@ class StoreTerm extends FormRequest
       'meta' => 'nullable',
       'start_date' => 'date',
       'status_id' => ['integer', Rule::in(array_values(SchoolTerm::Statuses))],
-      'tenant_id' => 'integer|exists:tenants,id'
+      'tenant_id' => 'integer|exists:tenants,id',
+      'type_id' => [new SchoolTermInProgress()],
     ];
   }
 }

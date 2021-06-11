@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreTerm;
+use App\Http\Requests\StoreSchoolTerm;
 use App\SchoolTerm;
 use App\Jobs\CompleteTerm;
 use App\Http\Requests\GetTerm;
@@ -101,7 +101,7 @@ class SchoolTermController extends Controller
     ], 200);
   }
 
-  public function create(StoreTerm $request){
+  public function create(StoreSchoolTerm $request){
     $tenant = Auth::user()->tenant()->first();
     $data = $request->all();
     $data['tenant_id'] = $tenant->id;
