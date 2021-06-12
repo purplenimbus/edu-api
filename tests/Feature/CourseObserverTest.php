@@ -5,7 +5,9 @@ namespace Tests\Feature;
 use App\Course;
 use App\StudentGrade;
 use App\Instructor;
+use App\NimbusEdu\Institution;
 use App\Registration;
+use App\SchoolTerm;
 use App\Subject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use DatabaseSeeder;
@@ -169,5 +171,30 @@ class CourseObserverTest extends TestCase
     $response->assertStatus(200);
 
     $this->assertEquals(Registration::count(), 0);
+  }
+
+  /**
+   * Test update term status instructor
+   *
+   * @return void
+   */
+  public function testUpdatesCurrentTermStatus()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $studentGrade = StudentGrade::first();
+    $course = factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    $this->actingAs($this->user)
+      ->putJson("api/v1/courses/{$course->id}", [
+        'student_grade_id' => $studentGrade->id,
+        'status_id' => Course::Statuses['complete'],
+      ]);
+
+    $this->assertEquals('complete', SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
   }
 }

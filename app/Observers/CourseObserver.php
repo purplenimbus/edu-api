@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Course;
 use App\NimbusEdu\Helpers\CourseHelper;
+use App\SchoolTerm;
+use Illuminate\Support\Arr;
 
 class CourseObserver
 {
@@ -54,6 +56,30 @@ class CourseObserver
   {
     if (request()->has('instructor_id') && $course->wasChanged('instructor_id') && isset($course->instructor_id)) {	
       $course->instructor->assignInstructor($course);	
+    }
+  }
+
+  /**
+   * Handle the course "saved" event.
+   *
+   * @param  \App\Course  $course
+   * @return void
+   */
+  public function updated(Course $course)
+  {
+    $courseStatus = Arr::get($course, "status", null);
+
+    if ($courseStatus == 'complete')
+    {
+      $otherCourses = $course->ofTenant($course->tenant->id)
+        ->whereStatusId(Course::Statuses['in progress']);	
+
+      if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
+        $course->tenant->current_term->update([
+          'current_term' => false,
+          'status_id'=> SchoolTerm::Statuses['complete'],
+        ]);	
+      }	
     }
   }
 

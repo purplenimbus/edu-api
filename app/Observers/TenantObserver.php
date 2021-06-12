@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\StudentGrade;
-use App\PaymentProfileItemType;
 use App\SchoolTermType;
 use App\Tenant;
 

@@ -40,6 +40,10 @@ class SchoolTerm extends Model
     'start_date' => 'date',
   ];
 
+  protected $appends = [
+    'status'
+  ];
+
   public function type() {
     return $this->hasOne('App\SchoolTermType', 'id', 'type_id');
   }

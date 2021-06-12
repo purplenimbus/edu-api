@@ -9,6 +9,7 @@ use App\Registration;
 use App\SchoolTerm;
 use App\Student;
 use App\StudentGrade;
+use Carbon\Carbon;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -195,6 +196,60 @@ class SchoolTermControllerTest extends TestCase
         "id" => $schoolTerm->id,
         "name" => $schoolTerm->name,
       ]);
+  }
+
+  /**
+   * doesn't create a school term while another term is in progress
+   *
+   * @return void
+   */
+  public function testDoesntCreateSchoolTermWhileAnotherTermIsInProgress()
+  {
+    $this->seed(DatabaseSeeder::class);
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    $data = factory(SchoolTerm::class)->make([
+      'type_id' => $this->user->tenant->schoolTermTypes->first()->id,
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    
+    $this->actingAs($this->user)
+      ->postJson('api/v1/school_terms', $data->toArray())
+      ->assertStatus(422);
+  }
+
+  /**
+   * create a school term while another term is complete
+   *
+   * @return void
+   */
+  public function testCreateSchoolTermWhileAnotherTermIsComplete()
+  {
+    $this->seed(DatabaseSeeder::class);
+    factory(SchoolTerm::class)->create([
+      'created_at' => Carbon::now()->yesterday(),
+      'current_term' => true,
+      'status_id' => SchoolTerm::Statuses['complete'],
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    $data = factory(SchoolTerm::class)->make([
+      'type_id' => $this->user->tenant->schoolTermTypes->first()->id,
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $response = $this->actingAs($this->user)
+      ->postJson('api/v1/school_terms', $data->toArray());
+    
+    $schoolTerm = SchoolTerm::latest()->first();
+
+    $response->assertStatus(200)
+      ->assertJson([
+        "id" => $schoolTerm->id,
+        "name" => $schoolTerm->name,
+      ]);
+    $this->assertEquals(2, SchoolTerm::count());
+    $this->assertEquals("in progress", $schoolTerm->status);
   }
 
   private function registerStudent(SchoolTerm $schoolTerm, Student $student, Course $course) {
