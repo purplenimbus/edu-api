@@ -48,7 +48,6 @@ class Tenant extends Model
    */
   protected $appends = [
     'email',
-    'owner',
   ];
 
   /**

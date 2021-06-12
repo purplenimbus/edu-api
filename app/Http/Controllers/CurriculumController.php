@@ -15,7 +15,7 @@ use App\StudentGrade;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\Nimbus\Syllabus;
+use App\NimbusEdu\Syllabus;
 
 class CurriculumController extends Controller
 {
