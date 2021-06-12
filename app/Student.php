@@ -17,6 +17,13 @@ class Student extends User
 
   public $table = "users";
 
+  const StatusTypes = [
+    'created' => 1,
+    'unenrolled' => 2,
+    'registered' => 3,
+    'archived' => 6,
+  ];
+
   /**
    * The accessors to append to the model's array form.
    *
