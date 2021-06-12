@@ -175,9 +175,7 @@ class StudentController extends Controller
    * @return void
    */
   public function transcripts(GetTranscript $request) {
-    $transcripts = Student::find($request->id)->getTranscripts();
-
-    return response()->json($transcripts, 200);
+    return response()->json(Student::find($request->id)->transcripts, 200);
   }
 
   /**
