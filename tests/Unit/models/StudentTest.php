@@ -6,7 +6,6 @@ use App\Course;
 use App\Guardian;
 use App\NimbusEdu\Institution;
 use App\Registration;
-use App\SchoolTerm;
 use App\Student;
 use App\StudentGrade;
 use App\Tenant;
