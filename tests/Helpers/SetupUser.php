@@ -19,6 +19,8 @@ trait SetupUser
       'tenant_id' => $tenant->id
     ]);
 
+    $tenant->setOwner($this->user);
+
     $this->user->markEmailAsVerified();
 
     auth()->login($this->user);

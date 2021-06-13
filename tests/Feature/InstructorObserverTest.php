@@ -19,10 +19,8 @@ class InstructorObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsDefaultPassword()
+  public function testItSetsTheDefaultPassword()
   {
-    $this->user->tenant->setOwner($this->user);
-
     $person = factory(User::class)->make();
 
     $this->actingAs($this->user)
@@ -41,10 +39,8 @@ class InstructorObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsTheUsersRole()
+  public function testItSetsTheUsersRole()
   {
-    $this->user->tenant->setOwner($this->user);
-
     $person = factory(User::class)->make();
 
     $this->actingAs($this->user)

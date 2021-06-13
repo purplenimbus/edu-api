@@ -25,7 +25,7 @@ class Guardian extends User
       ->load('user');
   }
 
-  public function assignWards($student_ids) {
+  public function assignWards(array $student_ids) {
     $students = Student::find($student_ids);
 
     return $students->map(function($student){

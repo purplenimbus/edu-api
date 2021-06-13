@@ -24,10 +24,9 @@ class StudentController extends Controller
    *
    * @return void
    */
-  public function index(GetStudents $request) {
+  public function index(GetStudents $request)
+  {
     $tenant = Auth::user()->tenant()->first();
-
-    $nimbus_edu = new NimbusEdu($tenant);
 
     $students = QueryBuilder::for(Student::class)
       ->defaultSort('firstname')
@@ -44,25 +43,23 @@ class StudentController extends Controller
         AllowedFilter::partial('firstname'),
         'email',
         AllowedFilter::partial('lastname'),
-        'ref_id',
+        AllowedFilter::callback('student_id', function (Builder $query, $value) {
+          return $query->whereRefId($value);
+        }),
         AllowedFilter::callback('has_image', function (Builder $query, $value) {
-            return $value ?
-              $query->whereNotNull('image') :
-              $query->whereNull('image');
+          return $value ?
+            $query->whereNotNull('image') :
+            $query->whereNull('image');
         }),
         AllowedFilter::callback('student_grade_id', function (Builder $query, $value) {
-            $query->where(
-              'meta->student_grade_id',
-              '=',
-              (int)$value
-            );
+          $query->where(
+            'meta->student_grade_id',
+            '=',
+            (int)$value
+          );
         }),
-        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
-            $query->where(
-              'account_status_id',
-              '=',
-              (int)$nimbus_edu->getStatusID($value)->id
-            );
+        AllowedFilter::callback('account_status', function (Builder $query, $value) {
+          $query->whereAccountStatusId($value);
         }),
       ])
       ->allowedAppends([
@@ -96,7 +93,8 @@ class StudentController extends Controller
    *
    * @return void
    */
-  public function create(StoreStudent $request) {
+  public function create(StoreStudent $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     $nimbus_edu = new NimbusEdu($tenant);
@@ -150,11 +148,12 @@ class StudentController extends Controller
    *
    * @return void
    */
-  public function edit(UpdateStudent $request) {
+  public function edit(UpdateStudent $request)
+  {
     $student = Student::find($request->id);
 
     $student->fill($request->all());
-    
+
     $student->save();
 
     if ($request->has('guardian_id')) {
@@ -174,10 +173,9 @@ class StudentController extends Controller
    *
    * @return void
    */
-  public function transcripts(GetTranscript $request) {
-    $transcripts = Student::find($request->id)->getTranscripts();
-
-    return response()->json($transcripts, 200);
+  public function transcripts(GetTranscript $request)
+  {
+    return response()->json(Student::find($request->id)->transcripts, 200);
   }
 
   /**
@@ -185,7 +183,8 @@ class StudentController extends Controller
    *
    * @return void
    */
-  public function valid_courses(GetStudent $request) {
+  public function valid_courses(GetStudent $request)
+  {
     $student = Student::find($request->id);
 
     $courses = QueryBuilder::for(Course::class)

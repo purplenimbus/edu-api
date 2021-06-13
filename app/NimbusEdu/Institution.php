@@ -16,7 +16,7 @@ class Institution
 {
   use CurriculumHelper, SubjectHelper, SchoolTermHelper;
 
-  public function newSchoolTerm(Tenant $tenant, $termName, $options = []) {
+  public function newSchoolTerm(Tenant $tenant, string $termName, array $options = []) {
     $typeId = SchoolTermType::whereName($termName)->first()->id;
 
     $data = array_merge([

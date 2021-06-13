@@ -20,7 +20,7 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsTheDefaultBankAccountWhenCreatedAndNoBankAccountExists()
+  public function testItSetsTheDefaultBankAccountWhenCreatedAndNoBankAccountExists()
   {    
     $response = $this->actingAs($this->user)
       ->postJson("api/v1/tenants/{$this->user->tenant->id}/bank_accounts", [
@@ -42,7 +42,7 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsTheDefaultBankAccountWhenUpdated()
+  public function testItSetsTheDefaultBankAccountWhenUpdated()
   {    
     $defaultBankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
@@ -72,7 +72,7 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testPassTheDefaultBankAccountParameterAndBankAccountsExists()
+  public function testItSetsTheDefaultBankAccountParameterIfPresent()
   {    
     $bankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
@@ -111,7 +111,7 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetTheDefaultBankAccountParameterWhenDeleted()
+  public function testItSetsTheDefaultBankAccountWhenABankAccountIsDeleted()
   {    
     $defaultBankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
@@ -137,7 +137,7 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testReturnsTheBankAccounts()
+  public function testItReturnsTheBankAccounts()
   {    
     factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
@@ -163,10 +163,8 @@ class BankAccountObserverTest extends TestCase
    *
    * @return void
    */
-  public function testCreatesNewSubAccountWhenBankAccountCreated()
+  public function testItCreatesANewSubAccountWhenBankAccountCreated()
   {
-    $this->user->tenant->setOwner($this->user);
-
     Paystack::shouldReceive("createSubAccount")
       ->andReturn([
         "data" => [

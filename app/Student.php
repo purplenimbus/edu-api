@@ -7,6 +7,7 @@ use App\StudentGrade;
 use App\Registration;
 use App\SchoolTerm;
 use App\UserGroupMember;
+use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
 
@@ -15,6 +16,13 @@ class Student extends User
   use HasRolesAndAbilities;
 
   public $table = "users";
+
+  const StatusTypes = [
+    'created' => 1,
+    'unenrolled' => 2,
+    'registered' => 3,
+    'archived' => 6,
+  ];
 
   /**
    * The accessors to append to the model's array form.
@@ -32,11 +40,11 @@ class Student extends User
   }
 
   public function generateStudentId() {
-    return date("Y").sprintf("%04d", $this->id);
+    return Carbon::now()->get('year').sprintf("%04d", $this->id);
   }
 
     /**
-   *  Get course grade type
+   *  Get student grade type
   */
   public function getGuardianAttribute()
   {
@@ -47,6 +55,14 @@ class Student extends User
     ->first();
 
     return !is_null($member) ? $member->group->owner : $member;
+  }
+
+  /**
+   *  Get student id
+  */
+  public function getStudentIdAttribute()
+  {
+    return $this->ref_id;
   }
 
   /**
@@ -66,9 +82,9 @@ class Student extends User
   }
 
   /**
-   *  Get course grade type
+   *  Get student transcripts
   */
-  public function getTranscripts() {
+  public function getTranscriptsAttribute() {
     if (is_null($this->id)) {
       return;
     }
@@ -96,7 +112,7 @@ class Student extends User
     $registrations = Registration::where('course_id', $course_id)->pluck('user_id');
 
     return $query
-      ->where('meta->student_grade_id', $course->student_grade_id)
+      ->ofStudentGrade($course->student_grade_id)
       ->ofTenant($course->tenant_id)
       ->whereNotIn('id', $registrations);
   }

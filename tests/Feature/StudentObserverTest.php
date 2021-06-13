@@ -19,11 +19,9 @@ class StudentObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsDefaultPassword()
+  public function testItSetsTheDefaultPassword()
   {
     $this->seed(DatabaseSeeder::class);
-
-    $this->user->tenant->setOwner($this->user);
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toString(),
@@ -47,11 +45,9 @@ class StudentObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsDefaultStudentIdIfNotPresent()
+  public function testItSetsTheDefaultStudentIdIfNotPresent()
   {
     $this->seed(DatabaseSeeder::class);
-
-    $this->user->tenant->setOwner($this->user);
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toIso8601String(),
@@ -79,11 +75,9 @@ class StudentObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsCustomStudentId()
+  public function testItSetsTheCustomStudentId()
   {
     $this->seed(DatabaseSeeder::class);
-
-    $this->user->tenant->setOwner($this->user);
 
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toIso8601String(),
@@ -113,12 +107,10 @@ class StudentObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsTheUsersRole()
+  public function testItSetsTheUsersRole()
   {
     $this->seed(DatabaseSeeder::class);
   
-    $this->user->tenant->setOwner($this->user);
-
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toString(),
       'student_grade_id' => StudentGrade::first()->id,
