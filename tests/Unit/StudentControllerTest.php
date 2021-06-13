@@ -527,7 +527,7 @@ class StudentControllerTest extends TestCase
       'tenant_id' => $this->user->tenant_id,
     ]);
     $this->enrollStudent($student, $course1);
-    $response = $this->actingAs($this->user)
+    $this->actingAs($this->user)
       ->getJson("api/v1/students/$student->id/valid_courses")
       ->assertOk()
       ->assertJson([
@@ -536,6 +536,49 @@ class StudentControllerTest extends TestCase
         ],
         'total' => 1,
       ]);
+  }
+
+  /**
+   * Return a transcript for a valid student
+   * @return void
+   */
+  public function testItReturnsTheTranscriptsForAValidStudent() {
+    $institution = new Institution();
+    $schoolTerm = $institution->newSchoolTerm($this->user->tenant, 'first term');
+    $studentGrade = StudentGrade::whereAlias('js 1')->first();
+    $course1 = factory(Course::class)->create([
+      'student_grade_id' => $studentGrade->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm->id,
+    ]);
+    $course2 = factory(Course::class)->create([
+      'student_grade_id' => $studentGrade->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm->id,
+    ]);
+    $student = factory(Student::class)->create([
+      'meta' => [ 'student_grade_id' => $studentGrade->id],
+      'tenant_id' => $this->user->tenant_id,
+    ]);
+    $this->enrollStudent($student, $course1);
+    $this->enrollStudent($student, $course2);
+
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students/$student->id/transcripts")
+      ->assertOk();
+
+    $this->assertEquals($student->transcripts->first()->name, "first term");
+    $this->assertEquals($student->transcripts->first()->registrations->count(), 2);
+  }
+
+  /**
+   * Return a transcript for an invalid student
+   * @return void
+   */
+  public function testItReturnsTheTranscriptsForAnInvalidStudent() {
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students/0/transcripts")
+      ->assertStatus(422);
   }
 
   private function enrollStudent(Student $student, Course $course) {
