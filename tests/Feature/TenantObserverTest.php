@@ -19,7 +19,7 @@ class TenantObserverTest extends TestCase
    *
    * @return void
    */
-  public function testCreateDefaultSchoolTermTypes()
+  public function testItCreatesDefaultSchoolTermTypes()
   {
     $response = $this->postJson('/api/v1/register', [
       'email' => $this->faker->email,
@@ -29,7 +29,7 @@ class TenantObserverTest extends TestCase
       'password_confirmation' => '1234abcd',
     ]);
     $tenant = Tenant::latest()->first();
-
+    
     $response->assertStatus(200);
     $this->assertEquals(Arr::pluck(config('edu.default.school_terms'), 'name'), SchoolTermType::ofTenant($tenant->id)->first()->pluck('name')->toArray());
   }
@@ -39,7 +39,7 @@ class TenantObserverTest extends TestCase
    *
    * @return void
    */
-  public function testCreateDefaultStudentGrades()
+  public function testItCreatesDefaultStudentGrades()
   {
     $response = $this->postJson('/api/v1/register', [
       'email' => $this->faker->email,

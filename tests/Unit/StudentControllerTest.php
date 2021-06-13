@@ -2,6 +2,9 @@
 
 namespace Tests\Unit;
 
+use App\Course;
+use App\NimbusEdu\Institution;
+use App\Registration;
 use App\Student;
 use App\StudentGrade;
 use Carbon\Carbon;
@@ -18,7 +21,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testStudentIndexSortedByName()
+  public function testItReturnsPaginatedStudentsSortedByName()
   {
     $student1 = factory(Student::class)->create([
       "firstname" => "anthony",
@@ -28,10 +31,10 @@ class StudentControllerTest extends TestCase
       "firstname" => "diana",
       "tenant_id" => $this->user->tenant->id,
     ]);
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students");
     
-    $response->assertJson([
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students")
+      ->assertJson([
       "current_page" => 1,
       "data" => [
         [ "id" => $student1->id ],
@@ -47,7 +50,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexSortedByCreatedAtInAsendingOrder()
+  public function testItReturnsPaginatedStudentsSortedByCreatedAtInAsendingOrder()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -57,10 +60,8 @@ class StudentControllerTest extends TestCase
       "created_at" => Carbon::now()->tomorrow()
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?sort=created_at");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?sort=created_at")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -82,7 +83,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexSortedByCreatedAtInDesendingOrder()
+  public function testItReturnsPaginatedStudentsSortedByCreatedAtInDesendingOrder()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -92,10 +93,8 @@ class StudentControllerTest extends TestCase
       "created_at" => Carbon::now()->tomorrow()
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?sort=-created_at");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?sort=-created_at")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -117,7 +116,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexSortedByUpdatedAtInAsendingOrder()
+  public function testItReturnsPaginatedStudentsSortedByUpdatedAtInAsendingOrder()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -127,10 +126,8 @@ class StudentControllerTest extends TestCase
       "updated_at" => Carbon::now()->tomorrow()
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?sort=updated_at");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?sort=updated_at")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -152,7 +149,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexSortedByUpdatedAtInDesendingOrder()
+  public function testItReturnsPaginatedStudentsSortedByUpdatedAtInDesendingOrder()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -162,10 +159,8 @@ class StudentControllerTest extends TestCase
       "updated_at" => Carbon::now()->tomorrow()
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?sort=-updated_at");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?sort=-updated_at")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -187,7 +182,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexFilteredByFirstName()
+  public function testItReturnsPaginatedStudentsFilteredByFirstName()
   {
     $student1 = factory(Student::class)->create([
       "firstname" => "diana",
@@ -198,11 +193,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[firstname]=diana");
-    
-    $response
-      ->assertOk()
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[firstname]=diana")->assertOk()
       ->assertJson([
         "current_page" => 1,
         "data" => [
@@ -218,7 +210,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexFilteredByLastName()
+  public function testItReturnsPaginatedStudentsFilteredByLastName()
   {
     $student1 = factory(Student::class)->create([
       "lastname" => "diana",
@@ -229,10 +221,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[lastname]=diana");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[lastname]=diana")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -249,7 +239,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexFilteredByEmail()
+  public function testItReturnsPaginatedStudentsFilteredByEmail()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -258,10 +248,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[email]=$student1->email");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[email]=$student1->email")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -278,7 +266,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexFilteredByStudentId()
+  public function testItReturnsPaginatedStudentsFilteredByStudentId()
   {
     $student1 = factory(Student::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -287,10 +275,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[student_id]=$student1->student_id");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[student_id]=$student1->student_id")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -307,7 +293,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexFilteredByImage()
+  public function testItReturnsPaginatedStudentsFilteredByImage()
   {
     $student1 = factory(Student::class)->create([
       "image" => "http://www.thisisanimage.com",
@@ -317,10 +303,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[has_image]=true");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[has_image]=true")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -337,7 +321,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentIndexWithOutImage()
+  public function testItReturnsPaginatedStudentsWithOutImage()
   {
     factory(Student::class)->create([
       "image" => "http://www.thisisanimage.com",
@@ -347,10 +331,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[has_image]=false");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[has_image]=false")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -367,7 +349,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentFilteredByStudentGrade()
+  public function testItReturnsPaginatedStudentsFilteredByStudentGrade()
   {
     $studentGrade1 = StudentGrade::whereAlias('js 1')->first();
     $studentGrade2 = StudentGrade::whereAlias('ss 3')->first();
@@ -381,9 +363,7 @@ class StudentControllerTest extends TestCase
     ]);
 
     $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[student_grade_id]=$studentGrade2->id");
-    
-    $response
+      ->getJson("api/v1/students?filter[student_grade_id]=$studentGrade2->id")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -400,7 +380,7 @@ class StudentControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedStudentFilteredByAccountStatus()
+  public function testItReturnsPaginatedStudentsFilteredByAccountStatus()
   {
     $accountStatus = Student::StatusTypes['registered'];
     $student1 = factory(Student::class)->create([
@@ -411,10 +391,8 @@ class StudentControllerTest extends TestCase
       "tenant_id" => $this->user->tenant->id,
     ]);
 
-    $response = $this->actingAs($this->user)
-      ->getJson("api/v1/students?filter[account_status]=$accountStatus");
-    
-    $response
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students?filter[account_status]=$accountStatus")
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -424,5 +402,150 @@ class StudentControllerTest extends TestCase
         "per_page" => 10,
         "total" => 1,
       ]);
+  }
+
+  /**
+   * Update a valid student
+   * @return void
+   */
+  public function testItUpdatesAValidStudent() {
+    $student = factory(Student::class)->create([
+      'firstname' => 'johnny',
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $this->actingAs($this->user)
+      ->putJson("api/v1/students/$student->id", [
+        'firstname' => 'english',
+      ])
+      ->assertOk()
+      ->assertJson([
+        'id' => $student->id,
+        'firstname' => 'english',
+      ]);
+  }
+
+  /**
+   * Update an invalid student
+   * @return void
+   */
+  public function testItDoesntUpdateAnInvalidStudent() {
+    $this->actingAs($this->user)
+      ->putJson("api/v1/students/0", [
+        'firstname' => 'english',
+      ])
+      ->assertStatus(422);
+  }
+
+  /**
+   * Create a valid student
+   * @return void
+   */
+  public function testItCreatesAValidStudent() {
+    $studentGrade = StudentGrade::whereAlias('js 1')->first();
+    $data = factory(Student::class)->make([
+      'firstname' => 'english',
+      'student_grade_id' => $studentGrade->id,
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    $this->actingAs($this->user)
+      ->postJson("api/v1/students", $data->toArray())
+      ->assertOk()
+      ->assertJson([
+        'email' => $data->email,
+        'firstname' => 'english',
+      ]);
+  }
+
+  /**
+   * Create a student with invalid data
+   * @return void
+   */
+  public function testItDoesntCreateAStudentFromInvalidData() {
+    $data = factory(Student::class)->make([
+      'firstname' => 'english',
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $this->actingAs($this->user)
+      ->postJson("api/v1/students", $data->toArray())
+      ->assertStatus(422);
+  }
+
+  /**
+   * Show a valid student
+   * @return void
+   */
+  public function testItShowsAValidStudent() {
+    $student = factory(Student::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students/$student->id")
+      ->assertOk()
+      ->assertJson([
+        'email' => $student->email,
+        'id' => $student->id,
+      ]);
+  }
+
+  /**
+   * Show a invalid student
+   * @return void
+   */
+  public function testItDoesntShowAnInvalidStudent() {
+    $this->actingAs($this->user)
+      ->getJson("api/v1/students/0")
+      ->assertStatus(422);
+  }
+
+  /**
+   * Show eligible courses
+   * @return void
+   */
+  public function testItReturnsEligibleCoursesForAStudent() {
+    $institution = new Institution();
+    $schoolTerm = $institution->newSchoolTerm($this->user->tenant, 'first term');
+    $studentGrade1 = StudentGrade::whereAlias('js 1')->first();
+    $studentGrade2 = StudentGrade::whereAlias('js 2')->first();
+    $course1 = factory(Course::class)->create([
+      'student_grade_id' => $studentGrade1->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm->id,
+    ]);
+    $course2 = factory(Course::class)->create([
+      'student_grade_id' => $studentGrade1->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm->id,
+    ]);
+    factory(Course::class)->create([
+      'student_grade_id' => $studentGrade2->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $schoolTerm->id,
+    ]);
+    $student = factory(Student::class)->create([
+      'meta' => [ 'student_grade_id' => $studentGrade1->id],
+      'tenant_id' => $this->user->tenant_id,
+    ]);
+    $this->enrollStudent($student, $course1);
+    $response = $this->actingAs($this->user)
+      ->getJson("api/v1/students/$student->id/valid_courses")
+      ->assertOk()
+      ->assertJson([
+        'data' => [
+          $course2->only('id'),
+        ],
+        'total' => 1,
+      ]);
+  }
+
+  private function enrollStudent(Student $student, Course $course) {
+    $tenant = $student->tenant;
+
+    return factory(Registration::class)->create([
+      'course_id' => $course->id,
+      'term_id' => $tenant->current_term->id,
+      'tenant_id' => $tenant->id,
+      'user_id' => $student->id,
+    ]);
   }
 }

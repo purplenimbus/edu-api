@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Models;
 
 use App\Course;
 use App\Guardian;
@@ -24,10 +24,10 @@ class StudentTest extends TestCase
   public function testGenerateStudentId()
   {
     $knownDate = Carbon::create(2001, 5, 21, 12);
-    Carbon::setTestNow($knownDate);  
+    Carbon::setTestNow($knownDate);
     $student = factory(Student::class)->create();
 
-    $this->assertEquals("20010001", $student->generateStudentId());
+    $this->assertEquals("2001".sprintf("%04d", $student->id), $student->generateStudentId());
   }
 
   /**
