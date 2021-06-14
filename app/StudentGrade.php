@@ -34,4 +34,9 @@ class StudentGrade extends Model
   {
     return $this->hasMany('App\PaymentProfile');
   }
+
+  public function tenant()
+  {
+    return $this->belongsTo('App\Tenant');
+  }
 }

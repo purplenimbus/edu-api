@@ -44,9 +44,17 @@ class CurriculumCourseLoad extends Model
 
   public function getHasCourseAttribute()
   {
-    return Course::whereSubjectId($this->subject->id)
-      ->ofStudentGrade($this->curriculum->grade->id)
-      ->first() ? true : false;
+    $query = Course::whereSubjectId($this->subject->id)
+      ->ofStudentGrade($this->curriculum->grade->id);
+
+    $currentTerm = Arr::get($this, 'curriculum.student_grade.tenant.current_term', null);
+
+    if (!is_null($currentTerm)) {
+      $query->ofSchoolTerm($currentTerm ->id);
+    }
+
+
+    return $query->first() ? true : false;
   }
 
   public function scopeOfTenant($query, $tenant_id)

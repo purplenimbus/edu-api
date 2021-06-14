@@ -97,7 +97,7 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function getCourseLoad(GetCurriculum $request, $student_grade_id){
+  public function getCourseLoad(GetCurriculum $request){
     $tenant = Auth::user()->tenant()->first();
     $nimbus_syllabus = new Syllabus($tenant);
     $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
@@ -128,8 +128,8 @@ class CurriculumController extends Controller
             );
         })
       ])
-      ->whereHas('curriculum', function($query) use ($student_grade_id){
-        $query->ofStudentGrade($student_grade_id);
+      ->whereHas('curriculum', function($query) use ($request){
+        $query->ofStudentGrade($request->student_grade_id);
       })
       ->paginate($request->paginate ?? config('edu.pagination'));
 
