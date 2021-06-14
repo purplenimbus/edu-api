@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Course;
 use App\Instructor;
+use App\NimbusEdu\Institution;
 use App\Registration;
 use App\SchoolTerm;
 use App\Student;
@@ -21,7 +22,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseBelongsToTenant()
+  public function testItBelongsToTenant()
   {
     $tenant = factory(Tenant::class)->create();
     $course = factory(Course::class)->create([
@@ -36,7 +37,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseBelongsToSchoolTerm()
+  public function testItBelongsToSchoolTerm()
   {
     $tenant = factory(Tenant::class)->create();
     $schoolTerm = factory(SchoolTerm::class)->create();
@@ -53,7 +54,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasStudentGrade()
+  public function testItHasStudentGrade()
   {
     $tenant = factory(Tenant::class)->create();
     $studentGrade = StudentGrade::first();
@@ -70,7 +71,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasAnInstructor()
+  public function testItHasAnInstructor()
   {
     $instructor = factory(Instructor::class)->create();
     $tenant = factory(Tenant::class)->create();
@@ -87,7 +88,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasASubject()
+  public function testItHasASubject()
   {
     $subject = factory(Subject::class)->create();
     $tenant = factory(Tenant::class)->create();
@@ -104,7 +105,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasManyRegistrations()
+  public function testItHasManyRegistrations()
   {
     $tenant = factory(Tenant::class)->create();
     $course = factory(Course::class)->create([ 'tenant_id' => $tenant->id ]);
@@ -120,7 +121,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasAStatus()
+  public function testItHasAStatus()
   {
     $course = factory(Course::class)->create();
 
@@ -132,7 +133,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasAStudentGradeScope()
+  public function testItHasAStudentGradeScope()
   {
     $tenant = factory(Tenant::class)->create();
     $studentGrade1 = StudentGrade::whereAlias('js 1')->first();
@@ -159,7 +160,7 @@ class CourseTest extends TestCase
    *
    * @return void
    */
-  public function testCourseHasAValidCoursesScope()
+  public function testItHasAValidCoursesScope()
   {
     // $this->seed();
     $tenant1 = factory(Tenant::class)->create();
@@ -199,6 +200,41 @@ class CourseTest extends TestCase
 
     $this->assertEquals(1, Course::validCourses($student1)->count());
     $this->assertEquals(1, Course::validCourses($student2)->count());
+  }
+
+  /**
+   * A course is scoped to a school term
+   *
+   * @return void
+   */
+  public function testItHasASchoolTermScope()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, 'first term');
+    $studentGrade1 = StudentGrade::whereAlias('js 1')->first();
+    $studentGrade2 = StudentGrade::whereAlias('js 2')->first();
+    $schoolTerm = factory(SchoolTerm::class)->create([
+      'tenant_id' => $tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'student_grade_id' => $studentGrade1->id,
+      'term_id' => $tenant->current_term->id,
+      'tenant_id' => $tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'student_grade_id' => $studentGrade1->id,
+      'term_id' => $schoolTerm->id,
+      'tenant_id' => $tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'student_grade_id' => $studentGrade2->id,
+      'term_id' => $tenant->current_term->id,
+      'tenant_id' => $tenant->id,
+    ]);
+
+    $this->assertEquals(2, Course::ofSchoolTerm($tenant->current_term->id)->count());
+    $this->assertEquals(1, Course::ofSchoolTerm($schoolTerm->id)->count());
   }
 
   private function registerStudent(Student $student, Course $course) {

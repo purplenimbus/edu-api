@@ -138,7 +138,7 @@ class Course extends Model
 
   public function scopeOfTenant($query, $tenant_id)
   {
-    return $query->where('tenant_id', $tenant_id);
+    return $query->whereTenantId($tenant_id);
   }
 
   public function scopeValidCourses($query, Student $student)
@@ -149,5 +149,10 @@ class Course extends Model
       ->ofStudentGrade($student->grade['id'])
       ->ofTenant($student->tenant_id)
       ->whereNotIn('id', $course_ids);
+  }
+
+  public function scopeOfSchoolTerm($query, $tenant_id)
+  {
+    return $query->whereTermId($tenant_id);
   }
 }

@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Course;
 use App\Instructor;
+use App\NimbusEdu\Institution;
 use App\Registration;
 use App\Student;
 use App\StudentGrade;
@@ -23,7 +24,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testCourseIndexSortedByName()
+  public function testItReturnsPaginatedCoursesSortedByName()
   {
     $course1 = factory(Course::class)->create([
       "name" => "math",
@@ -52,7 +53,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexSortedByCreatedAtInAsendingOrder()
+  public function testItReturnsPaginatedCoursesSortedByCreatedAtInAsendingOrder()
   {
     $course1 = factory(Course::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -87,7 +88,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexSortedByCreatedAtInDescendingOrder()
+  public function testItReturnsPaginatedCoursesSortedByCreatedAtInDescendingOrder()
   {
     $course1 = factory(Course::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -118,7 +119,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexSortedByUpdatedAtInDescendingOrder()
+  public function testItReturnsPaginatedCoursesSortedByUpdatedAtInDescendingOrder()
   {
     $course1 = factory(Course::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -149,7 +150,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexSortedByUpdatedAtInAscendingOrder()
+  public function testItReturnsPaginatedCoursesSortedByUpdatedAtInAscendingOrder()
   {
     $course1 = factory(Course::class)->create([
       "tenant_id" => $this->user->tenant->id,
@@ -180,7 +181,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByName()
+  public function testItReturnsPaginatedCoursesFilteredByName()
   {
     $course1 = factory(Course::class)->create([
       "name" => "math",
@@ -211,7 +212,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByValidInstructorId()
+  public function testItReturnsPaginatedCoursesFilteredByAValidInstructorId()
   {
     $instructor = factory(Instructor::class)->create();
     $course1 = factory(Course::class)->create([
@@ -249,7 +250,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByInvalidInstructorId()
+  public function testItDoesntReturnPaginatedCoursesFilteredByAnInvalidInstructorId()
   {
     $instructor = factory(Instructor::class)->create();
     factory(Course::class)->create([
@@ -277,7 +278,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByValidStatus()
+  public function testItReturnsPaginatedCoursesFilteredByAValidStatus()
   {
     $course1 = factory(Course::class)->create([
       "name" => "math",
@@ -313,7 +314,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByInvalidStatus()
+  public function testItDoesntReturnPaginatedCoursesFilteredByAnInvalidStatus()
   {
     factory(Course::class)->create([
       "name" => "math",
@@ -338,7 +339,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByValidStatusId()
+  public function testItReturnsPaginatedCoursesFilteredByAValidStatusId()
   {
     $course1 = factory(Course::class)->create([
       "name" => "math",
@@ -372,7 +373,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByInvalidStatusId()
+  public function testItDoesntReturnPaginatedCoursesFilteredByAnInvalidStatusId()
   {
     factory(Course::class)->create([
       "name" => "math",
@@ -398,7 +399,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByValidStudentGradeId()
+  public function testItReturnsPaginatedCoursesFilteredByAValidStudentGradeId()
   {
     $student_grade = StudentGrade::first();
     $course1 = factory(Course::class)->create([
@@ -435,7 +436,7 @@ class CourseControllerTest extends TestCase
    *
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByInvalidStudentGradeId()
+  public function testItReturnsPaginatedCoursesFilteredByInvalidStudentGradeId()
   {
     $student_grade = StudentGrade::first();
     factory(Course::class)->create([
@@ -462,7 +463,7 @@ class CourseControllerTest extends TestCase
    * Returns courses with an instructor
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByHasInstructor()
+  public function testItReturnsPaginatedCoursesFilteredByHasInstructor()
   {
     $instructor = factory(Instructor::class)->create();
     $course1 = factory(Course::class)->create([
@@ -499,7 +500,7 @@ class CourseControllerTest extends TestCase
    * Returns courses without an instructor
    * @return void
    */
-  public function testPaginatedCourseIndexFilteredByCoursesWithoutInstructor()
+  public function testItReturnsPaginatedCoursesFilteredByCoursesWithoutInstructor()
   {
     $instructor = factory(Instructor::class)->create();
     factory(Course::class)->create([
@@ -535,7 +536,7 @@ class CourseControllerTest extends TestCase
    * Update a valid course
    * @return void
    */
-  public function testUpdateValidCourse() {
+  public function testItUpdatesAValidCourse() {
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
@@ -553,10 +554,10 @@ class CourseControllerTest extends TestCase
   }
   
   /**
-   * Update an invalid course
+   * Doesn't update an invalid course
    * @return void
    */
-  public function testUpdateInvalidCourse() {
+  public function testItDoesntUpdateAnInvalidCourse() {
     factory(Course::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
@@ -569,10 +570,10 @@ class CourseControllerTest extends TestCase
   }
 
   /**
-   * Create a valid course
+   * Doesn't create a course with valid data
    * @return void
    */
-  public function testCreateValidCourse() {
+  public function testItCreatesACourseWithValidData() {
     $data = factory(Course::class)->make([
       'tenant_id' => $this->user->tenant_id,
     ]);
@@ -590,10 +591,10 @@ class CourseControllerTest extends TestCase
   }
 
   /**
-   * Create a course with invalid data
+   * Doesn't create a course with invalid data
    * @return void
    */
-  public function testCreateValidCourseInvalidData() {
+  public function testItDoesntCreateACourseWithInvalidData() {
     $data = factory(Course::class)->make([
       'tenant_id' => $this->user->tenant_id,
     ]);
@@ -610,7 +611,7 @@ class CourseControllerTest extends TestCase
    * show a valid course
    * @return void
    */
-  public function testShowValidCourse() {
+  public function testItReturnsAValidCourse() {
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant_id,
     ]);
@@ -629,7 +630,7 @@ class CourseControllerTest extends TestCase
    * show an invalid course
    * @return void
    */
-  public function testShowInvalidCourse() {
+  public function testItShowsInvalidCourse() {
     factory(Course::class)->create([
       'tenant_id' => $this->user->tenant_id,
     ]);
@@ -643,7 +644,7 @@ class CourseControllerTest extends TestCase
    * show un registered students
    * @return void
    */
-  public function testShowUnregisteredStudents() {
+  public function testItReturnsUnregisteredStudents() {
     $studentGrade = StudentGrade::first();
     $studentData = [
       'meta' => [ 'student_grade_id' => $studentGrade->id ],
@@ -692,7 +693,7 @@ class CourseControllerTest extends TestCase
    * delete a valid courses
    * @return void
    */
-  public function testDeleteValidCourses() {
+  public function testItDeletesValidCourses() {
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant_id,
     ]);
@@ -715,7 +716,7 @@ class CourseControllerTest extends TestCase
    * batch create courses with valid subjects
    * @return void
    */
-  public function testBatchCreateCoursesWithValidSubjects() {
+  public function testItBatchCreatesCoursesWithValidSubjects() {
     $this->seed(DatabaseSeeder::class);
     $subject1 = Subject::whereName('english')->first();
     $subject2 = Subject::whereName('mathematics')->first();
@@ -760,10 +761,10 @@ class CourseControllerTest extends TestCase
   }
 
   /**
-   * batch create courses with invalid subjects
+   * Doesn't batch create courses with invalid subjects
    * @return void
    */
-  public function testBatchCreateCoursesWithInvalidSubjects() {
+  public function testItDoesntBatchCreateCoursesWithInvalidSubjects() {
     $this->seed(DatabaseSeeder::class);
 
     $this->actingAs($this->user)
@@ -776,10 +777,10 @@ class CourseControllerTest extends TestCase
   }
 
   /**
-   * batch create courses with invalid student grades
+   * Doesn't create batch courses with invalid student grades
    * @return void
    */
-  public function testBatchCreateCoursesWithInvalidStudentGrades() {
+  public function testItDoesntBatchCreateCoursesWithInvalidStudentGrades() {
     $this->seed(DatabaseSeeder::class);
 
     $this->actingAs($this->user)
@@ -788,6 +789,56 @@ class CourseControllerTest extends TestCase
           ['student_grade_id' => 0],
         ]
       ])
+      ->assertStatus(422);
+  }
+
+  /**
+   * Returns courses filtered by valid school term
+   *
+   * @return void
+   */
+  public function testItReturnsPaginatedCoursesFilteredByAValidSchoolTerm()
+  {
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+    $course1 = factory(Course::class)->create([
+      "name" => "math",
+      "tenant_id" => $this->user->tenant->id,
+      'term_id' => $this->user->tenant->current_term->id,
+    ]);
+    $course2 = factory(Course::class)->create([
+      "name" => "english",
+      "tenant_id" => $this->user->tenant->id,
+      'term_id' => $this->user->tenant->current_term->id,
+    ]);
+    factory(Course::class)->create([
+      "tenant_id" => $this->user->tenant->id,
+    ]);
+    $termId = $this->user->tenant->current_term->id;
+    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/courses?filter[term_id]=$termId")
+      ->assertOk()
+      ->assertJson([
+        "current_page" => 1,
+        "data" => [
+          $course2->only('id'),
+          $course1->only('id'),
+        ],
+        "per_page" => 10,
+        "total" => 2,
+      ]);
+  }
+
+  /**
+   * Doesn't returns courses filtered by an invalid school term
+   *
+   * @return void
+   */
+  public function testItDoesntReturnPaginatedCoursesFilteredByAnInvalidSchoolTerm()
+  {
+    $this->actingAs($this->user)
+      ->getJson("api/v1/courses?filter[term_id]=0")
       ->assertStatus(422);
   }
 }
