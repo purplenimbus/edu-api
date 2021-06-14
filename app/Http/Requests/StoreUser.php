@@ -26,7 +26,7 @@ class StoreUser extends FormRequest
   {
     return [
       'date_of_birth' => 'date',
-      'email'  => 'email|unique:users,email',
+      'email'  => 'email|unique:users,email', //should be required need to fix this
       'firstname'   => 'required|string|max:255',
       'lastname'  => 'required|string|max:255',
       'othernames'  => 'nullable|string|max:255',
@@ -36,7 +36,7 @@ class StoreUser extends FormRequest
       'address.country' => 'string|required_with:address.street',
       'address.state' => 'string|required_with:address.street',
       'address.phone_number' => 'string',
-      'tenant_id' => 'integer|exists:tenants,id',
+      'tenant_id' => 'integer|exists:tenants,id', //should be required need to fix this
     ];
   }
 }

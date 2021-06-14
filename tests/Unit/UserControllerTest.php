@@ -17,7 +17,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testGetUsers()
+  public function testItReturnsUsers()
   {
     $this->user->update(['firstname' => 'anthony']);
     $user1 = factory(User::class)->create([
@@ -32,7 +32,7 @@ class UserControllerTest extends TestCase
 
     $this->actingAs($this->user)
       ->getJson('api/v1/users')
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           $this->user->only(['id', 'firstname']),
@@ -47,7 +47,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testGetUsersWithFirstNameFilter()
+  public function testItReturnsUsersFilteredByFirstName()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -59,7 +59,7 @@ class UserControllerTest extends TestCase
     
     $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[firstname]={$user1->firstname}")
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           [
@@ -75,7 +75,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testGetUsersWithLastNameFilter()
+  public function testItReturnsUsersFilteredByLastName()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -87,7 +87,7 @@ class UserControllerTest extends TestCase
     
     $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[lastname]={$user1->lastname}")
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           [
@@ -104,7 +104,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testFilterUsersWithoutImage()
+  public function testItReturnsUsersFilteredWithNoImage()
   {
     $user1 = factory(User::class)->create([
       'firstname' => 'james',
@@ -119,7 +119,7 @@ class UserControllerTest extends TestCase
     
     $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[has_image]=false")
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           [
@@ -139,7 +139,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testFilterUsersWithImage()
+  public function testItReturnsUsersFilteredWithImage()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -152,7 +152,7 @@ class UserControllerTest extends TestCase
     
     $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[has_image]=true")
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           [
@@ -169,7 +169,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testFilterUsersbyAccountStatus()
+  public function testItReturnsUsersFilteredByAccountStatus()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -184,7 +184,7 @@ class UserControllerTest extends TestCase
 
     $this->actingAs($this->user)
       ->getJson("api/v1/users?filter[account_status]={$user1->account_status_id}")
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "data" => [
           [
@@ -200,7 +200,7 @@ class UserControllerTest extends TestCase
    *
    * @return void
    */
-  public function testGetUserById()
+  public function testItReturnsAUserByUserId()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -216,11 +216,23 @@ class UserControllerTest extends TestCase
   }
 
   /**
+   * Get a user by id
+   *
+   * @return void
+   */
+  public function testItDoesntReturnAnInvalidUser()
+  {    
+    $this->actingAs($this->user)
+      ->getJson("api/v1/users/0")
+      ->assertStatus(422);
+  }
+
+  /**
    * Update a user
    *
    * @return void
    */
-  public function testUpdateUserById()
+  public function testItUpdatesAValidUser()
   {
     $user1 = factory(User::class)->create([
       'tenant_id' => $this->user->tenant->id,
@@ -231,7 +243,7 @@ class UserControllerTest extends TestCase
         'firstname' => 'melinda',
         'lastname' => 'epifano',
       ])
-      ->assertStatus(200)
+      ->assertOk()
       ->assertJson([
         "id" => $user1->id,
         "firstname" => 'melinda',
@@ -240,11 +252,26 @@ class UserControllerTest extends TestCase
   }
 
   /**
+   * Update an invalid user
+   *
+   * @return void
+   */
+  public function testItDoesntUpdateAnInvalidUser()
+  {
+    $this->actingAs($this->user)
+      ->putJson("api/v1/users/0", [
+        'firstname' => 'melinda',
+        'lastname' => 'epifano',
+      ])
+      ->assertStatus(422);
+  }
+
+  /**
    * Create a new user
    *
    * @return void
    */
-  public function testCreateNewUser()
+  public function testItCreatesANewUserWithValidData()
   {
     $data = factory(User::class)->make([
       'tenant_id' => $this->user->tenant->id,
@@ -266,7 +293,7 @@ class UserControllerTest extends TestCase
           'lastname',
           'tenant_id',
         ])
-      )->assertStatus(200);
+      )->assertOk();
     
     $user = User::all()->last();
 
@@ -276,5 +303,34 @@ class UserControllerTest extends TestCase
         "firstname" => $user->firstname,
         "lastname" => $user->lastname,
       ]);
+  }
+
+  /**
+   * Create a new user with invalid data
+   *
+   * @return void
+   */
+  public function testItDoesntCreateANewUserWithInvalidData()
+  {
+    $data = factory(User::class)->make([
+      'address' => [
+        'city' => 'springfield',
+        'country' => 'united states of america',
+        'state' => 'missouri',
+        'street' => '1742 evergreen terrace',
+      ]
+    ]);
+
+    $this->actingAs($this->user)
+      ->postJson(
+        "api/v1/users/",
+        $data->only([
+          'email',
+          'address',
+          'lastname',
+          'tenant_id',
+        ])
+        )
+        ->assertStatus(422);
   }
 }

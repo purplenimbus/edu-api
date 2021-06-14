@@ -575,7 +575,7 @@ class StudentControllerTest extends TestCase
    * Return a transcript for an invalid student
    * @return void
    */
-  public function testItReturnsTheTranscriptsForAnInvalidStudent() {
+  public function testItDoesntReturnTheTranscriptsForAnInvalidStudent() {
     $this->actingAs($this->user)
       ->getJson("api/v1/students/0/transcripts")
       ->assertStatus(422);
