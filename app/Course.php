@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Course extends Model
 {
@@ -132,8 +133,7 @@ class Course extends Model
 
   public function scopeOfStudentGrade($query, $student_grade_id)
   {
-    return $query
-      ->where('student_grade_id', $student_grade_id);
+    return $query->whereStudentGradeId($student_grade_id);
   }
 
   public function scopeOfTenant($query, $tenant_id)
@@ -145,10 +145,17 @@ class Course extends Model
   {
     $course_ids = Registration::where('user_id', $student->id)->pluck('course_id');
 
-    return $query
-      ->ofStudentGrade($student->grade['id'])
+    $query->ofStudentGrade($student->grade['id'])
       ->ofTenant($student->tenant_id)
       ->whereNotIn('id', $course_ids);
+
+    $currentTerm = Arr::get($this, 'tenant.current_term', null);
+
+    if (!is_null($currentTerm)) {
+      $query->ofSchoolTerm($currentTerm ->id);
+    }
+
+    return $query;
   }
 
   public function scopeOfSchoolTerm($query, $tenant_id)

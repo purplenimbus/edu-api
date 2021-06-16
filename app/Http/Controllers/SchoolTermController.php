@@ -49,9 +49,7 @@ class SchoolTermController extends Controller
         'courses_completed',
         'registered_students_count',
       ])
-      ->where([
-        ['tenant_id', '=', $tenant->id]
-      ])
+      ->whereTenantId($tenant->id)
       ->paginate($request->paginate ?? config('edu.pagination'));
 
     return response()->json($terms, 200);
@@ -92,7 +90,7 @@ class SchoolTermController extends Controller
   {
     $tenant = Auth::user()->tenant()->first();
 
-    if ($request->status_id === 2) {
+    if ($request->status_id === SchoolTerm::Statuses['complete']) {
       CompleteTerm::dispatch($tenant);
     }
 
