@@ -11,8 +11,6 @@ use App\Http\Requests\GetCourses;
 use App\Http\Requests\StoreCourse;
 use App\Http\Requests\StoreBatchCourses;
 use App\Http\Requests\UpdateCourse;
-use App\Http\Requests\StoreBatch;
-use App\Jobs\ProcessBatch;
 use App\Jobs\GenerateCourses;
 use App\Student;
 use App\Http\Requests\DeleteCourse;
@@ -60,6 +58,7 @@ class CourseController extends Controller
             $query->whereNotNull('instructor_id') :
             $query->whereNull('instructor_id');
         }),
+        'term_id'
       ])
       ->allowedFields([
         'registrations',
@@ -78,9 +77,7 @@ class CourseController extends Controller
       ->allowedAppends(
         'status'
       )
-      ->where([
-        ['tenant_id', '=', $tenant->id]
-      ])
+      ->whereTenantId($tenant->id)
       ->paginate($request->paginate ?? config('edu.pagination'));
 
     return response()->json($courses, 200);

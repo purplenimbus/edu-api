@@ -48,11 +48,9 @@ class Curriculum extends Model
   {
     return $this->hasMany('App\CurriculumCourseLoad');
   }
-  /**
- *  Setup model event hooks
- */
-  public static function boot()
+
+  public function student_grade()
   {
-    parent::boot();
+    return $this->belongsTo('App\StudentGrade');
   }
 }

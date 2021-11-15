@@ -20,7 +20,7 @@ Route::group([
   Route::post('/logout','Auth\LoginController@logout');
   Route::get('/subjects', 'CurriculumController@subjects');
   Route::get('/grades/list', 'CurriculumController@listClasses');
-  Route::get('/curriculum/{student_grade_id}','CurriculumController@getCourseLoad');
+  Route::get('/curriculum','CurriculumController@getCourseLoad');
   Route::get('/account_status','UserController@getAccountStatuses');
   Route::get('/course_statuses','CourseController@course_statuses');
 

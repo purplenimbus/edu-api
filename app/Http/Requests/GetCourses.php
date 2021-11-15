@@ -30,6 +30,7 @@ class GetCourses extends FormRequest
       'filter.student_grade_id' => 'integer|exists:student_grades,id',
       'filter.instructor_id' => 'integer|exists:users,id',
       'filter.name' => 'string',
+      'filter.term_id' => 'integer|exists:school_terms,id',
       'filter.status_id' => ['integer', Rule::in(array_values(Course::Statuses))],
       'filter.status' => ['string', Rule::in(array_keys(Course::Statuses))],
     ];
