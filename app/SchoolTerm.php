@@ -86,4 +86,8 @@ class SchoolTerm extends Model
   public function scopeOfTenant($query, $tenant_id) {
     return $query->whereTenantId($tenant_id);
   }
+
+  public function enrolledStudents() {
+    return $this->registrations->unique('user_id')->pluck('user');
+  }
 }
