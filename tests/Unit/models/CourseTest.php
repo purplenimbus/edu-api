@@ -237,6 +237,52 @@ class CourseTest extends TestCase
     $this->assertEquals(1, Course::ofSchoolTerm($schoolTerm->id)->count());
   }
 
+  public function testItHasAnIncompleteScope()
+  {
+    $tenant = factory(Tenant::class)->create();
+    factory(Course::class)->create([
+      'status_id' => Course::Statuses['complete'],
+      'tenant_id' => $tenant->id,
+    ]);
+    $course2 = factory(Course::class)->create([
+      'status_id' => Course::Statuses['created'],
+      'tenant_id' => $tenant->id,
+    ]);
+    $course3 = factory(Course::class)->create([
+      'status_id' => Course::Statuses['in progress'],
+      'tenant_id' => $tenant->id,
+    ]);
+
+    $this->assertEquals(Course::incomplete()->get()->pluck(['id'])->toArray(), [$course2->id, $course3->id]);
+  }
+
+  public function testItHasAnIncompleteScopeCurrentTerm()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, 'first term');
+    $schoolTerm = factory(SchoolTerm::class)->create([
+      'tenant_id' => $tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'status_id' => Course::Statuses['complete'],
+      'term_id' => $tenant->current_term->id,
+      'tenant_id' => $tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'status_id' => Course::Statuses['created'],
+      'term_id' => $schoolTerm->id,
+      'tenant_id' => $tenant->id,
+    ]);
+    $course3 = factory(Course::class)->create([
+      'status_id' => Course::Statuses['in progress'],
+      'term_id' => $tenant->current_term->id,
+      'tenant_id' => $tenant->id,
+    ]);
+
+    $this->assertEquals(Course::with('tenant')->incomplete()->get()->pluck(['id'])->toArray(), [$course3->id]);
+  }
+
   private function registerStudent(Student $student, Course $course) {
     return factory(Registration::class)->create([
       'course_id' => $course->id,

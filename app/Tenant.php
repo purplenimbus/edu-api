@@ -66,6 +66,11 @@ class Tenant extends Model
       ->first();
   }
 
+  public function getHasCurrentTermAttribute()
+  {
+    return !is_null($this->currentTerm);
+  }
+
   public function getOwnerAttribute()
   {
     return User::whereIs('admin')
