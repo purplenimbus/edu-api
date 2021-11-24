@@ -10,12 +10,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use App\Tenant;
 use App\Course;
 use App\SchoolTerm;
-use Notifications\TermComplete;
+use App\Jobs\SendStudentGrades;
 
 class CompleteTerm implements ShouldQueue
 {
   use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-  var $tenant;
+  private $tenant;
 
   /**
    * Create a new job instance.
@@ -40,12 +40,10 @@ class CompleteTerm implements ShouldQueue
       ->pluck('course_id')
       ->unique()->values()->all();
 
-    $courses = Course::find($course_ids)->update('status_id', Course::Statuses['complete']);
+    Course::find($course_ids)->toQuery()->update(['status_id' => Course::Statuses['complete']]);
 
-    $this->tenant->current_term->update('status_id', SchoolTerm::Statuses['complete']);
+    SendStudentGrades::dispatch($this->tenant);
 
-    //kick off job to notify all parents with results here?
-
-    $this->tenant->notify(new TermComplete);
+    $this->tenant->current_term->update(['status_id' => SchoolTerm::Statuses['complete']]);
   }
 }
