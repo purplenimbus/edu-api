@@ -43,7 +43,5 @@ class CompleteTerm implements ShouldQueue
     Course::find($course_ids)->toQuery()->update(['status_id' => Course::Statuses['complete']]);
 
     SendStudentGrades::dispatch($this->tenant);
-
-    $this->tenant->current_term->update(['status_id' => SchoolTerm::Statuses['complete']]);
   }
 }

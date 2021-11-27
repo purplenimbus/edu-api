@@ -2,6 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Guardian;
+use App\SchoolTerm;
+use App\Student;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,9 +19,10 @@ class StudentGradeAvailable extends Notification
    *
    * @return void
    */
-  public function __construct()
+  public function __construct(SchoolTerm $schoolTerm, Student $student)
   {
-    //
+    $this->schoolTerm = $schoolTerm;
+    $this->student = $student;
   }
 
   /**
@@ -29,7 +33,7 @@ class StudentGradeAvailable extends Notification
    */
   public function via($notifiable)
   {
-    return ['mail'];
+    return ['mail','database'];
   }
 
   /**
@@ -40,10 +44,20 @@ class StudentGradeAvailable extends Notification
    */
   public function toMail($notifiable)
   {
+    $key = is_a($notifiable, 'App\Student') ? 'student_subject' : 'guardian_subject';
+    $host = env('FRONT_END_URL','http://localhost:4200/#/');
+		$url = "{$host}messages";
+
     return (new MailMessage)
-      ->line('The introduction to the notification.')
-      ->action('Notification Action', url('/'))
-      ->line('Thank you for using our application!');
+      ->subject(__("email.student_grade_available.{$key}", [
+        'first_name' => ucfirst($this->student->firstname),
+        'term_name' => $this->schoolTerm->name,
+      ]))
+      ->greeting(__('email.hi', [
+        'first_name' => ucfirst($notifiable->firstname),
+      ]))
+      ->line(__('email.student_grade_available.message'))
+      ->action(__('email.student_grade_available.view_result'), url($url));
   }
 
   /**

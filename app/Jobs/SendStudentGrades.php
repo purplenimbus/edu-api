@@ -38,11 +38,14 @@ class SendStudentGrades implements ShouldQueue
       $this->tenant->current_term
         ->enrolledStudents()
         ->each(function(Student $student) {
-          $student->notify(new StudentGradeAvailable);
+          $student->notify(new StudentGradeAvailable($this->tenant->current_term, $student));
           if ($student->guardian) {
-            $student->guardian->notify(new StudentGradeAvailable);
+            $student->guardian->notify(new StudentGradeAvailable($this->tenant->current_term, $student));
           }
         });
     }
+    //we only want to update the current_term after emails have gone out
+    //to ensure the emails contain the correct term name
+    $this->tenant->current_term->update(['status_id' => SchoolTerm::Statuses['complete']]);
   }
 }
