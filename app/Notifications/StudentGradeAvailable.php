@@ -56,7 +56,10 @@ class StudentGradeAvailable extends Notification
       ->greeting(__('email.hi', [
         'first_name' => ucfirst($notifiable->firstname),
       ]))
-      ->line(__('email.student_grade_available.message'))
+      ->line(__('email.student_grade_available.message', [
+        'first_name' => ucfirst($this->student->firstname),
+        'term_name' => $this->schoolTerm->name,
+      ]))
       ->action(__('email.student_grade_available.view_result'), url($url));
   }
 

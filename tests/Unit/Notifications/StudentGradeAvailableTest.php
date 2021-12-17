@@ -56,7 +56,8 @@ class StudentGradeAvailableTest extends TestCase
     $mailData = $notification->toMail($guardian)->toArray();
 
     $this->assertEquals('Hi James!', $mailData['greeting']);
-    $this->assertEquals('Joey\'s first term result is available', $mailData['subject']);
+    $this->assertEquals('Joey\'s first term result', $mailData['subject']);
+    $this->assertContains('Joey\'s first term result has been posted and is available for viewing', $mailData['introLines']);
     $this->assertStringContainsString('/messages', $mailData['actionUrl']);
     $this->assertEquals('View Result', $mailData['actionText']);
   }
