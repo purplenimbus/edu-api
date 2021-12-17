@@ -158,8 +158,15 @@ class Course extends Model
     return $query;
   }
 
-  public function scopeOfSchoolTerm($query, $tenant_id)
+  public function scopeOfSchoolTerm($query, $term_id)
   {
-    return $query->whereTermId($tenant_id);
+    return $query->whereTermId($term_id);
+  }
+
+  public function scopeIncomplete($query) {
+    $query->whereStatusId(Course::Statuses['in progress'])
+      ->orWhere('status_id', Course::Statuses['created']);
+
+    return $query;
   }
 }

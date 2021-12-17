@@ -43,7 +43,9 @@ class CourseObserver
       $course->schema = config('edu.default.course_schema');	
     }
 
-    $course->status_id = Course::Statuses['created'];
+    if (is_null($course->status_id)) {	
+      $course->status_id = Course::Statuses['created'];
+    }
   }
 
   /**
@@ -71,14 +73,17 @@ class CourseObserver
 
     if ($courseStatus == 'complete')
     {
-      $otherCourses = $course->ofTenant($course->tenant->id)
-        ->whereStatusId(Course::Statuses['in progress']);	
+      $otherCourses = $course
+        ->ofTenant($course->tenant->id)
+        ->incomplete();
 
-      if ($otherCourses->count() == 0 && isset($course->tenant->current_term)){	
-        $course->tenant->current_term->update([
-          'current_term' => false,
-          'status_id'=> SchoolTerm::Statuses['complete'],
-        ]);	
+      if ($course->tenant->has_current_term){
+        if($otherCourses->count() == 0) {
+          $course->tenant->current_term->update([
+            'current_term' => false,
+            'status_id'=> SchoolTerm::Statuses['complete'],
+          ]);
+        }
       }	
     }
   }

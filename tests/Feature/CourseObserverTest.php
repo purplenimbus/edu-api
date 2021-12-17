@@ -195,6 +195,29 @@ class CourseObserverTest extends TestCase
         'status_id' => Course::Statuses['complete'],
       ]);
 
-    $this->assertEquals('complete', SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
+    $this->assertEquals(array_flip(SchoolTerm::Statuses)[2], SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
+  }
+
+  public function testDosentUpdateCurrentTermStatusIfOtherCoursesAreinProgress()
+  {
+    $this->seed(DatabaseSeeder::class);
+
+    $studentGrade = StudentGrade::first();
+    $course = factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $otherCourse = factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    $this->actingAs($this->user)
+      ->putJson("api/v1/courses/{$course->id}", [
+        'student_grade_id' => $studentGrade->id,
+        'status_id' => Course::Statuses['complete'],
+      ]);
+
+    $this->assertEquals(array_flip(SchoolTerm::Statuses)[1], SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
   }
 }
