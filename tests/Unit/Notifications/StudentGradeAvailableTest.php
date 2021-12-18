@@ -75,9 +75,7 @@ class StudentGradeAvailableTest extends TestCase
       ],
       'tenant_id' => $tenant->id,
     ]);
-    $guardian = factory(Guardian::class)->create([
-      'first_name' => 'james',
-    ]);    
+    
     $notification = new StudentGradeAvailable($tenant->current_term, $student);
 
     $this->assertEquals([
