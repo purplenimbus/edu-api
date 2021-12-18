@@ -61,4 +61,25 @@ class StudentGradeAvailableTest extends TestCase
     $this->assertStringContainsString('/messages', $mailData['actionUrl']);
     $this->assertEquals('View Result', $mailData['actionText']);
   }
+
+  public function testItSavesADatabaseNotification()
+  {
+    $studentGrade = StudentGrade::first();
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, 'first term');
+    $student = factory(Student::class)->create([
+      'first_name' => 'joey',
+      'meta' => [
+        'student_grade_id' => $studentGrade->id,
+      ],
+      'tenant_id' => $tenant->id,
+    ]);
+    
+    $notification = new StudentGradeAvailable($tenant->current_term, $student);
+
+    $this->assertEquals([
+      'message' => "Joey's first term result has been posted and is available for viewing"
+    ], $notification->toArray());
+  }
 }

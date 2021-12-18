@@ -33,7 +33,7 @@ class StudentGradeAvailable extends Notification
    */
   public function via($notifiable)
   {
-    return ['mail','database'];
+    return ['mail', 'database'];
   }
 
   /**
@@ -69,10 +69,13 @@ class StudentGradeAvailable extends Notification
    * @param  mixed  $notifiable
    * @return array
    */
-  public function toArray($notifiable)
+  public function toArray()
   {
     return [
-      //
+      'message' => __('email.student_grade_available.message', [
+        'first_name' => ucfirst($this->student->firstname),
+        'term_name' => $this->schoolTerm->name,
+      ])
     ];
   }
 }
