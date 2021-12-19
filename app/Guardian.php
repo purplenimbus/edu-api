@@ -19,10 +19,10 @@ class Guardian extends User
 
   public function wards() {
     return $this->hasMany('App\UserGroup','owner_id','id')
-      ->where('type_id', 1)
+      ->where('type_id', UserGroup::Types['wards'])
       ->first()
       ->members
-      ->load('user');
+      ->pluck('user');
   }
 
   public function assignWards(array $student_ids) {
