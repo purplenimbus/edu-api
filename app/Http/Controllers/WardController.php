@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests\DeleteGroupMember;
 use App\Http\Requests\UpdateGroup;
 use App\Http\Requests\GetGuardian;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
-use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\UserGroup;
+use App\UserGroupMember;
 
 class WardController extends Controller
 {
-    /**
+  /**
    * Display a listing of the guardians wards.
    *
    * @return \Illuminate\Http\Response

@@ -2,12 +2,14 @@
 
 use App\Tenant;
 use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory;
 
 $factory->define(Tenant::class, function (Faker $faker) {
   return [
     'address' => [
-      'street' => $faker->streetAddress
+      'city' => 'uyo',
+      'street' => $faker->streetAddress,
+      'state' => 'akwa ibom',
+      'country' => 'nigeria'
     ],
     'name' => $faker->company,
   ];

@@ -8,14 +8,17 @@ use App\Notifications\StudentGradeAvailable;
 use App\Student;
 use App\StudentGrade;
 use App\Tenant;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class StudentGradeAvailableTest extends TestCase
 {
+  use RefreshDatabase;
+
   public function testItSendsAnEmailToAStudent()
   {
-    $studentGrade = StudentGrade::first();
     $tenant = factory(Tenant::class)->create();
+    $studentGrade = StudentGrade::first();
     $institution = new Institution();
     $institution->newSchoolTerm($tenant, 'first term');
     $student = factory(Student::class)->create([
@@ -37,8 +40,8 @@ class StudentGradeAvailableTest extends TestCase
 
   public function testItSendsAnEmailToAGuardian()
   {
-    $studentGrade = StudentGrade::first();
     $tenant = factory(Tenant::class)->create();
+    $studentGrade = StudentGrade::first();
     $institution = new Institution();
     $institution->newSchoolTerm($tenant, 'first term');
     $student = factory(Student::class)->create([
@@ -64,8 +67,8 @@ class StudentGradeAvailableTest extends TestCase
 
   public function testItSavesADatabaseNotification()
   {
-    $studentGrade = StudentGrade::first();
     $tenant = factory(Tenant::class)->create();
+    $studentGrade = StudentGrade::first();
     $institution = new Institution();
     $institution->newSchoolTerm($tenant, 'first term');
     $student = factory(Student::class)->create([

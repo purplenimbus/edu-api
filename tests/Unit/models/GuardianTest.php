@@ -11,7 +11,7 @@ class GuardianTest extends TestCase
 {
   use RefreshDatabase;
 
-  public function testItHasManyWards()
+  public function testItHasAyWardsAttribute()
   {
     $guardian = factory(Guardian::class)->create();
     $student1 = factory(Student::class)->create();
@@ -21,6 +21,6 @@ class GuardianTest extends TestCase
     $this->assertEquals([
       $student1->id,
       $student2->id,
-    ], $guardian->wards()->pluck('id')->toArray());
+    ], $guardian->wards->pluck('id')->toArray());
   }
 }
