@@ -49,7 +49,7 @@ class Student extends User
   public function getGuardianAttribute()
   {
     $member = UserGroupMember::whereHas('group', function($query) {
-      $query->where('type_id', 1);
+      $query->where('type_id', UserGroup::Types['wards']);
     })
     ->where('user_id', $this->id)
     ->first();
