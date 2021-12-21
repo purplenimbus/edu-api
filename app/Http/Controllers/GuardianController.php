@@ -11,6 +11,7 @@ use App\Http\Requests\StoreGuardian;
 use App\Http\Requests\GetGuardian;
 use App\Http\Requests\DeleteGuardian;
 use App\Http\Requests\GetUsers;
+use App\Http\Requests\UpdateGuardian;
 use App\NimbusEdu\NimbusEdu;
 
 class GuardianController extends Controller
@@ -22,55 +23,32 @@ class GuardianController extends Controller
    */
   public function index(GetUsers $request)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
+    $user = Auth::user();
+    $tenant = $user->tenant()->first();
 
     $guardians = QueryBuilder::for(Guardian::class)
       ->defaultSort('firstname')
       ->allowedSorts(
-        'created_at',
-        'date_of_birth',
         'firstname',
-        'id',
-        'lastname',
-        'ref_id',
-        'updated_at'
+        'lastname'
       )
-      ->allowedAppends([
-        'roles',
-        'type',
-      ])
       ->allowedFilters([
         AllowedFilter::partial('firstname'),
         AllowedFilter::partial('lastname'),
-        'email',
+        AllowedFilter::partial('email'),
         AllowedFilter::callback('has_image', function (Builder $query, $value) {
-            return $value ?
-              $query->whereNotNull('image') :
-              $query->whereNull('image');
+          return $value ?
+            $query->whereNotNull('image') :
+            $query->whereNull('image');
         }),
       ])
-      ->allowedFields([
-        'address',
-        'date_of_birth',
-        'firstname',
-        'lastname',
-        'othernames',
-        'email',
-        'meta',
-        'password',
-        'image',
-        'ref_id',
-        'wards.members'
-      ])
-      ->allowedIncludes(
-        'status',
-        'wards.members.user'
+      ->allowedAppends(
+        'wards'
       )
-      ->where('tenant_id', $tenant_id);
-    
-    $data = isset($request->paginate) ? $guardians->paginate($request->paginate) : $guardians->get();
-    
-    return response()->json($data, 200);
+      ->whereTenantId($tenant->id)
+      ->paginate($request->paginate ?? config('edu.pagination'));
+
+    return response()->json($guardians, 200);
   }
 
   /**
@@ -82,29 +60,14 @@ class GuardianController extends Controller
    */
   public function show(GetGuardian $request)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
     $guardian = QueryBuilder::for(Guardian::class)
       ->allowedAppends([
         'roles',
         'type',
       ])
-      ->allowedFields([
-        'address',
-        'date_of_birth',
-        'firstname',
-        'lastname',
-        'othernames',
-        'email',
-        'meta',
-        'password',
-        'image',
-        'ref_id',
-        'wards.members'
-      ])
       ->allowedIncludes(
         'status',
-        'wards.members.user'
+        'wards'
       )
       ->where('id', $request->id)
       ->first();
@@ -137,10 +100,8 @@ class GuardianController extends Controller
    * @param  \App\Guardian  $guardian
    * @return \Illuminate\Http\Response
    */
-  public function update(StoreGuardian $request, $id)
+  public function update(UpdateGuardian $request, $id)
   {
-    $tenant_id = Auth::user()->tenant()->first()->id;
-
     $guardian = Guardian::find($id);
 
     $guardian->fill($request->all());

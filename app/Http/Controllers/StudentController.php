@@ -131,7 +131,6 @@ class StudentController extends Controller
         'password',
         'image',
         'ref_id',
-        'wards.members',
         'roles'
       ])
       ->allowedIncludes(

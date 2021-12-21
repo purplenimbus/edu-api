@@ -19,6 +19,11 @@ class UserGroup extends Model
     'tenant_id',
   ];
 
+  const Types = [
+    'wards' => 1,
+    'class list' => 2
+  ];
+
   public function members() {
   	return $this->hasMany('App\UserGroupMember', 'group_id');
   }
@@ -30,7 +35,7 @@ class UserGroup extends Model
   public function scopeOfGuardians($query, $owner_id = false)
   {
     $params = [
-      ['type_id', '=', 1],
+      ['type_id', '=', Self::Types['wards']],
     ];
 
     if ($owner_id) {

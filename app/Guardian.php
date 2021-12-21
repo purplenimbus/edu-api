@@ -2,8 +2,6 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
 use App\User;
 use App\UserGroup;
 use App\UserGroupMember;
@@ -17,9 +15,9 @@ class Guardian extends User
       ->whereIs('guardian');
   }
 
-  public function wards() {
+  public function getWardsAttribute() {
     return $this->hasMany('App\UserGroup','owner_id','id')
-      ->where('type_id', 1)
+      ->where('type_id', UserGroup::Types['wards'])
       ->first()
       ->members
       ->load('user');
@@ -32,7 +30,7 @@ class Guardian extends User
       $group = UserGroup::firstOrCreate([ 
         'owner_id' => $this->id,
         'tenant_id' => $this->tenant->id,
-        'type_id' => 1
+        'type_id' => UserGroup::Types['wards']
       ]);
 
       UserGroupMember::firstOrCreate([

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateUser extends FormRequest
+class UpdateGuardian extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -23,15 +23,9 @@ class UpdateUser extends FormRequest
    */
   public function rules()
   {
-    $validation = new StoreUser();
-  
-    return array_merge($validation->rules(), [
-      'email'  => 'email',
-      'firstname'   => 'string|max:255',
-      'lastname'  => 'string|max:255',
-      'id' => 'required|integer|exists:users,id',
-      'tenant_id' => 'integer|exists:tenants,id',
-    ]);
+    $guardianValidation = new UpdateUser();
+
+    return array_merge([], $guardianValidation->rules());
   }
 
   public function validationData() {

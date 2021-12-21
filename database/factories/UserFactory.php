@@ -21,7 +21,10 @@ use Faker\Generator as Faker;
 $factory->define(User::class, function (Faker $faker) {
   return [
     'address' => [
-      'street' => $faker->streetAddress
+      'city' => 'uyo',
+      'street' => $faker->streetAddress,
+      'state' => 'akwa ibom',
+      'country' => 'nigeria'
     ],
     'date_of_birth' => $faker->date,
     'firstname' => $faker->firstName,

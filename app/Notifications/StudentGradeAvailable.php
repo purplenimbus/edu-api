@@ -6,7 +6,6 @@ use App\Guardian;
 use App\SchoolTerm;
 use App\Student;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 

@@ -68,15 +68,5 @@ class OtherSeeders extends Seeder
     foreach($course_load_types as $type){
       App\CurriculumCourseLoadType::create($type);
     }
-
-    $user_group_types = [
-      [ 'name' => 'family' ],
-      [ 'name' => 'class list' ],
-    ];
-
-    //Create User Group Types
-    foreach($user_group_types as $type){
-      App\UserGroupType::create($type);
-    }
   }
 }
