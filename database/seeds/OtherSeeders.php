@@ -73,10 +73,5 @@ class OtherSeeders extends Seeder
       [ 'name' => 'family' ],
       [ 'name' => 'class list' ],
     ];
-
-    //Create User Group Types
-    foreach($user_group_types as $type){
-      App\UserGroupType::create($type);
-    }
   }
 }
