@@ -32,6 +32,10 @@ class Transaction extends Model
 	
 	public function getPayStackTransaction() {
 		if (!$this->ref_id) {
+			return null;
+		}
+
+		if ($this->ref_id) {
 			request()->merge([
 				'trxref' => $this->ref_id,
 			]);

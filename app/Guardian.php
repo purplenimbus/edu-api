@@ -20,7 +20,7 @@ class Guardian extends User
       ->where('type_id', UserGroup::Types['wards'])
       ->first()
       ->members
-      ->pluck('user');
+      ->load('user');
   }
 
   public function assignWards(array $student_ids) {

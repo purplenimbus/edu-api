@@ -222,8 +222,6 @@ Route::group([
           'prefix' => '/wards'
         ], function() {
           Route::get('/', 'WardController@index');
-          Route::put('/', 'WardController@update');
-          Route::delete('/', 'WardController@destroy');
         });
       });
     });

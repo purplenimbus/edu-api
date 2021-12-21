@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserGroupMember extends Model
 {
+  protected $with = ['user'];
   /**
    * The attributes that are mass assignable.
    *

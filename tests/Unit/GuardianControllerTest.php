@@ -308,6 +308,7 @@ class GuardianControllerTest extends TestCase
       $student3->id,
       $student4->id,
     ]);
+
     $this->actingAs($this->user)
       ->getJson("api/v1/guardians?append=wards")
       ->assertOk()
@@ -317,10 +318,10 @@ class GuardianControllerTest extends TestCase
             "id" => $guardian1->id,
             "wards" => [
               [
-                "id" => $student1->id,
+                "user_id" => $student1->id,
               ],
               [
-                "id" => $student2->id,
+                "user_id" => $student2->id,
               ]
             ]
           ],
@@ -328,10 +329,10 @@ class GuardianControllerTest extends TestCase
             "id" => $guardian2->id,
             "wards" => [
               [
-                "id" => $student3->id,
+                "user_id" => $student3->id,
               ],
               [
-                "id" => $student4->id,
+                "user_id" => $student4->id,
               ]
             ]
           ]
