@@ -21,6 +21,7 @@ class UserGroup extends Model
 
   const Types = [
     'wards' => 1,
+    'class list' => 2
   ];
 
   public function members() {
