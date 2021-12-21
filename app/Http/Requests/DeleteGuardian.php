@@ -22,13 +22,14 @@ class DeleteGuardian extends FormRequest
    * @return array
    */
   public function rules()
-	{
-		return [
-			'id' => 'exists:users,id',
-		];
-	}
+  {
+    return [
+      'id' => 'exists:users,id',
+    ];
+  }
 
-	public function validationData() {
-		return array_merge($this->all(), $this->route()->parameters());
-	}
+  public function validationData()
+  {
+    return array_merge($this->all(), $this->route()->parameters());
+  }
 }
