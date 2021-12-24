@@ -64,7 +64,7 @@ class SendStudentGradesTest extends TestCase
     $this->registerStudent($tenant->current_term, $student1, $course1);
     $this->registerStudent($tenant->current_term, $student2, $course1);
 
-    $job = new SendStudentGrades($tenant);
+    $job = new SendStudentGrades($tenant, $tenant->current_term);
     $job->handle();
 
     Notification::assertSentTo(

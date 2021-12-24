@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Course;
+use App\Jobs\CompleteTerm;
+use App\Jobs\SendStudentGrades;
 use App\NimbusEdu\Helpers\CourseHelper;
 use App\SchoolTerm;
 use Illuminate\Support\Arr;
@@ -77,13 +79,13 @@ class CourseObserver
         ->ofTenant($course->tenant->id)
         ->incomplete();
 
-      if ($course->tenant->has_current_term){
-        if($otherCourses->count() == 0) {
-          $course->tenant->current_term->update([
-            'current_term' => false,
-            'status_id'=> SchoolTerm::Statuses['complete'],
-          ]);
-        }
+      if ($course->tenant->has_current_term && $otherCourses->count() == 0){
+        SendStudentGrades::dispatch($course->tenant, $course->tenant->current_term);
+
+        $course->tenant->current_term->update([
+          'current_term' => false,
+          'status_id'=> SchoolTerm::Statuses['complete'],
+        ]);
       }	
     }
   }

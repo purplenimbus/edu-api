@@ -13,6 +13,8 @@ class StudentGradeAvailable extends Notification
 {
   use Queueable;
 
+  private $schoolTerm;
+  private $student;
   /**
    * Create a new notification instance.
    *

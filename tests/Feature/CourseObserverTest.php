@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Course;
 use App\StudentGrade;
 use App\Instructor;
+use App\Jobs\CompleteTerm;
+use App\Jobs\SendStudentGrades;
 use App\NimbusEdu\Institution;
 use App\Registration;
 use App\SchoolTerm;
@@ -14,6 +16,7 @@ use DatabaseSeeder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Bus;
 
 class CourseObserverTest extends TestCase
 {
@@ -198,7 +201,52 @@ class CourseObserverTest extends TestCase
     $this->assertEquals(array_flip(SchoolTerm::Statuses)[2], SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
   }
 
-  public function testDosentUpdateCurrentTermStatusIfOtherCoursesAreinProgress()
+  public function testDispatchesTheCompleteTermJobWhenTheCurrentTermCompleted()
+  {
+    Bus::fake();
+    $this->seed(DatabaseSeeder::class);
+
+    $studentGrade = StudentGrade::first();
+    $course = factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    $this->actingAs($this->user)
+      ->putJson("api/v1/courses/{$course->id}", [
+        'student_grade_id' => $studentGrade->id,
+        'status_id' => Course::Statuses['complete'],
+      ]);
+
+    Bus::assertDispatched(SendStudentGrades::class);
+  }
+
+  public function testDoesntDispatchTheCompleteTermJobWhenTheCurrentTermCompletedIfOtherCoursesAreinProgress()
+  {
+    Bus::fake();
+    $this->seed(DatabaseSeeder::class);
+
+    $studentGrade = StudentGrade::first();
+    $course = factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    factory(Course::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+    $institution = new Institution();
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+
+    $this->actingAs($this->user)
+      ->putJson("api/v1/courses/{$course->id}", [
+        'student_grade_id' => $studentGrade->id,
+        'status_id' => Course::Statuses['complete'],
+      ]);
+
+    Bus::assertNotDispatched(SendStudentGrades::class);
+  }
+
+  public function testDosentUpdateTheCurrentTermStatusIfOtherCoursesAreInProgress()
   {
     $this->seed(DatabaseSeeder::class);
 
@@ -206,7 +254,7 @@ class CourseObserverTest extends TestCase
     $course = factory(Course::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
-    $otherCourse = factory(Course::class)->create([
+    factory(Course::class)->create([
       'tenant_id' => $this->user->tenant->id,
     ]);
     $institution = new Institution();

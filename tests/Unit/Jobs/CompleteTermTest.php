@@ -101,6 +101,33 @@ class CompleteTermTest extends TestCase
     Bus::assertDispatched(SendStudentGrades::class);
   }
 
+  public function testItMarksTheSchoolTermAsComplete()
+  {
+    $this->seed(OtherSeeders::class);
+    $this->seed(SubjectsSeeder::class);
+    $tenant = factory(Tenant::class)->create();
+    $course1 = factory(Course::class)->create([
+      'tenant_id' => $tenant->id,
+    ]);
+    $studentGrade = StudentGrade::first();
+    $student1 = factory(Student::class)->create([
+      'tenant_id' => $tenant->id,
+      'meta' => [
+        'student_grade_id' => $studentGrade->id,
+      ],
+    ]);
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, 'first term');
+    $this->registerStudent($tenant->current_term, $student1, $course1);
+
+    $this->assertEquals('in progress', $tenant->current_term->status);
+  
+    $job = new CompleteTerm($tenant);
+    $job->handle();
+
+    $this->assertEquals('complete', $tenant->current_term->status);
+  }
+
   private function registerStudent(SchoolTerm $schoolTerm, Student $student, Course $course) {
     return factory(Registration::class)->create([
       'course_id' => $course->id,
