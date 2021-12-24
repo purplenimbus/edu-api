@@ -45,19 +45,21 @@ class StudentGradeAvailable extends Notification
    */
   public function toMail($notifiable)
   {
-    $key = is_a($notifiable, 'App\Student') ? 'student_subject' : 'guardian_subject';
+    $subjectKey = is_a($notifiable, 'App\Student') ? 'student_subject' : 'guardian_subject';
+    $messageKey = is_a($notifiable, 'App\Student') ? 'student_message' : 'guardian_message';
     $host = env('FRONT_END_URL','http://localhost:4200/#/');
 		$url = "{$host}messages";
 
+
     return (new MailMessage)
-      ->subject(__("email.student_grade_available.{$key}", [
+      ->subject(__("email.student_grade_available.{$subjectKey}", [
         'first_name' => ucfirst($this->student->firstname),
         'term_name' => $this->schoolTerm->name,
       ]))
       ->greeting(__('email.hi', [
         'first_name' => ucfirst($notifiable->firstname),
       ]))
-      ->line(__('email.student_grade_available.message', [
+      ->line(__("email.student_grade_available.{$messageKey}", [
         'first_name' => ucfirst($this->student->firstname),
         'term_name' => $this->schoolTerm->name,
       ]))
