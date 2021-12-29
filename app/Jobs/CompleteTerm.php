@@ -9,8 +9,8 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Tenant;
 use App\Course;
-use App\SchoolTerm;
 use App\Jobs\SendStudentGrades;
+use App\SchoolTerm;
 
 class CompleteTerm implements ShouldQueue
 {
@@ -42,6 +42,8 @@ class CompleteTerm implements ShouldQueue
 
     Course::find($course_ids)->toQuery()->update(['status_id' => Course::Statuses['complete']]);
 
-    SendStudentGrades::dispatch($this->tenant);
+    SendStudentGrades::dispatch($this->tenant, $this->tenant->current_term);
+
+    $this->tenant->current_term->update(['status_id' => SchoolTerm::Statuses['complete']]);
   }
 }
