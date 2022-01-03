@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\App;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,7 +24,9 @@ class DatabaseSeeder extends Seeder
 
     $this->call('OtherSeeders');
     $this->call('PermissionsSeeder');
-    $this->call('DemoUsersSeeder');
+    if (App::environment(['local', 'staging'])) {
+      $this->call('DemoUsersSeeder');
+    }
     $this->call('SubjectsSeeder');
     $this->call('CurriculaSeeder');
     //$this->call('UsersTableSeeder');
