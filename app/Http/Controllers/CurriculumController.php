@@ -25,7 +25,7 @@ class CurriculumController extends Controller
    * @return void
    */
   public function generateCurriculum(GenerateCurriculum $request){
-    $tenant_id = Auth::user()->tenant()->first()->id;
+    $tenant = Auth::user()->tenant()->first();
 
     ProcessBatch::dispatch($tenant, $request->student_grade_id, $request->type);
 
