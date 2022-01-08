@@ -10,6 +10,7 @@
 |
 */
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -33,6 +34,13 @@ Route::group([
   Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
   Route::post('/password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
   Route::get('/password/reset', 'Auth\ResetPasswordController@getToken');
+
+  Route::group([
+    'middleware' => ['jwt.auth'],
+    'prefix' => 'auth'
+  ], function() {
+    Route::get('/user', 'Auth\LoginController@currentUser');
+  });
 
   Route::group([
     'middleware' => ['jwt.auth','verified']

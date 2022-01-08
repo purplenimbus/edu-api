@@ -96,4 +96,8 @@ class LoginController extends Controller
       return response()->json(true);
     }
   }
+
+  public function currentUser() {
+    return Auth::user();
+  }
 }
