@@ -2,7 +2,7 @@
 
 namespace App\Jobs;
 
-use App\NimbusEdu\Helpers\StudentImport;
+use App\NimbusEdu\Helpers\importsUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -19,7 +19,7 @@ use App\NimbusEdu\Syllabus;
 
 class ProcessBatch implements ShouldQueue
 {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, StudentImport;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, importsUser;
 
   var $data;
   var $type;
@@ -62,6 +62,8 @@ class ProcessBatch implements ShouldQueue
 
       switch($this->type){
         case 'student' : $this->importStudent($data, $this->tenant); break;
+        case 'instructor' : $this->importInstructor($data, $this->tenant); break;
+        case 'guardian' : $this->importGuardian($data, $this->tenant); break;
         //need to deprecate these cases below as they are on longer being used 
         case 'user' : $this->payload = $this->NimbusEdu->processUser($data, $this->payload); break;
         case 'results' : $this->payload = $this->NimbusEdu->processResults($data, $this->payload); break;

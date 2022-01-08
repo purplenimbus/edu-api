@@ -9,18 +9,14 @@ use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\NimbusEdu\Helpers\StudentImport;
+use App\Student;
 
 class ProcessBatchTest extends TestCase
 {
   use RefreshDatabase;
 
-  public function testItBatchProcessesUsers()
+  public function testItBatchImportsStudents()
   {
-    $mock = $this->getMockForTrait(StudentImport::class);
-    $mock->expects($this->any())
-      ->method('importStudent')
-      ->will($this->returnValue(TRUE));
-  
     $tenant = factory(Tenant::class)->create();
     $data = [
       [
@@ -42,5 +38,11 @@ class ProcessBatchTest extends TestCase
     $batch = new ProcessBatch($tenant, $data, "student");
 
     $batch->handle();
+
+    $this->assertEquals(2, Student::count());
+    $this->assertEquals([
+      'jobboy@yopmail.com',
+      'janegirl@yopmail.com'
+    ], Student::all()->pluck('email')->toArray());
   }
 }

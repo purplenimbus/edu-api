@@ -7,6 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Arr;
 use App\Http\Requests\StoreCourse; 
 use App\Course;
+use App\Guardian;
+use App\Instructor;
 
 class StoreBatch extends FormRequest
 {
@@ -15,6 +17,21 @@ class StoreBatch extends FormRequest
       'type' => 'course',
       'model' => Course::class,
       'validation' => StoreCourse::class,
+    ],
+    [
+      'type' => 'student',
+      'model' => Student::class,
+      'validation' => StoreStudent::class,
+    ],
+    [
+      'type' => 'instructor',
+      'model' => Instructor::class,
+      'validation' => StoreInstructor::class,
+    ],
+    [
+      'type' => 'guardian',
+      'model' => Guardian::class,
+      'validation' => StoreGuardian::class,
     ],
   ];
   /**
