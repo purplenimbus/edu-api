@@ -63,7 +63,6 @@ class ProcessBatch implements ShouldQueue
         case 'instructor' : $this->importInstructor($data, $this->tenant); break;
         case 'guardian' : $this->importGuardian($data, $this->tenant); break;
         //need to deprecate these cases below as they are on longer being used 
-        case 'user' : $this->payload = $this->NimbusEdu->processUser($data, $this->payload); break;
         case 'results' : $this->payload = $this->NimbusEdu->processResults($data, $this->payload); break;
         case 'course' : $this->payload = $this->Syllabus->processCourses($data); break;
       }

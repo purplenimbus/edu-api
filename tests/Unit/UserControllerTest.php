@@ -340,10 +340,14 @@ class UserControllerTest extends TestCase
   public function testItBatchCreatesNewUsersWithValidData()
   {
     $student1 = factory(User::class)->make([
+      'first_name' => 'darl',
+      'email' => 'student1@yopmail.com',
       'tenant_id' => $this->user->tenant->id,
       'student_grade_id' => StudentGrade::first()->id,
     ]);
     $student2 = factory(User::class)->make([
+      'first_name' => 'darl',
+      'email' => 'student2@yopmail.com',
       'tenant_id' => $this->user->tenant->id,
       'student_grade_id' => StudentGrade::first()->id,
     ]);

@@ -12,7 +12,6 @@ use App\Curriculum;
 use App\StudentGrade;
 use App\Registration;
 use App\CurriculumType;
-use App\UserType;
 use App\Invoice;
 use App\Guardian;
 use App\NimbusEdu\Helpers\CourseHelper;
@@ -31,74 +30,6 @@ class NimbusEdu
   {
     $this->tenant = $tenant;
   }
-
-  public function processUser($data, $payload){
-    try{
-      $self = $this;
-      $user = User::with(['status_type'])
-        ->firstOrNew(array_only($data, ['firstname','lastname','email','tenant_id']));
-
-      $created = isset($user->id) ? false : true;
-
-      $user_type = $this->getUserType($data['meta']['user_type']);
-
-      if(!isset($user->id)){
-        $data['password'] = $user->createDefaultPassword();
-      }
-
-      $data['user_type_id'] = $user_type->id;
-
-      $user_type = $data['meta']['user_type'];
-
-      if(isset($data['meta']['course_codes'])){
-        $course_codes =  $data['meta']['course_codes'];
-        unset($data['meta']['course_codes']);
-      }else{
-        $course_codes = false;
-      }
-
-      unset($data['meta']['user_type']);
-
-      $user->fill($data);
-
-      $user->save();
-
-      switch($user_type){
-        case 'student' : $self->enrollCoreCourses($user, $user->meta->student_grade_id); 
-
-        break;
-
-        case 'teacher' : if($course_codes){ 
-          foreach (explode(',',$course_codes) as $course_code){
-            $course = Course::with(['grade','registrations'])->where('code',$course_code)->first();
-
-            if(isset($course->id)){
-              $self->assignInstructor($user, $course);
-            }else{
-              \Log::info('Cant assign instructor, '.$course_code.' not found ');
-            }
-          }
-        }
-
-        break;
-
-        case 'admin' : $user->assignRole('admin'); break;
-        case 'parent' : $user->assignRole('parent'); break;
-        default : $user->assignRole('other'); break;
-      }
-
-      if($created){
-        $payload['created'][] = $user;
-      }else{
-        $payload['updated'][] = $user;
-      }
-
-      return $payload;
-
-    }catch(Exception $e){
-      throw new Exception($e->getMessage());
-    }
-  }  
 
   public function processSubject($data, $payload){
     try{
@@ -169,12 +100,6 @@ class NimbusEdu
     }
   }
 
-  public function getUserType($name, $new = false){
-    return $new ? 
-    UserType::firstOrCreate(['name' => strtolower($name)]) : 
-    UserType::where(['name' => strtolower($name)])->first();
-  }
-
   public function getCurriculumType($new = false){
     return $new ? 
     CurriculumType::firstOrCreate(['country' => $this->tenant->country]) : 
@@ -214,24 +139,6 @@ class NimbusEdu
           var_dump('Student '.$student->id.' Registered in '.$course['code'].' , Registration ID '.$registration->id);
         }
       }
-    }catch(Exception $e){
-      throw new Exception($e->getMessage());
-    }
-  }
-
-  public function assignInstructor(User $instructor, Course $course){
-    try{
-      $course->instructor_id = $instructor->id;
-
-      $course->save();
-
-      \Log::info('Instructor '.$instructor->id.' Assigned to '.$course->code);
-
-      $instructor->account_status_id = $this->getStatusID('assigned')->id;
-
-      $instructor->save();
-
-      return $course;
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }

@@ -43,7 +43,7 @@ class Student extends User
     return Carbon::now()->get('year').sprintf("%04d", $this->id);
   }
 
-    /**
+  /**
    *  Get student grade type
   */
   public function getGuardianAttribute()

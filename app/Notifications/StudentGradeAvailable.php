@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Guardian;
 use App\SchoolTerm;
 use App\Student;
 use Illuminate\Bus\Queueable;
@@ -47,9 +46,6 @@ class StudentGradeAvailable extends Notification
   {
     $subjectKey = is_a($notifiable, 'App\Student') ? 'student_subject' : 'guardian_subject';
     $messageKey = is_a($notifiable, 'App\Student') ? 'student_message' : 'guardian_message';
-    $host = env('FRONT_END_URL','http://localhost:4200/#/');
-		$url = "{$host}messages";
-
 
     return (new MailMessage)
       ->subject(__("email.student_grade_available.{$subjectKey}", [
@@ -63,7 +59,7 @@ class StudentGradeAvailable extends Notification
         'first_name' => ucfirst($this->student->firstname),
         'term_name' => $this->schoolTerm->name,
       ]))
-      ->action(__('email.student_grade_available.view_result'), url($url));
+      ->action(__('email.student_grade_available.view_result'), url(env('FRONT_END_URL','http://localhost:4200/#/')));
   }
 
   /**
