@@ -72,12 +72,16 @@ class StoreBatch extends FormRequest
       $validation_rules = $validation->rules();
 
       foreach(array_keys($validation_rules) as $key) {
-        $rules["data.*.{$key}"] = is_string($validation_rules[$key]) ? $validation_rules[$key]."|distinct" : $validation_rules[$key];
+        $rules["data.*.{$key}"] = $this->getValidationKey($validation_rules, $key);
       }
 
       return $rules;
     }
 
     return [];
+  }
+
+  private function getValidationKey (array $validation_rules, string $key) {
+    return is_string($validation_rules[$key]) && ($key === 'email' || $key === 'ref_id') ? $validation_rules[$key]."|distinct" : $validation_rules[$key];
   }
 }

@@ -132,7 +132,7 @@ class UserController extends Controller
 
   public function batchUpdate(StoreBatch $request)
   {
-    ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->all()[0], $request->type);
+    ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->data, $request->type);
 
     return response()->json(['message' => 'your request is being processed'], 200);
   }

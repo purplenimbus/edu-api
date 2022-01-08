@@ -2,12 +2,15 @@
 
 namespace Tests\Unit;
 
+use App\Jobs\ProcessBatch;
+use App\StudentGrade;
 use App\Tenant;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 use Tests\Helpers\SetupUser;
+use Illuminate\Support\Facades\Bus;
 
 class UserControllerTest extends TestCase
 {
@@ -332,5 +335,107 @@ class UserControllerTest extends TestCase
         ])
         )
         ->assertStatus(422);
+  }
+
+  public function testItBatchCreatesNewUsersWithValidData()
+  {
+    $student1 = factory(User::class)->make([
+      'tenant_id' => $this->user->tenant->id,
+      'student_grade_id' => StudentGrade::first()->id,
+    ]);
+    $student2 = factory(User::class)->make([
+      'tenant_id' => $this->user->tenant->id,
+      'student_grade_id' => StudentGrade::first()->id,
+    ]);
+
+    Bus::fake();
+
+    $this->actingAs($this->user)
+      ->postJson(
+        "api/v1/users/batch", [
+          "type" => "student",
+          "data" => [
+            $student1->toArray(),
+            $student2->toArray(),
+          ]
+        ])
+        ->assertOk();
+
+    $tenant = $this->user->tenant;
+    Bus::assertDispatched(function (ProcessBatch $event) use ($tenant) {
+      return $event->tenant->id === $tenant->id && $event->type === "student";
+    });
+  }
+
+  public function testItDoesntBatchCreateNewUsersWithDuplicateEmails()
+  {
+    $student1 = factory(User::class)->make([
+      'email' => 'student1@yopmail.com',
+      'tenant_id' => $this->user->tenant->id,
+      'student_grade_id' => StudentGrade::first()->id,
+    ]);
+    $student2 = factory(User::class)->make([
+      'email' => 'student1@yopmail.com',
+      'tenant_id' => $this->user->tenant->id,
+      'student_grade_id' => StudentGrade::first()->id,
+    ]);
+
+    Bus::fake();
+
+    $this->actingAs($this->user)
+      ->postJson(
+        "api/v1/users/batch", [
+          "type" => "student",
+          "data" => [
+            $student1->toArray(),
+            $student2->toArray(),
+          ]
+        ])
+        ->assertStatus(422)
+        ->assertJson([
+          "message" => "The given data was invalid.",
+          "errors" => [
+            "data.0.email" => ["The data.0.email field has a duplicate value."],
+            "data.1.email" => ["The data.1.email field has a duplicate value."],
+          ]
+        ]);
+
+    Bus::assertNotDispatched(ProcessBatch::class);
+  }
+
+  public function testItDoesntBatchCreateNewUsersWithDuplicateRefId()
+  {
+    $student1 = factory(User::class)->make([
+      'email' => 'student1@yopmail.com',
+      'tenant_id' => $this->user->tenant->id,
+      'ref_id' => '111',
+    ]);
+    $student2 = factory(User::class)->make([
+      'email' => 'student2@yopmail.com',
+      'tenant_id' => $this->user->tenant->id,
+      'ref_id' => '111',
+    ]);
+
+    Bus::fake();
+
+    $this->actingAs($this->user)
+      ->postJson(
+        "api/v1/users/batch", [
+          "type" => "student",
+          "data" => [
+            $student1->toArray(),
+            $student2->toArray(),
+          ]
+        ])
+        ->assertStatus(422)
+        ->assertJson([
+          "message" => "The given data was invalid.",
+          "errors" => [
+            "data.0.ref_id" => ["The data.0.ref_id field has a duplicate value."],
+            "data.1.ref_id" => ["The data.1.ref_id field has a duplicate value."],
+          ]
+        ]);
+
+    Bus::assertNotDispatched(ProcessBatch::class);
   }
 }

@@ -9,8 +9,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-use App\Notifications\BatchProcessed;
-
 use Illuminate\Support\Facades\Auth;
 
 use App\Tenant;
@@ -33,7 +31,7 @@ class ProcessBatch implements ShouldQueue
    *
    * @return void
    */
-  public function __construct(Tenant $tenant, $data, $type)
+  public function __construct(Tenant $tenant, array $data, string $type)
   {
     
     $this->tenant = $tenant;
