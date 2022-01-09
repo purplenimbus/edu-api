@@ -129,10 +129,27 @@ class Student extends User
 
   public function setRegistrationPermissions(Registration $registration) {
     $registration->user->allow('view', $registration);
-    $registration->user->allow('view', $registration->course);
+    $this->setCoursePermissions($registration);
 
     if ($registration->user->guardian) {
       $registration->user->guardian->allow('view', $registration);
+    }
+  }
+
+  public function setCoursePermissions(Registration $registration) {
+    $registration->user->allow('view', $registration->course);
+  }
+
+  public function revokeCoursePermissions(Registration $registration) {
+    $registration->user->disallow('view', $registration->course);
+  }
+
+  public function revokeRegistrationPermissions(Registration $registration) {
+    $registration->user->disallow('view', $registration);
+    $this->revokeCoursePermissions($registration);
+
+    if ($registration->user->guardian) {
+      $registration->user->guardian->disallow('view', $registration);
     }
   }
 }
