@@ -23,21 +23,9 @@ class UpdateInstructor extends FormRequest
    */
   public function rules()
   {
-    return [
-      'account_status_id' => 'integer|exists:account_status,id',
-      'student_grade_id' => 'integer|exists:student_grades,id',
-      'date_of_birth' => 'date',
-      'email'  => 'email',
-      'firstname'   => 'max:255',
-      'id' => 'required|integer|exists:users,id',
-      'lastname'  => 'max:255',
-      'othernames'  => 'nullable|string|max:255',
-      'ref_id' => 'integer|unique:users,ref_id',
-      'address.street' => 'string|required_with:address.city,address.country,address.state',
-      'address.city' => 'string|required_with:address.street',
-      'address.country' => 'string|required_with:address.street',
-      'address.state' => 'string|required_with:address.street',
-    ];
+    $validation = new UpdateUser();
+
+    return array_merge([], $validation->rules());
   }
 
   public function validationData(){

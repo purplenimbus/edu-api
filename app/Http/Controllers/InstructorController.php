@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Course;
 use App\Instructor;
 use App\Http\Requests\AssignInstructor;
+use App\Http\Requests\GetInstructor;
 use App\Http\Requests\StoreInstructor;
 use App\Http\Requests\GetInstructors;
 use App\Http\Requests\UpdateInstructor;
@@ -22,10 +22,9 @@ class InstructorController extends Controller
    *
    * @return void
    */
-  public function index(GetInstructors $request) {
+  public function index(GetInstructors $request)
+  {
     $tenant = Auth::user()->tenant()->first();
-
-    $nimbus_edu = new NimbusEdu($tenant);
 
     $instructors = QueryBuilder::for(Instructor::class)
       ->defaultSort('firstname')
@@ -35,25 +34,19 @@ class InstructorController extends Controller
         'firstname',
         'id',
         'lastname',
-        'ref_id',
         'updated_at'
       )
       ->allowedFilters([
         'firstname',
         'email',
         'lastname',
-        'ref_id',
         AllowedFilter::callback('has_image', function (Builder $query, $value) {
-            return $value ?
-              $query->whereNotNull('image') :
-              $query->whereNull('image');
+          return $value ?
+            $query->whereNotNull('image') :
+            $query->whereNull('image');
         }),
-        AllowedFilter::callback('status', function (Builder $query, $value) use ($nimbus_edu) {
-            $query->where(
-              'account_status_id',
-              '=',
-              (int)$nimbus_edu->getStatusID($value)->id
-            );
+        AllowedFilter::callback('account_status', function (Builder $query, $value) {
+          $query->whereAccountStatusId($value);
         }),
       ])
       ->allowedAppends([
@@ -86,13 +79,14 @@ class InstructorController extends Controller
    *
    * @return void
    */
-  public function assignInstructor(AssignInstructor $request){
+  public function assignInstructor(AssignInstructor $request)
+  {
     $course = Course::find($request->course_id);
 
     $instructor = Instructor::find($request->instructor_id);
 
     return response()->json(
-      $instructor->setCoursePermissions($course),
+      $instructor->assignInstructor($course),
       200
     );
   }
@@ -102,7 +96,8 @@ class InstructorController extends Controller
    *
    * @return void
    */
-  public function create(StoreInstructor $request) {
+  public function create(StoreInstructor $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     $nimbus_edu = new NimbusEdu($tenant);
@@ -117,12 +112,38 @@ class InstructorController extends Controller
    *
    * @return void
    */
-  public function edit(UpdateInstructor $request) {
+  public function edit(UpdateInstructor $request)
+  {
     $instructor = Instructor::find($request->id);
 
     $instructor->fill($request->all());
-    
+
     $instructor->save();
+
+    return response()->json($instructor, 200);
+  }
+
+  public function show(GetInstructor $request)
+  {
+    $instructor = QueryBuilder::for(Instructor::class)
+      ->allowedAppends([
+        'roles',
+        'status',
+        'type',
+      ])
+      ->allowedFields([
+        'address',
+        'date_of_birth',
+        'firstname',
+        'lastname',
+        'othernames',
+        'email',
+        'meta',
+        'image',
+        'roles'
+      ])
+      ->where('id', $request->id)
+      ->first();
 
     return response()->json($instructor, 200);
   }

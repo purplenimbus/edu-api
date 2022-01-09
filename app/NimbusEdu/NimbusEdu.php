@@ -251,8 +251,6 @@ class NimbusEdu
         }
       }
 
-      $student->notify(new ActivateUser);
-
       \Log::info('Created student '.$student->ref_id);
 
       return $student;
@@ -273,8 +271,6 @@ class NimbusEdu
 
       $instructor = Instructor::create($data);
 
-      $instructor->notify(new ActivateUser);
-
       \Log::info('Created instructor '.$instructor->id);
 
       return $instructor;
@@ -291,8 +287,6 @@ class NimbusEdu
       ]);
 
       $guardian = Guardian::create($data);
-      
-      $guardian->notify(new ActivateUser);
       
       if ($request->has('ward_ids')) {
         $guardian->assignWards($request->ward_ids);

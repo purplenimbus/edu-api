@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\ValidInstructor;
+use Illuminate\Foundation\Http\FormRequest;
 
-class AssignInstructor extends FormRequest
+class GetInstructor extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,12 +25,12 @@ class AssignInstructor extends FormRequest
   public function rules()
   {
     return [
-      'instructor_id' => [
-        'required',
-        'exists:users,id',
-        new ValidInstructor()
-      ],
-      'course_id' => 'required|exists:courses,id'
+      'id' => ['exists:users,id', new ValidInstructor()]
     ];
+  }
+
+  public function validationData()
+  {
+    return array_merge($this->all(), $this->route()->parameters());
   }
 }

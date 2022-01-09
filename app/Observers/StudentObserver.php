@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Notifications\ActivateUser;
 use App\Student;
 use App\User;
 
@@ -33,5 +34,7 @@ class StudentObserver
       $student->ref_id = $student->generateStudentId();
       $student->save();
     }
+
+    $student->notify(new ActivateUser);
   }
 }

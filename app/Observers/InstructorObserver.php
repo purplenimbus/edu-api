@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Instructor;
+use App\Notifications\ActivateUser;
 use App\User;
 
 class InstructorObserver
@@ -29,6 +30,8 @@ class InstructorObserver
     $user = User::find($instructor->id);
     $user->assign('instructor');//Assign user model a role to return roles and permissions for JWT Claims
     $instructor->assign('instructor');
+
+    $instructor->notify(new ActivateUser);
   }
 
 }

@@ -10,7 +10,6 @@
 |
 */
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -105,7 +104,7 @@ Route::group([
       'prefix' => '/school_terms',
       'middleware' => ['checksubscription']
     ], function() {
-      Route::get('', 'SchoolTermController@index')->middleware('can:view-terms');
+      Route::get('', 'SchoolTermController@index');
       Route::post('', 'SchoolTermController@create');
 
       Route::group([
@@ -190,6 +189,7 @@ Route::group([
       ], function() {
         Route::post('/assign', 'InstructorController@assignInstructor');
         Route::put('/', 'InstructorController@edit');
+        Route::get('/', 'InstructorController@show');
       });
     });
 
