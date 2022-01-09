@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Guardian;
+use App\Notifications\ActivateUser;
 use App\User;
 
 class GuardianObserver
@@ -29,5 +30,7 @@ class GuardianObserver
     $user = User::find($guardian->id);
     $user->assign('guardian');//Assign user model a role to return roles and permissions for JWT Claims
     $guardian->assign('guardian');
+
+    $guardian->notify(new ActivateUser);
   }
 }

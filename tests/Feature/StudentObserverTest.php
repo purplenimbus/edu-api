@@ -2,13 +2,18 @@
 
 namespace Tests\Feature;
 
+use App\Notifications\ActivateUser;
 use App\StudentGrade;
 use App\Student;
+use App\Tenant;
+use App\User;
 use Carbon\Carbon;
 use DatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class StudentObserverTest extends TestCase
 {
@@ -110,22 +115,36 @@ class StudentObserverTest extends TestCase
   public function testItSetsTheUsersRole()
   {
     $this->seed(DatabaseSeeder::class);
-  
+
     $person = factory(Student::class)->make([
       'date_of_birth' => Carbon::now()->toString(),
       'student_grade_id' => StudentGrade::first()->id,
     ]);
 
     $this->actingAs($this->user)
-      ->postJson("api/v1/students",
+      ->postJson(
+        "api/v1/students",
         $person->only([
           'student_grade_id',
           'date_of_birth',
           'email',
           'firstname',
           'lastname',
-        ]));
+        ])
+      );
 
     $this->assertEquals('student', Student::first()->type);
+  }
+
+  public function testItSendsTheUserActivationEmail()
+  {
+    Notification::fake();
+    $student = factory(Student::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    Notification::assertSentTo(
+      [$student], ActivateUser::class
+    );
   }
 }

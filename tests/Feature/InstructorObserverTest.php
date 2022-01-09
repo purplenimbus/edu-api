@@ -3,13 +3,12 @@
 namespace Tests\Feature;
 
 use App\Instructor;
+use App\Notifications\ActivateUser;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;
-use Bouncer;
+use Illuminate\Support\Facades\Notification;
 
 class InstructorObserverTest extends TestCase
 {
@@ -52,5 +51,17 @@ class InstructorObserverTest extends TestCase
         ]));
 
     $this->assertEquals('instructor', Instructor::first()->type);
+  }
+
+  public function testItSendsTheUserActivationEmail()
+  {
+    Notification::fake();
+    $instructor = factory(Instructor::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    Notification::assertSentTo(
+      [$instructor], ActivateUser::class
+    );
   }
 }

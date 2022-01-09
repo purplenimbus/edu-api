@@ -3,8 +3,10 @@
 namespace Tests\Feature;
 
 use App\Guardian;
+use App\Notifications\ActivateUser;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 
@@ -49,5 +51,17 @@ class GuardianObserverTest extends TestCase
         ]));
 
     $this->assertEquals('guardian', Guardian::first()->type);
+  }
+
+  public function testItSendsTheUserActivationEmail()
+  {
+    Notification::fake();
+    $guardian = factory(Guardian::class)->create([
+      'tenant_id' => $this->user->tenant->id,
+    ]);
+
+    Notification::assertSentTo(
+      [$guardian], ActivateUser::class
+    );
   }
 }
