@@ -22,25 +22,25 @@ class UserControllerTest extends TestCase
    */
   public function testItReturnsUsers()
   {
-    $this->user->update(['firstname' => 'anthony']);
+    $this->user->update(["firstname" => "anthony"]);
     $user1 = factory(User::class)->create([
-      'firstname' => 'james',
-      'tenant_id' => $this->user->tenant_id,
+      "firstname" => "james",
+      "tenant_id" => $this->user->tenant_id,
     ]);
     $tenant2 = factory(Tenant::class)->create();
     $user2 = factory(User::class)->create([
-      'firstname' => 'benjamin',
-      'tenant_id' => $tenant2->id,
+      "firstname" => "benjamin",
+      "tenant_id" => $tenant2->id,
     ]);
 
     $this->actingAs($this->user)
-      ->getJson('api/v1/users')
+      ->getJson("api/v1/users")
       ->assertOk()
       ->assertJson([
         "data" => [
-          $this->user->only(['id', 'firstname']),
-          $user2->only(['id', 'firstname']),
-          $user1->only(['id', 'firstname']),
+          $this->user->only(["id", "firstname"]),
+          $user2->only(["id", "firstname"]),
+          $user1->only(["id", "firstname"]),
         ],
       ]);
   }
@@ -53,11 +53,11 @@ class UserControllerTest extends TestCase
   public function testItReturnsUsersFilteredByFirstName()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      "tenant_id" => $this->user->tenant->id,
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2->id,
+      "tenant_id" => $tenant2->id,
     ]);
     
     $this->actingAs($this->user)
@@ -81,11 +81,11 @@ class UserControllerTest extends TestCase
   public function testItReturnsUsersFilteredByLastName()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      "tenant_id" => $this->user->tenant->id,
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2,
+      "tenant_id" => $tenant2,
     ]);
     
     $this->actingAs($this->user)
@@ -110,14 +110,14 @@ class UserControllerTest extends TestCase
   public function testItReturnsUsersFilteredWithNoImage()
   {
     $user1 = factory(User::class)->create([
-      'firstname' => 'james',
-      'tenant_id' => $this->user->tenant_id,
+      "firstname" => "james",
+      "tenant_id" => $this->user->tenant_id,
     ]);
-    $this->user->update(['firstname' => 'anthony']);
+    $this->user->update(["firstname" => "anthony"]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2->id,
-      'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
+      "tenant_id" => $tenant2->id,
+      "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C",
     ]);
     
     $this->actingAs($this->user)
@@ -145,12 +145,12 @@ class UserControllerTest extends TestCase
   public function testItReturnsUsersFilteredWithImage()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
-      'image' => 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C',
+      "tenant_id" => $this->user->tenant->id,
+      "image" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQi1SYU1kgu3FtGlMpm5W7K2zuZHLgBQZzf34TQ3_Qe8LUd8s5C",
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2,
+      "tenant_id" => $tenant2,
     ]);
     
     $this->actingAs($this->user)
@@ -175,14 +175,14 @@ class UserControllerTest extends TestCase
   public function testItReturnsUsersFilteredByAccountStatus()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      "tenant_id" => $this->user->tenant->id,
     ]);
     $user1->update([
-      'account_status_id' => User::StatusTypes['archived'],
+      "account_status_id" => User::StatusTypes["archived"],
     ]);
     $tenant2 = factory(Tenant::class)->create();
     factory(User::class)->create([
-      'tenant_id' => $tenant2->id,
+      "tenant_id" => $tenant2->id,
     ]);
 
     $this->actingAs($this->user)
@@ -206,7 +206,7 @@ class UserControllerTest extends TestCase
   public function testItReturnsAUserByUserId()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      "tenant_id" => $this->user->tenant->id,
     ]);
     
     $this->actingAs($this->user)
@@ -238,19 +238,19 @@ class UserControllerTest extends TestCase
   public function testItUpdatesAValidUser()
   {
     $user1 = factory(User::class)->create([
-      'tenant_id' => $this->user->tenant->id,
+      "tenant_id" => $this->user->tenant->id,
     ]);
 
     $this->actingAs($this->user)
       ->putJson("api/v1/users/{$user1->id}", [
-        'firstname' => 'melinda',
-        'lastname' => 'epifano',
+        "firstname" => "melinda",
+        "lastname" => "epifano",
       ])
       ->assertOk()
       ->assertJson([
         "id" => $user1->id,
-        "firstname" => 'melinda',
-        "lastname" => 'epifano',
+        "firstname" => "melinda",
+        "lastname" => "epifano",
       ]);
   }
 
@@ -263,8 +263,8 @@ class UserControllerTest extends TestCase
   {
     $this->actingAs($this->user)
       ->putJson("api/v1/users/0", [
-        'firstname' => 'melinda',
-        'lastname' => 'epifano',
+        "firstname" => "melinda",
+        "lastname" => "epifano",
       ])
       ->assertStatus(422);
   }
@@ -277,12 +277,12 @@ class UserControllerTest extends TestCase
   public function testItCreatesANewUserWithValidData()
   {
     $data = factory(User::class)->make([
-      'tenant_id' => $this->user->tenant->id,
-      'address' => [
-        'city' => 'springfield',
-        'country' => 'united states of america',
-        'state' => 'missouri',
-        'street' => '1742 evergreen terrace',
+      "tenant_id" => $this->user->tenant->id,
+      "address" => [
+        "city" => "springfield",
+        "country" => "united states of america",
+        "state" => "missouri",
+        "street" => "1742 evergreen terrace",
       ]
     ]);
 
@@ -290,11 +290,11 @@ class UserControllerTest extends TestCase
       ->postJson(
         "api/v1/users/",
         $data->only([
-          'address',
-          'email',
-          'firstname',
-          'lastname',
-          'tenant_id',
+          "address",
+          "email",
+          "firstname",
+          "lastname",
+          "tenant_id",
         ])
       )->assertOk();
     
@@ -316,11 +316,11 @@ class UserControllerTest extends TestCase
   public function testItDoesntCreateANewUserWithInvalidData()
   {
     $data = factory(User::class)->make([
-      'address' => [
-        'city' => 'springfield',
-        'country' => 'united states of america',
-        'state' => 'missouri',
-        'street' => '1742 evergreen terrace',
+      "address" => [
+        "city" => "springfield",
+        "country" => "united states of america",
+        "state" => "missouri",
+        "street" => "1742 evergreen terrace",
       ]
     ]);
 
@@ -328,10 +328,10 @@ class UserControllerTest extends TestCase
       ->postJson(
         "api/v1/users/",
         $data->only([
-          'email',
-          'address',
-          'lastname',
-          'tenant_id',
+          "email",
+          "address",
+          "lastname",
+          "tenant_id",
         ])
         )
         ->assertStatus(422);
@@ -340,16 +340,16 @@ class UserControllerTest extends TestCase
   public function testItBatchCreatesNewUsersWithValidData()
   {
     $student1 = factory(User::class)->make([
-      'first_name' => 'darl',
-      'email' => 'student1@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'student_grade_id' => StudentGrade::first()->id,
+      "first_name" => "darl",
+      "email" => "student1@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "student_grade_id" => StudentGrade::first()->id,
     ]);
     $student2 = factory(User::class)->make([
-      'first_name' => 'darl',
-      'email' => 'student2@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'student_grade_id' => StudentGrade::first()->id,
+      "first_name" => "darl",
+      "email" => "student2@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "student_grade_id" => StudentGrade::first()->id,
     ]);
 
     Bus::fake();
@@ -374,14 +374,14 @@ class UserControllerTest extends TestCase
   public function testItDoesntBatchCreateNewUsersWithDuplicateEmails()
   {
     $student1 = factory(User::class)->make([
-      'email' => 'student1@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'student_grade_id' => StudentGrade::first()->id,
+      "email" => "student1@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "student_grade_id" => StudentGrade::first()->id,
     ]);
     $student2 = factory(User::class)->make([
-      'email' => 'student1@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'student_grade_id' => StudentGrade::first()->id,
+      "email" => "student1@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "student_grade_id" => StudentGrade::first()->id,
     ]);
 
     Bus::fake();
@@ -410,14 +410,14 @@ class UserControllerTest extends TestCase
   public function testItDoesntBatchCreateNewUsersWithDuplicateRefId()
   {
     $student1 = factory(User::class)->make([
-      'email' => 'student1@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'ref_id' => '111',
+      "email" => "student1@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "ref_id" => "111",
     ]);
     $student2 = factory(User::class)->make([
-      'email' => 'student2@yopmail.com',
-      'tenant_id' => $this->user->tenant->id,
-      'ref_id' => '111',
+      "email" => "student2@yopmail.com",
+      "tenant_id" => $this->user->tenant->id,
+      "ref_id" => "111",
     ]);
 
     Bus::fake();
