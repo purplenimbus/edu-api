@@ -81,11 +81,11 @@ class InstructorTest extends TestCase
     ]);
 
     $instructor1->setCoursePermissions($course);
-    $this->assertTrue($instructor1->can('view', $course));
+    $this->assertTrue($instructor1->can("view", $course));
     $instructor2->setCoursePermissions($course);
     \Bouncer::refreshFor($instructor1);
 
-    $this->assertFalse($instructor1->refresh()->can('view', $course));
-    $this->assertTrue($instructor2->can('view', $course));
+    $this->assertFalse($instructor1->refresh()->can("view", $course));
+    $this->assertTrue($instructor2->can("view", $course));
   }
 }
