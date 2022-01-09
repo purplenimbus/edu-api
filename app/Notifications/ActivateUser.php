@@ -52,8 +52,8 @@ class ActivateUser extends VerifyEmail
       ->subject(__('registration.welcome', ['name' => config('app.name')]))
 			->greeting(__('registration.hi', [ 'first_name' => $first_name ]))
 			->line(new HtmlString(__('registration.invited', [
-				'school_owner' => $notifiable->tenant->owner->fullname,
-				'school_name' => $notifiable->tenant->name
+				'school_owner' => $notifiable->tenant->owner->fullname ?? '',
+				'school_name' => $notifiable->tenant->name ?? ''
 			])))
 			->line(__('registration.confirm'))
 			->action(__('registration.email', [ 'email' => strtolower($email) ]), $this->verificationUrl($notifiable));

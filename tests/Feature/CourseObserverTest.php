@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Course;
 use App\StudentGrade;
 use App\Instructor;
-use App\Jobs\CompleteTerm;
 use App\Jobs\SendStudentGrades;
 use App\NimbusEdu\Institution;
 use App\Registration;
@@ -98,7 +97,7 @@ class CourseObserverTest extends TestCase
    *
    * @return void
    */
-  public function testSetsOverrittenCourseAttributes()
+  public function testSetsOvewrittenCourseAttributes()
   {
     $this->seed(DatabaseSeeder::class);
 
@@ -157,11 +156,16 @@ class CourseObserverTest extends TestCase
   {
     $this->seed(DatabaseSeeder::class);
 
-    $course = factory(Course::class)->create([
+    $instructor = factory(Instructor::class)->create([
       'tenant_id' => $this->user->tenant_id,
     ]);
 
-    factory(Registration::class, 3)->create([
+    $course = factory(Course::class)->create([
+      'instructor_id' => $instructor->id,
+      'tenant_id' => $this->user->tenant_id,
+    ]);
+
+    factory(Registration::class)->create([
       'course_id' => $course->id,
       'tenant_id' => $this->user->tenant_id,
     ]);
