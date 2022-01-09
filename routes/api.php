@@ -189,6 +189,7 @@ Route::group([
       ], function() {
         Route::post('/assign', 'InstructorController@assignInstructor');
         Route::put('/', 'InstructorController@edit');
+        Route::get('/', 'InstructorController@show');
       });
     });
 

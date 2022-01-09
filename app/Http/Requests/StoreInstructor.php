@@ -25,8 +25,6 @@ class StoreInstructor extends FormRequest
   {
     $validation = new StoreUser();
   
-    return array_merge($validation->rules(), [
-      'ref_id' => 'integer|unique:users,ref_id',
-    ]);
+    return array_merge([], $validation->rules());
   }
 }

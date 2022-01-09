@@ -128,7 +128,6 @@ class StudentController extends Controller
         'othernames',
         'email',
         'meta',
-        'password',
         'image',
         'ref_id',
         'roles'

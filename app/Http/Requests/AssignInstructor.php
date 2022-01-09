@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\ValidTeacher;
+use App\Rules\ValidInstructor;
 
 class AssignInstructor extends FormRequest
 {
@@ -28,7 +28,7 @@ class AssignInstructor extends FormRequest
       'instructor_id' => [
         'required',
         'exists:users,id',
-        new ValidTeacher()
+        new ValidInstructor()
       ],
       'course_id' => 'required|exists:courses,id'
     ];
