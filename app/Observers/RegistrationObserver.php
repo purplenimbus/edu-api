@@ -29,7 +29,8 @@ class RegistrationObserver
       $registration->course_score_id = $course_score->id;
       $registration->save();
     }
-    $this->grantAccessToRegistration($registration);
+
+    $registration->user->setRegistrationPermissions($registration);
   }
 
   /**

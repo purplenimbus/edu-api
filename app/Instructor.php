@@ -14,10 +14,7 @@ class Instructor extends User
       ->whereIs('instructor');
   }
 
-  /**
-   *  Assign Instructor
-  */
-  public function assignInstructor(Course $course) 
+  public function setCoursePermissions(Course $course) 
   { 
     $former_instructor_id = $course->getOriginal()["instructor_id"];
     $former_instructor = Instructor::find($former_instructor_id);
@@ -29,6 +26,15 @@ class Instructor extends User
 
     Bouncer::allow($this)->to('edit', $course);
     Bouncer::allow($this)->to('view', $course);
+  }
+
+  public function assignInstructor(Course $course){
+    $course->instructor_id = $this->id;
+    $course->save();
+
+    $this->setCoursePermissions($course);
+
+    return $course;
   }
 
   /**

@@ -92,7 +92,7 @@ class InstructorController extends Controller
     $instructor = Instructor::find($request->instructor_id);
 
     return response()->json(
-      $instructor->assignInstructor($course),
+      $instructor->setCoursePermissions($course),
       200
     );
   }

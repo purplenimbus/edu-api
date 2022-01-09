@@ -126,4 +126,13 @@ class Student extends User
   {
     return $this->hasMany('App\Registration', 'user_id', 'id');
   }
+
+  public function setRegistrationPermissions(Registration $registration) {
+    $registration->user->allow('view', $registration);
+    $registration->user->allow('view', $registration->course);
+
+    if ($registration->user->guardian) {
+      $registration->user->guardian->allow('view', $registration);
+    }
+  }
 }
