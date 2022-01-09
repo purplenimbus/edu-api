@@ -2,13 +2,12 @@
 
 namespace App\Jobs;
 
+use App\NimbusEdu\Helpers\importsUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-
-use App\Notifications\BatchProcessed;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -18,7 +17,7 @@ use App\NimbusEdu\Syllabus;
 
 class ProcessBatch implements ShouldQueue
 {
-  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+  use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, importsUser;
 
   var $data;
   var $type;
@@ -32,7 +31,7 @@ class ProcessBatch implements ShouldQueue
    *
    * @return void
    */
-  public function __construct(Tenant $tenant, $data, $type)
+  public function __construct(Tenant $tenant, array $data, string $type)
   {
     
     $this->tenant = $tenant;
@@ -56,42 +55,17 @@ class ProcessBatch implements ShouldQueue
    */
   public function handle()
   {
-    $self = $this;
-    $payload = [];
-    $resource = [];
-
     foreach ($this->data as $data){
-      $data['tenant_id'] = $self->tenant->id;
+      $data['tenant_id'] = $this->tenant->id;
 
       switch($this->type){
-        case 'user' : $this->payload = $self->NimbusEdu->processUser($data, $this->payload); break;
-        case 'results' : $this->payload = $self->NimbusEdu->processResults($data, $this->payload); break;
-        case 'course' : $this->payload = $self->Syllabus->processCourses($data); break;
-
-        $resource =  isset($this->payload['resource']) ? 
-        $this->payload['resource'] 
-        : [];
-
-        break;
-        default : break;
+        case 'student' : $this->importStudent($data, $this->tenant); break;
+        case 'instructor' : $this->importInstructor($data, $this->tenant); break;
+        case 'guardian' : $this->importGuardian($data, $this->tenant); break;
+        //need to deprecate these cases below as they are on longer being used 
+        case 'results' : $this->payload = $this->NimbusEdu->processResults($data, $this->payload); break;
+        case 'course' : $this->payload = $this->Syllabus->processCourses($data); break;
       }
     }
-
-    foreach ($this->payload as $key => $value) {
-      $payload[$key] = sizeof($value);
-    }
-
-    $payload['batch_type'] = $this->type;
-
-    if ($this->author) {
-      $payload['author'] = $this->author->only(['id','firstname','lastname']);
-    }
-
-    $payload['resource'] = $resource;
-
-    $this->tenant->notify(new BatchProcessed($payload));
-
-    \Log::info('ProcessBatch '.ucfirst($this->type).': '.sizeof($this->payload['created']).' Created , '.sizeof($this->payload['updated']).' Updated for tenant_id: '.$this->tenant->id);
-
   }
 }

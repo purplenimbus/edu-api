@@ -29,7 +29,8 @@ class RegistrationObserver
       $registration->course_score_id = $course_score->id;
       $registration->save();
     }
-    $this->grantAccessToRegistration($registration);
+
+    $registration->user->setRegistrationPermissions($registration);
   }
 
   /**
@@ -42,23 +43,6 @@ class RegistrationObserver
     if ($registration->course_score) {
       $registration->course_score->delete();
     }
-    $this->blockAccessToRegistration($registration);
-  }
-
-  private function grantAccessToRegistration(Registration $registration){
-    $registration->user->allow('view', $registration);
-    $registration->user->allow('view', $registration->course);
-
-    if ($registration->user->guardian) {
-      $registration->user->guardian->allow('view', $registration);
-    }
-  }
-
-  private function blockAccessToRegistration(Registration $registration){
-    $registration->user->disallow('view', $registration->course);
-
-    if ($registration->user->guardian) {
-      $registration->user->guardian->disallow('view', $registration);
-    }
+    $registration->user->revokeCoursePermissions($registration);
   }
 }

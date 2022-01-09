@@ -19,54 +19,54 @@ class UserController extends Controller
   public function index(GetUsers $request)
   {
     $users = QueryBuilder::for(User::class)
-      ->defaultSort('firstname')
+      ->defaultSort("firstname")
       ->allowedSorts(
-        'created_at',
-        'date_of_birth',
-        'firstname',
-        'id',
-        'lastname',
-        'ref_id',
-        'updated_at'
+        "created_at",
+        "date_of_birth",
+        "firstname",
+        "id",
+        "lastname",
+        "ref_id",
+        "updated_at"
       )
       ->allowedFilters([
-        AllowedFilter::partial('firstname'),
-        'email',
-        AllowedFilter::partial('lastname'),
-        'ref_id',
-        AllowedFilter::callback('user_type', function (Builder $query) use ($request) {
+        AllowedFilter::partial("firstname"),
+        "email",
+        AllowedFilter::partial("lastname"),
+        "ref_id",
+        AllowedFilter::callback("user_type", function (Builder $query) use ($request) {
           return $query->role($request->value);
         }),
-        AllowedFilter::callback('has_image', function (Builder $query, $value) {
+        AllowedFilter::callback("has_image", function (Builder $query, $value) {
           return $value ?
-            $query->whereNotNull('image') :
-            $query->whereNull('image');
+            $query->whereNotNull("image") :
+            $query->whereNull("image");
         }),
-        AllowedFilter::callback('account_status', function (Builder $query, $value) {
+        AllowedFilter::callback("account_status", function (Builder $query, $value) {
           $query->where(
-            'account_status_id',
-            '=',
+            "account_status_id",
+            "=",
             $value
           );
         }),
       ])
       ->allowedAppends([
-        'type',
-        'status'
+        "type",
+        "status"
       ])
       ->allowedFields([
-        'address',
-        'date_of_birth',
-        'firstname',
-        'lastname',
-        'othernames',
-        'email',
-        'meta',
-        'password',
-        'image',
-        'ref_id'
+        "address",
+        "date_of_birth",
+        "firstname",
+        "lastname",
+        "othernames",
+        "email",
+        "meta",
+        "password",
+        "image",
+        "ref_id"
       ])
-      ->paginate($request->paginate ?? config('edu.pagination'));
+      ->paginate($request->paginate ?? config("edu.pagination"));
 
     return response()->json($users, 200);
   }
@@ -75,22 +75,22 @@ class UserController extends Controller
   {
     $user = QueryBuilder::for(User::class)
       ->allowedAppends([
-        'type',
-        'status'
+        "type",
+        "status"
       ])
       ->allowedFields([
-        'address',
-        'date_of_birth',
-        'firstname',
-        'lastname',
-        'othernames',
-        'email',
-        'meta',
-        'password',
-        'image',
-        'ref_id'
+        "address",
+        "date_of_birth",
+        "firstname",
+        "lastname",
+        "othernames",
+        "email",
+        "meta",
+        "password",
+        "image",
+        "ref_id"
       ])
-      ->where('id', $request->id)
+      ->where("id", $request->id)
       ->first();
 
     return response()->json($user, 200);
@@ -100,22 +100,22 @@ class UserController extends Controller
   {
     $user = QueryBuilder::for(User::class)
       ->allowedAppends([
-        'type',
-        'status'
+        "type",
+        "status"
       ])
       ->allowedFields([
-        'address',
-        'date_of_birth',
-        'firstname',
-        'lastname',
-        'othernames',
-        'email',
-        'meta',
-        'password',
-        'image',
-        'ref_id'
+        "address",
+        "date_of_birth",
+        "firstname",
+        "lastname",
+        "othernames",
+        "email",
+        "meta",
+        "password",
+        "image",
+        "ref_id"
       ])
-      ->where('id', $request->id)
+      ->where("id", $request->id)
       ->first();
 
     $user->update($request->all());
@@ -132,9 +132,9 @@ class UserController extends Controller
 
   public function batchUpdate(StoreBatch $request)
   {
-    ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->all()[0], $request->type);
+    ProcessBatch::dispatch(Auth::user()->tenant()->first(), $request->data, $request->type);
 
-    return response()->json(['message' => 'your request is being processed'], 200);
+    return response()->json(["message" => "your request is being processed"], 200);
   }
 
   public function getAccountStatuses()

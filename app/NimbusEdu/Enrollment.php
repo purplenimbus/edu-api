@@ -28,13 +28,11 @@ class Enrollment
   }
 
   private function enroll(Student $student, Int $course_id) {
-    $school_term = $this->tenant->current_term;
-
     $registration = Registration::firstOrCreate([
       'tenant_id' => $this->tenant->id ,
       'user_id' => $student->id,
       'course_id' => $course_id,
-      'term_id' => is_null($school_term->id) ? null : $school_term->id,
+      'term_id' => $this->tenant->has_current_term ? $this->tenant->current_term->id : null,
     ]);
 
     return $registration;

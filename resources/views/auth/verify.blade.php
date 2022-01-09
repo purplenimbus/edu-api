@@ -11,7 +11,7 @@
   <div class="p3 center">
     <h1>{{ __('registration.verification_success') }}</h2>
     <p>
-      {{ $message }}
+      {!! $message !!}
     </p>
     <a href="{{ $login_url }}" class="btn btn-primary mt3">Login</a>
   </div>

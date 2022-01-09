@@ -54,13 +54,13 @@ class StudentTest extends TestCase
     $tenant = factory(Student::class)->create();
     $studentGrade = StudentGrade::first();
     $student = factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
 
-    $this->assertEquals($studentGrade->id, $student->grade['id']);
+    $this->assertEquals($studentGrade->id, $student->grade["id"]);
   }
 
   /**
@@ -72,13 +72,13 @@ class StudentTest extends TestCase
   {
     $tenant = factory(Tenant::class)->create();
     $institution = new Institution();
-    $institution->newSchoolTerm($tenant, 'first term');
+    $institution->newSchoolTerm($tenant, "first term");
     $studentGrade = StudentGrade::first();
     $student = factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
     $this->enrollStudent($student);
     $this->enrollStudent($student);
@@ -95,25 +95,25 @@ class StudentTest extends TestCase
   public function testStudenGradeScope()
   {
     $tenant = factory(Tenant::class)->create();
-    $studentGrade1 = StudentGrade::whereAlias('js 1')->first();
-    $studentGrade2 = StudentGrade::whereAlias('js 2')->first();
+    $studentGrade1 = StudentGrade::whereAlias("js 1")->first();
+    $studentGrade2 = StudentGrade::whereAlias("js 2")->first();
     factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade1->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade1->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
     factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade1->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade1->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
     factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade2->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade2->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
 
     $this->assertEquals(2, Student::ofStudentGrade($studentGrade1->id)->count());
@@ -129,19 +129,19 @@ class StudentTest extends TestCase
   {
     $tenant = factory(Tenant::class)->create();
     $institution = new Institution();
-    $institution->newSchoolTerm($tenant, 'first term');
-    $studentGrade = StudentGrade::whereAlias('js 1')->first();
+    $institution->newSchoolTerm($tenant, "first term");
+    $studentGrade = StudentGrade::whereAlias("js 1")->first();
     $student1 = factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
     $student2 = factory(Student::class)->create([
-      'meta' => [
-        'student_grade_id' => $studentGrade->id,
+      "meta" => [
+        "student_grade_id" => $studentGrade->id,
       ],
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
 
     $registration1 = $this->enrollStudent($student1);
@@ -160,31 +160,26 @@ class StudentTest extends TestCase
     $tenant1 = factory(Tenant::class)->create();
     $tenant2 = factory(Tenant::class)->create();
     factory(Student::class)->create([
-      'tenant_id' => $tenant1->id,
+      "tenant_id" => $tenant1->id,
     ]);
     factory(Student::class)->create([
-      'tenant_id' => $tenant1->id,
+      "tenant_id" => $tenant1->id,
     ]);
     factory(Student::class)->create([
-      'tenant_id' => $tenant2->id,
+      "tenant_id" => $tenant2->id,
     ]);
 
     $this->assertEquals(2, Student::ofTenant($tenant1->id)->count());
     $this->assertEquals(1, Student::ofTenant($tenant2->id)->count());
   }
 
-  /**
-   * students have many registration
-   *
-   * @return void
-   */
-  public function testStudentsRegistrations()
+  public function testItHasManyRegistrations()
   {
     $tenant = factory(Tenant::class)->create();
     $institution = new Institution();
-    $institution->newSchoolTerm($tenant, 'first term');
+    $institution->newSchoolTerm($tenant, "first term");
     $student = factory(Student::class)->create([
-      'tenant_id' => $tenant->id,
+      "tenant_id" => $tenant->id,
     ]);
     $this->enrollStudent($student);
     $this->enrollStudent($student);
@@ -192,19 +187,108 @@ class StudentTest extends TestCase
     $this->assertEquals(2, $student->registrations->count());
   }
 
+  public function testItSetsRegistrationPermissionsForStudent()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, "first term");
+    $student = factory(Student::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $this->enrollStudent($student);
+    $student->setRegistrationPermissions($student->registrations->first());
+
+    $this->assertTrue($student->can("view", $student->registrations->first()));
+    $this->assertTrue($student->can("view", $student->registrations->first()->course));
+  }
+
+  public function testItSetsCoursePermissionsForStudent()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, "first term");
+    $student = factory(Student::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $this->enrollStudent($student);
+    $student->setCoursePermissions($student->registrations->first());
+
+    $this->assertTrue($student->can("view", $student->registrations->first()->course));
+  }
+
+  public function testItSetsRegistrationPermissionsForStudentsGuardianIfGuardianPresent()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, "first term");
+    $student = factory(Student::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $guardian = factory(Guardian::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $guardian->assignWards([$student->id]);
+    $this->enrollStudent($student);
+    $student->setRegistrationPermissions($student->registrations->first());
+
+    $this->assertTrue($student->guardian->can("view", $student->registrations->first()));
+  }
+
+  public function testItRevokesCoursePermissionsFromStudent()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, "first term");
+    $student = factory(Student::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $this->enrollStudent($student);
+
+    $student->setCoursePermissions($student->registrations->first());
+    $this->assertTrue($student->can("view", $student->registrations->first()->course));
+
+    $student->revokeCoursePermissions($student->registrations->first());
+    \Bouncer::refreshFor($student);
+
+    $this->assertTrue($student->cannot("view", $student->registrations->first()->course));
+  }
+
+  public function testItRevokesRegistrationPermissionsFromStudentsGuardianIfPresent()
+  {
+    $tenant = factory(Tenant::class)->create();
+    $institution = new Institution();
+    $institution->newSchoolTerm($tenant, "first term");
+    $student = factory(Student::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $guardian = factory(Guardian::class)->create([
+      "tenant_id" => $tenant->id,
+    ]);
+    $guardian->assignWards([$student->id]);
+    $this->enrollStudent($student);
+
+    $student->setRegistrationPermissions($student->registrations->first());
+    $this->assertTrue($student->guardian->can("view", $student->registrations->first()));
+
+    $student->revokeRegistrationPermissions($student->registrations->first());
+    \Bouncer::refreshFor($student->guardian);
+
+    $this->assertTrue($student->guardian->cannot("view", $student->registrations->first()));
+  }
+
   private function enrollStudent(Student $student) {
     $tenant = $student->tenant;
 
     $course = factory(Course::class)->create([
-      'student_grade_id' => $student->grade['id'],
-      'term_id' => $tenant->current_term->id,
-      'tenant_id' => $tenant->id,
+      "student_grade_id" => $student->grade["id"],
+      "term_id" => $tenant->current_term->id,
+      "tenant_id" => $tenant->id,
     ]);
     return factory(Registration::class)->create([
-      'course_id' => $course->id,
-      'term_id' => $tenant->current_term->id,
-      'tenant_id' => $tenant->id,
-      'user_id' => $student->id,
+      "course_id" => $course->id,
+      "term_id" => $tenant->current_term->id,
+      "tenant_id" => $tenant->id,
+      "user_id" => $student->id,
     ]);
   }
 }

@@ -21,7 +21,7 @@ class CourseObserver
   public function created(Course $course)
   {
     if (request()->has('instructor_id') && $course->wasChanged('instructor_id')) {	
-      $course->instructor->assignInstructor($course);	
+      $course->instructor->setCoursePermissions($course);	
     }
   }
 
@@ -59,7 +59,7 @@ class CourseObserver
   public function saved(Course $course)
   {
     if (request()->has('instructor_id') && $course->wasChanged('instructor_id') && isset($course->instructor_id)) {	
-      $course->instructor->assignInstructor($course);	
+      $course->instructor->setCoursePermissions($course);	
     }
   }
 
