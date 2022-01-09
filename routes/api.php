@@ -110,7 +110,7 @@ Route::group([
       Route::group([
         'prefix' => '/{id}'
       ], function() {
-        Route::get('', 'SchoolTermController@show')->middleware('can:view-terms');
+        Route::get('', 'SchoolTermController@show');
         Route::put('', 'SchoolTermController@update');
       });
     });
