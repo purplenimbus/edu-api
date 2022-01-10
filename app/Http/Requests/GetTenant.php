@@ -24,7 +24,7 @@ class GetTenant extends FormRequest
     public function rules()
     {
       return [
-        'tenant_id'  => 'integer|required|exists:tenants,id',
+        'id'  => 'integer|required|exists:tenants,id',
       ];
     }
 

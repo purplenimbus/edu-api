@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Tenant;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateTenant extends FormRequest
+class GetTenantSettings extends FormRequest
 {
   /**
    * Determine if the user is authorized to make this request.
@@ -25,16 +27,11 @@ class UpdateTenant extends FormRequest
   {
     return [
       'id'  => 'integer|required|exists:tenants,id',
-      'name' => 'string',
-      'logo' => 'mimes:jpeg,png|nullable|max:1048576',
-      'address.street' => 'string|required_with:address.city,address.country,address.state',
-      'address.city' => 'string|required_with:address.street',
-      'address.country' => 'string|required_with:address.street',
-      'address.state' => 'string|required_with:address.street',
+      'name'  => ['required', 'string', Rule::in(array_keys(config('model_settings.defaultSettings.tenants')))],
     ];
   }
 
-  public function validationData(){
+  public function validationData() {
     return array_merge($this->all(), $this->route()->parameters());
   }
 }

@@ -7,16 +7,17 @@ use Illuminate\Notifications\Notifiable;
 use App\SchoolTerm;
 use App\User;
 use Exception;
+use Glorand\Model\Settings\Traits\HasSettingsField;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Unicodeveloper\Paystack\Facades\Paystack;
-use Glorand\Model\Settings\Traits\HasSettingsTable;
 
 class Tenant extends Model
 {
   use Notifiable;
-  use HasSettingsTable;
+  use HasSettingsField;
+
   /**
    * The attributes that are mass assignable.
    *
