@@ -3,7 +3,8 @@
 return [
   'defaultSettings' => [
     'tenants' => [
-      'school_terms' => config('edu.default.school_terms')
+      'course_schema' => config('edu.default.course_schema'),
+      'school_terms' => config('edu.default.school_terms'),
     ]
   ]
 ];

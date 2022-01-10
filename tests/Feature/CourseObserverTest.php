@@ -16,6 +16,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Bus;
+use SubjectsSeeder;
 
 class CourseObserverTest extends TestCase
 {
@@ -271,5 +272,71 @@ class CourseObserverTest extends TestCase
       ]);
 
     $this->assertEquals(array_flip(SchoolTerm::Statuses)[1], SchoolTerm::ofTenant($this->user->tenant->id)->first()->status);
+  }
+
+  public function testSetsDefaultCourseSchema()
+  {
+    $this->seed(SubjectsSeeder::class);
+
+    $subject = Subject::first();
+    $studentGrade = StudentGrade::first();
+
+    $this->actingAs($this->user)
+      ->postJson("api/v1/courses", [
+        "student_grade_id" => $studentGrade->id,
+        "subject_id" => $subject->id,
+      ])
+      ->assertOk()
+      ->assertJson([
+        "schema" => [
+          [
+            "name" => "midterm 1",
+            "score" => 20
+          ],
+          [
+            "name" => "midterm 2",
+            "score" => 20
+          ],
+          [
+            "name" => "midterm 3",
+            "score" => 20
+          ],
+          [
+            "name" => "exam",
+            "score" => 40
+          ]
+        ]
+      ]);
+  }
+
+  public function testSetsCourseSchemaFromSettings()
+  {
+    $this->seed(SubjectsSeeder::class);
+
+    $subject = Subject::first();
+    $studentGrade = StudentGrade::first();
+
+    $this->user->tenant->settings()->update('course_schema', [
+      [
+        "name" => "midterm 1",
+        "score" => 100
+      ],
+    ]);
+
+    $this->actingAs($this->user)
+      ->postJson("api/v1/courses", [
+        "student_grade_id" => $studentGrade->id,
+        "subject_id" => $subject->id,
+        "tenant_id" => $this->user->tenant_id
+      ])
+      ->assertOk()
+      ->assertJson([
+        "schema" => [
+          [
+            "name" => "midterm 1",
+            "score" => 100
+          ],
+        ]
+      ]);
   }
 }

@@ -6,6 +6,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UpdateTenant;
 use App\Http\Requests\GetTenant;
+use App\Http\Requests\GetTenantSettings;
+use App\Http\Requests\UpdateTenantSetting;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Tenant;
 use Storage;
@@ -29,7 +31,7 @@ class TenantController extends BaseController
         'payment_profile_item_types'
       ])
       ->where([
-        ['id', '=', $request->tenant_id]
+        ['id', '=', $request->id]
       ])
       ->first();
 
@@ -75,9 +77,17 @@ class TenantController extends BaseController
     return response()->json($tenant, 200);
   }
   
-  public function settings(GetTenant $request){
+  public function getSettings(GetTenantSettings $request){
     $tenant = Auth::user()->tenant()->first();
 
-    return response()->json($tenant->meta->settings, 200);
+    return response()->json($tenant->settings()->get($request->name), 200);
+  }
+
+  public function updateSetting(UpdateTenantSetting $request){
+    $tenant = Auth::user()->tenant()->first();
+
+    $tenant->settings()->update($request->name, $request->value);
+
+    return response()->json($tenant->settings()->get($request->name), 200);
   }
 }

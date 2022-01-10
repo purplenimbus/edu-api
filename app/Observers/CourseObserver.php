@@ -7,6 +7,7 @@ use App\Jobs\SendStudentGrades;
 use App\NimbusEdu\Helpers\CourseHelper;
 use App\SchoolTerm;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class CourseObserver
 {
@@ -41,7 +42,7 @@ class CourseObserver
     }	
 
     if (is_null($course->schema)) {	
-      $course->schema = config('edu.default.course_schema');	
+      $course->schema = Auth::user()->tenant()->first()->settings()->get('course_schema') ?? config('edu.default.course_schema');	
     }
 
     if (is_null($course->status_id)) {	

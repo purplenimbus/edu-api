@@ -50,11 +50,14 @@ Route::group([
     ], function() {
       Route::post('/', 'TenantController@create');
       Route::group([
-        'prefix' => '/{tenant_id}'
+        'prefix' => '/{id}'
       ], function() {
         Route::get('/', 'TenantController@show');
-        Route::post('/', 'TenantController@update');
-        Route::get('/settings', 'TenantController@settings');
+        Route::put('/', 'TenantController@update');
+
+        Route::get('/settings', 'TenantController@getSettings');
+        Route::put('/settings', 'TenantController@updateSetting');
+
         Route::post('/term', 'TenantController@updateTerm');
         Route::group([
           'prefix' => '/bank_accounts'
