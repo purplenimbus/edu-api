@@ -10,7 +10,7 @@ class CourseScore extends Model
   use SoftDeletes;
   
   /**
-   * The accessors to append to the model's array form.
+   * The accessors to append to the model"s array form.
    *
    * @var array
    */
@@ -22,13 +22,13 @@ class CourseScore extends Model
    * @var array
    */
   protected $fillable = [
-  	'registration_id',
-    'scores',
-    'comment'
+  	"registration_id",
+    "scores",
+    "comment"
   ];
 
   /**
-   * The attributes excluded from the model's JSON form.
+   * The attributes excluded from the model"s JSON form.
    *
    * @var array
    */
@@ -41,7 +41,7 @@ class CourseScore extends Model
    */
 
 	protected $casts = [
-    'scores' => 'array',
+    "scores" => "array",
   ];
 
   /**

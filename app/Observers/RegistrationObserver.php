@@ -17,10 +17,10 @@ class RegistrationObserver
   {
     if ($registration->course->schema) {
       $course_score = CourseScore::create([
-        'registration_id' => $registration->id,
-        'scores' => array_map(
+        "registration_id" => $registration->id,
+        "scores" => array_map(
           function ($item) {
-            $item['score'] = 0;
+            $item["score"] = 0;
             return $item;
           },
           $registration->course->schema

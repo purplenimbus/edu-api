@@ -8,10 +8,10 @@ use Illuminate\Support\Arr;
 class Course extends Model
 {
   const Statuses = [
-    'created' => 1,
-    'in progress' => 2,
-    'complete' => 3,
-    'archived' => 4,
+    "created" => 1,
+    "in progress" => 2,
+    "complete" => 3,
+    "archived" => 4,
   ];
 
   /**
@@ -20,19 +20,19 @@ class Course extends Model
    * @var array
    */
   protected $fillable = [
-    'name',
-    'description',
-    'meta',
-    'tenant_id',
-    'term_id',
-    'instructor_id',
-    'subject_id',
-    'code',
-    'student_grade_id',
-    'schema',
-    'status_id',
-    'start_date',
-    'end_date',
+    "name",
+    "description",
+    "meta",
+    "tenant_id",
+    "term_id",
+    "instructor_id",
+    "subject_id",
+    "code",
+    "student_grade_id",
+    "schema",
+    "status_id",
+    "start_date",
+    "end_date",
   ];
 
   /**
@@ -41,8 +41,8 @@ class Course extends Model
    * @var array
    */
   protected $dates = [
-    'end_date',
-    'start_date',
+    "end_date",
+    "start_date",
   ];
 
   /**
@@ -52,12 +52,12 @@ class Course extends Model
    */
 
   protected $casts = [
-    'meta' => 'array',
-    'schema' => 'array',
+    "meta" => "array",
+    "schema" => "array",
   ];
 
   /**
-   * The attributes excluded from the model's JSON form.
+   * The attributes excluded from the model"s JSON form.
    *
    * @var array
    */
@@ -65,7 +65,7 @@ class Course extends Model
   ];
 
   protected $appends = [
-    'status'
+    "status"
   ];
 
   /**
@@ -75,7 +75,7 @@ class Course extends Model
    */
   public function tenant()
   {
-    return $this->belongsTo('App\Tenant');
+    return $this->belongsTo("App\Tenant");
   }
 
   /**
@@ -85,7 +85,7 @@ class Course extends Model
    */
   public function term()
   {
-    return $this->belongsTo('App\SchoolTerm');
+    return $this->belongsTo("App\SchoolTerm");
   }
   /**
    * Get course grade
@@ -94,7 +94,7 @@ class Course extends Model
    */
   public function grade()
   {
-    return $this->belongsTo('App\StudentGrade', 'student_grade_id');
+    return $this->belongsTo("App\StudentGrade", "student_grade_id");
   }
 
   /**
@@ -104,7 +104,7 @@ class Course extends Model
    */
   public function instructor()
   {
-    return $this->belongsTo('App\Instructor');
+    return $this->belongsTo("App\Instructor");
   }
 
   /**
@@ -114,7 +114,7 @@ class Course extends Model
    */
   public function subject()
   {
-    return $this->belongsTo('App\Subject');
+    return $this->belongsTo("App\Subject");
   }
 
   /**
@@ -124,7 +124,7 @@ class Course extends Model
    */
   public function registrations()
   {
-    return $this->hasMany('App\Registration');
+    return $this->hasMany("App\Registration");
   }
 
   public function getStatusAttribute() {
@@ -143,13 +143,13 @@ class Course extends Model
 
   public function scopeValidCourses($query, Student $student)
   {
-    $course_ids = Registration::where('user_id', $student->id)->pluck('course_id');
+    $course_ids = Registration::where("user_id", $student->id)->pluck("course_id");
 
-    $query->ofStudentGrade($student->grade['id'])
+    $query->ofStudentGrade($student->grade["id"])
       ->ofTenant($student->tenant_id)
-      ->whereNotIn('id', $course_ids);
+      ->whereNotIn("id", $course_ids);
 
-    $currentTerm = Arr::get($this, 'tenant.current_term', null);
+    $currentTerm = Arr::get($this, "tenant.current_term", null);
 
     if (!is_null($currentTerm)) {
       $query->ofSchoolTerm($currentTerm ->id);
@@ -164,8 +164,8 @@ class Course extends Model
   }
 
   public function scopeIncomplete($query) {
-    $query->whereStatusId(Course::Statuses['in progress'])
-      ->orWhere('status_id', Course::Statuses['created']);
+    $query->whereStatusId(Course::Statuses["in progress"])
+      ->orWhere("status_id", Course::Statuses["created"]);
 
     return $query;
   }

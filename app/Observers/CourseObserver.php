@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Course;
-use App\Jobs\CompleteTerm;
 use App\Jobs\SendStudentGrades;
 use App\NimbusEdu\Helpers\CourseHelper;
 use App\SchoolTerm;
