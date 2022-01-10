@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Requests;
 
-use App\Http\Requests\GetInstructor;
 use App\Instructor;
 use App\Rules\ValidInstructor;
 use Tests\TestCase;

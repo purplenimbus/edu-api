@@ -40,7 +40,7 @@ class ValidCourseSchema implements Rule
 
   private function sum_schema($carry, $item)
   {
-      $carry += $item["score"];
-      return $carry;
+    $carry += $item["score"];
+    return $carry;
   }
 }
