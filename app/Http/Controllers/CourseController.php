@@ -15,6 +15,7 @@ use App\Jobs\GenerateCourses;
 use App\Student;
 use App\Http\Requests\DeleteCourse;
 use App\Http\Requests\GetNotRegistered;
+use App\Http\Requests\UpdateCourseSchema;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder as Builder;
 use Spatie\QueryBuilder\AllowedFilter;
