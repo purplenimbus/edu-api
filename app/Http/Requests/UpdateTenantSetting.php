@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\ValidScores;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -36,7 +35,7 @@ class UpdateTenantSetting extends FormRequest
   {
     $validation = new GetTenantSettings();
 
-    if (request()->has("name") && !is_null(self::tenant_settings[request()->name])) {
+    if (request()->has("name") && isset(self::tenant_settings[request()->name])) {
       $setting_validation = self::tenant_settings[request()->name];
 
       $setting_validation = new $setting_validation();

@@ -56,7 +56,7 @@ Route::group([
         Route::put('/', 'TenantController@update');
 
         Route::get('/settings', 'TenantController@getSettings');
-        Route::put('/settings', 'TenantController@updateSettings');
+        Route::put('/settings', 'TenantController@updateSetting');
 
         Route::post('/term', 'TenantController@updateTerm');
         Route::group([

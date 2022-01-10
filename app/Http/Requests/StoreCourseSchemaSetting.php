@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ValidCourseSchema;
 use App\Rules\ValidScores;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,16 +26,16 @@ class StoreCourseSchemaSetting extends FormRequest
   public function rules()
   {
     return [
-      'value' => [
-        'required',
-        'array',
-        new ValidScores(),
+      "value" => [
+        "required",
+        "array",
+        new ValidCourseSchema(),
       ],
-      'value.*.name' => 'required|string|max:255',
-      'value.*.score' => [
-        'required',
-        'integer',
-        'max:100',
+      "value.*.name" => "required|string|max:255",
+      "value.*.score" => [
+        "required",
+        "integer",
+        "max:100",
       ],
     ];
   }

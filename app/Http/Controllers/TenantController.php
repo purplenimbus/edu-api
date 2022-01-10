@@ -80,7 +80,7 @@ class TenantController extends BaseController
   public function getSettings(GetTenantSettings $request){
     $tenant = Auth::user()->tenant()->first();
 
-    return response()->json($tenant->settings()->get($request->setting_name), 200);
+    return response()->json($tenant->settings()->get($request->name), 200);
   }
 
   public function updateSetting(UpdateTenantSetting $request){
@@ -88,6 +88,6 @@ class TenantController extends BaseController
 
     $tenant->settings()->update($request->name, $request->value);
 
-    return response()->json($tenant->settings()->get($request->setting_name), 200);
+    return response()->json($tenant->settings()->get($request->name), 200);
   }
 }
