@@ -35,8 +35,8 @@ class UpdateTenantSetting extends FormRequest
   {
     $validation = new GetTenantSettings();
 
-    if (request()->has("name") && isset(self::tenant_settings[request()->name])) {
-      $setting_validation = self::tenant_settings[request()->name];
+    if ($this->input("name") && isset(self::tenant_settings[$this->input("name")])) {
+      $setting_validation = self::tenant_settings[$this->input("name")];
 
       $setting_validation = new $setting_validation();
 

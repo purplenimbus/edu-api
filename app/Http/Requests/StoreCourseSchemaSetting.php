@@ -31,7 +31,7 @@ class StoreCourseSchemaSetting extends FormRequest
         "array",
         new ValidCourseSchema(),
       ],
-      "value.*.name" => "required|string|max:255",
+      "value.*.name" => "required|string|max:255|distinct",
       "value.*.score" => [
         "required",
         "integer",
