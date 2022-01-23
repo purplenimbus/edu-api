@@ -6,18 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Curriculum extends Model
 {
-	const Types = [
+  const Types = [
     "nigeria" => 1,
   ];
 
   public $table = "curricula";
-	/**
+  /**
    * Cast meta property to array
    *
    * @var array
    */
-  
-	protected $casts = [
+
+  protected $casts = [
     'meta' => 'array',
   ];
 
@@ -27,7 +27,7 @@ class Curriculum extends Model
    * @var array
    */
   protected $fillable = [
-    'student_grade_id','description','meta','type_id','tenant_id'
+    'student_grade_id', 'description', 'meta', 'type_id', 'tenant_id'
   ];
 
   /**
@@ -35,8 +35,7 @@ class Curriculum extends Model
    *
    * @var array
    */
-  protected $hidden = [
-  ];
+  protected $hidden = [];
 
   public function scopeOfStudentGrade($query, $student_grade_id)
   {
@@ -45,7 +44,7 @@ class Curriculum extends Model
 
   public function grade()
   {
-    return $this->belongsTo('App\StudentGrade','student_grade_id');
+    return $this->belongsTo('App\StudentGrade', 'student_grade_id');
   }
 
   public function subjects()
