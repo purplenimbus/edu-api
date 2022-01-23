@@ -9,6 +9,7 @@ use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
+use SubjectsSeeder;
 use Tests\TestCase;
 
 class TenantObserverTest extends TestCase
@@ -56,6 +57,7 @@ class TenantObserverTest extends TestCase
 
   public function testItGeneratesADefaultTenantCurriculum()
   {
+    $this->seed(SubjectsSeeder::class);
     $this->postJson('/api/v1/register', [
       'email' => $this->faker->email,
       'fullName' => $this->faker->name,

@@ -24,11 +24,9 @@ class DatabaseSeeder extends Seeder
 
     $this->call('OtherSeeders');
     $this->call('PermissionsSeeder');
+    $this->call('SubjectsSeeder');
     if (App::environment(['local', 'staging'])) {
       $this->call('DemoUsersSeeder');
     }
-    $this->call('SubjectsSeeder');
-    $this->call('CurriculaSeeder');
-    //$this->call('UsersTableSeeder');
   }
 }

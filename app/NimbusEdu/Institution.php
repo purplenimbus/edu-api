@@ -4,6 +4,7 @@ namespace App\NimbusEdu;
 
 use App\Curriculum;
 use App\NimbusEdu\Helpers\CurriculumHelper;
+use App\NimbusEdu\Helpers\MapsStudentGradeNumber;
 use App\NimbusEdu\Helpers\SchoolTermHelper;
 use App\NimbusEdu\Helpers\SubjectHelper;
 use App\SchoolTerm;
@@ -14,7 +15,7 @@ use Exception;
 
 class Institution
 {
-  use CurriculumHelper, SubjectHelper, SchoolTermHelper;
+  use CurriculumHelper, SubjectHelper, SchoolTermHelper, MapsStudentGradeNumber;
 
   public function newSchoolTerm(Tenant $tenant, string $termName, array $options = []) {
     $typeId = SchoolTermType::whereName($termName)->first()->id;
@@ -45,19 +46,18 @@ class Institution
   }
 
   private function processCourseLoad(array $course_load, Tenant $tenant): void {
-    $student_grade_id = $course_load['student_grade_id'];
+    $studentGrade = $this->mapStudentGradeIndexToStudentGradeId($course_load['student_grade_id'], $tenant);
 
-    if ($student_grade_id) {
+    if (isset($studentGrade->id)) {
       $curriculum = Curriculum::firstOrCreate([
         'tenant_id' => $tenant->id,
-        'student_grade_id' => $student_grade_id,
+        'student_grade_id' => $studentGrade->id,
         'type_id' => $this->getCurriculumTypeId(Tenant::first()->country),
       ]);
 
       if(isset($course_load['core_subjects_code'])) {
         $this->processSubjects(
           $course_load['core_subjects_code'],
-          $student_grade_id,
           'core',
           $curriculum
         );
@@ -66,7 +66,6 @@ class Institution
       if(isset($course_load['elective_subjects_code'])) {
         $this->processSubjects(
           $course_load['elective_subjects_code'],
-          $student_grade_id,
           'elective',
           $curriculum
         );
@@ -75,7 +74,6 @@ class Institution
       if(isset($course_load['optional_subjects_code'])) {
         $this->processSubjects(
           $course_load['optional_subjects_code'],
-          $student_grade_id,
           'optional',
           $curriculum
         );
@@ -85,8 +83,7 @@ class Institution
 
   private function processSubjects(
     $data,
-    $student_grade_id,
-    $type,
+    string $type,
     Curriculum $curriculum){
     $core_subjects_codes = explode(',', $data);
 
