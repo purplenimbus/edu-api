@@ -52,7 +52,7 @@ class CurriculumCourseLoad extends Model
     $query = Course::whereSubjectId($this->subject->id)
       ->ofStudentGrade($this->curriculum->grade->id);
 
-    $currentTerm = Arr::get($this, 'curriculum.student_grade.tenant.current_term', null);
+    $currentTerm = Arr::get($this, 'curriculum.tenant.current_term', null);
 
     if (!is_null($currentTerm)) {
       $query->ofSchoolTerm($currentTerm->id);

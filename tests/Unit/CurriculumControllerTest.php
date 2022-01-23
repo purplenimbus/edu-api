@@ -1,5 +1,6 @@
 <?php
 
+use App\Course;
 use App\Curriculum;
 use App\CurriculumCourseLoad;
 use App\CurriculumCourseLoadType;
@@ -29,7 +30,7 @@ class CurriculumControllerTest extends TestCase
     $this->seed(SubjectsSeeder::class);
 
     $this->actingAs($this->user)
-      ->getJson("api/v1/subjects?subject_id=".Subject::first()->id)
+      ->getJson("api/v1/subjects?subject_id=" . Subject::first()->id)
       ->assertOk()
       ->assertJson(Subject::first()->toArray());
   }
@@ -56,7 +57,7 @@ class CurriculumControllerTest extends TestCase
     $this->actingAs($this->user)
       ->getJson("api/v1/grades/list")
       ->assertOk()
-      ->assertJson(StudentGrade::ofTenant($this->user->tenant_id)->get(['alias','description','id','name'])->toArray());
+      ->assertJson(StudentGrade::ofTenant($this->user->tenant_id)->get(['alias', 'description', 'id', 'name'])->toArray());
   }
 
   public function testItDosentReturnACourseLoadForAnInvalidStudentGrade()
@@ -83,7 +84,7 @@ class CurriculumControllerTest extends TestCase
     $studentGrade = StudentGrade::first();
 
     $this->actingAs($this->user)
-      ->getJson("api/v1/curriculum?student_grade_id=".$studentGrade->id)
+      ->getJson("api/v1/curriculum?student_grade_id=" . $studentGrade->id)
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -103,7 +104,7 @@ class CurriculumControllerTest extends TestCase
     ]);
 
     $this->actingAs($this->user)
-      ->getJson("api/v1/curriculum?".$query)
+      ->getJson("api/v1/curriculum?" . $query)
       ->assertOk()
       ->assertJson([
         "current_page" => 1,
@@ -122,17 +123,50 @@ class CurriculumControllerTest extends TestCase
       "student_grade_id" => $studentGrade->id,
       "filter[type]" => array_flip(CurriculumCourseLoad::Types)[1],
     ]);
-    dd(StudentGrade::count(), Tenant::first()->id);
-    dd(StudentGrade::whereAlias('js 1')->first()->toArray());
-    // dd(Curriculum::whereStudentGradeId(1)->first()->subjects->toArray());
-    // dd(Curriculum::ofStudentGrade($studentGrade->id)->first()->subjects->toArray());
-    $r = $this->actingAs($this->user)
-      ->getJson("api/v1/curriculum?".$query)
-      ->assertOk();
-      // ->assertJson([
-      //   "current_page" => 1,
-      //   "total" => 19,
-      // ]);
-      dd($r->json());
+
+    $this->actingAs($this->user)
+      ->getJson("api/v1/curriculum?" . $query)
+      ->assertOk()
+      ->assertJson([
+        "current_page" => 1,
+        "total" => 19,
+      ]);
+  }
+
+  public function testItAppendsHasCourseProperty()
+  {
+    $this->seed(SubjectsSeeder::class);
+    $this->seed(OtherSeeders::class);
+    $institution = new Institution();
+    $institution->generateCurriculum($this->user->tenant);
+    $institution->newSchoolTerm($this->user->tenant, 'first term');
+    $studentGrade = StudentGrade::whereAlias('js 1')->first();
+    $subject = Subject::whereCode('MATH')->first();
+    factory(Course::class)->create([
+      'subject_id' => $subject->id,
+      'student_grade_id' => $studentGrade->id,
+      'tenant_id' => $this->user->tenant_id,
+      'term_id' => $this->user->tenant->current_term->id,
+    ]);
+    $query = http_build_query([
+      "append" => "has_course",
+      "filter[type]" => array_flip(CurriculumCourseLoad::Types)[1],
+      "page" => 1,
+      "student_grade_id" => $studentGrade->id,
+    ]);
+
+    $response = $this->actingAs($this->user)
+      ->getJson("api/v1/curriculum?" . $query)
+      ->assertOk()
+      ->assertJson([
+        "current_page" => 1,
+        "total" => 19,
+      ]);
+
+    $collection = collect($response->json()["data"]);
+
+    $this->assertTrue(
+      $collection->contains(function($value) { return $value["has_course"]; })
+    );
   }
 }
