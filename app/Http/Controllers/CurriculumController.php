@@ -11,33 +11,36 @@ use App\Lesson;
 use App\Subject;
 use App\CurriculumCourseLoad;
 use App\Http\Requests\GenerateCurriculum;
+use App\NimbusEdu\Helpers\CurriculumHelper;
 use App\StudentGrade;
 use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\AllowedFilter;
-use App\NimbusEdu\Syllabus;
 
 class CurriculumController extends Controller
 {
+  use CurriculumHelper;
   /**
    * Batch create subjects
    *
    * @return void
    */
-  public function generateCurriculum(GenerateCurriculum $request){
+  public function generateCurriculum(GenerateCurriculum $request)
+  {
     $tenant = Auth::user()->tenant()->first();
 
     ProcessBatch::dispatch($tenant, $request->student_grade_id, $request->type);
 
-    return response()->json(['message' => 'your request is being processed'],200);
+    return response()->json(['message' => 'your request is being processed'], 200);
   }
   /**
    * List all subjects
    *
    * @return void
    */
-  public function subjects(GetSubjects $request){
-    if($request->has('subject_id')){
+  public function subjects(GetSubjects $request)
+  {
+    if ($request->has('subject_id')) {
       return response()->json(Subject::find($request->subject_id), 200);
     }
 
@@ -49,10 +52,11 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function listClasses(){
+  public function listClasses()
+  {
     return response()
       ->json(StudentGrade::ofTenant(Auth::user()->tenant()->first()->id)
-      ->get(['alias','description','id','name']), 200);
+        ->get(['alias', 'description', 'id', 'name']), 200);
   }
   /**
    * List lessons
@@ -65,30 +69,30 @@ class CurriculumController extends Controller
 
     $query = [];
 
-    array_push($query,['tenant_id', '=', $tenant_id]);
+    array_push($query, ['tenant_id', '=', $tenant_id]);
     //TO DO: create GetLessons Request
-    if(!$request->has('course_id')){
+    if (!$request->has('course_id')) {
       $message = 'course id required';
-      
-      return response()->json($message,500);
-    }else{
-      array_push($query,['course_id', '=', $request->course_id]);
-      array_push($query,['parent_id', '=', null]);
-    } 
 
-    if($request->has('instructor_id')){
-      array_push($query,['meta->instructor_id', '=', $request->instructor_id]);
+      return response()->json($message, 500);
+    } else {
+      array_push($query, ['course_id', '=', $request->course_id]);
+      array_push($query, ['parent_id', '=', null]);
     }
 
-    $lessons = $request->has('paginate') ? Lesson::with('sub_lessons','course')->where($query)->paginate($request->paginate) : Lesson::with('sub_lessons','course')->where($query)->get();
+    if ($request->has('instructor_id')) {
+      array_push($query, ['meta->instructor_id', '=', $request->instructor_id]);
+    }
 
-    if(sizeof($lessons)){
-      return response()->json($lessons,200);
-    }else{
+    $lessons = $request->has('paginate') ? Lesson::with('sub_lessons', 'course')->where($query)->paginate($request->paginate) : Lesson::with('sub_lessons', 'course')->where($query)->get();
 
-      $message = 'no lessons found for course id : '.$request->course_id;
-      
-      return response()->json(['message' => $message],404);
+    if (sizeof($lessons)) {
+      return response()->json($lessons, 200);
+    } else {
+
+      $message = 'no lessons found for course id : ' . $request->course_id;
+
+      return response()->json(['message' => $message], 404);
     }
   }
 
@@ -97,9 +101,8 @@ class CurriculumController extends Controller
    *
    * @return void
    */
-  public function getCourseLoad(GetCurriculum $request){
-    $tenant = Auth::user()->tenant()->first();
-    $nimbus_syllabus = new Syllabus($tenant);
+  public function getCourseLoad(GetCurriculum $request)
+  {
     $course_load = QueryBuilder::for(CurriculumCourseLoad::class)
       ->allowedFields(
         'curriculum.id',
@@ -117,18 +120,15 @@ class CurriculumController extends Controller
       ->allowedAppends(['has_course'])
       ->allowedFilters([
         AllowedFilter::callback('type_id', function (Builder $query, $value) {
-            $query->where('type_id', $value);
+          $query->whereTypeId($value);
         }),
-        AllowedFilter::callback('type', function (Builder $query, $value) use ($nimbus_syllabus) {
-            $type = $nimbus_syllabus
-                ->getCurriculumCourseLoadType($value);
-            $query->where(
-              'type_id',
-              isset($type->id) ? (int)$type->id : false
-            );
+        AllowedFilter::callback('type', function (Builder $query, $value) {
+          $query->whereTypeId(
+            $this->getCurriculumCourseLoadTypeId($value)
+          );
         })
       ])
-      ->whereHas('curriculum', function($query) use ($request){
+      ->whereHas('curriculum', function ($query) use ($request) {
         $query->ofStudentGrade($request->student_grade_id);
       })
       ->paginate($request->paginate ?? config('edu.pagination'));

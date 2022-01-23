@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\NimbusEdu\Institution;
 use App\StudentGrade;
 use App\SchoolTermType;
 use App\Tenant;
@@ -18,6 +19,7 @@ class TenantObserver
   {
     $this->createDefaultSchoolTermTypes($tenant);
     $this->createDefaultStudentGrades($tenant);
+    $this->createDefaultCurriculum($tenant);
   }
 
   private function createDefaultSchoolTermTypes(Tenant $tenant) {
@@ -42,5 +44,11 @@ class TenantObserver
 
       StudentGrade::create($grade);
     }
+  }
+
+  private function createDefaultCurriculum(Tenant $tenant) {
+    $institution = new Institution();
+
+    $institution->generateCurriculum($tenant);
   }
 }

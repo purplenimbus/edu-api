@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Curriculum extends Model
 {
-	public $table = "curricula";
+	const Types = [
+    "nigeria" => 1,
+  ];
+
+  public $table = "curricula";
 	/**
    * Cast meta property to array
    *
@@ -23,7 +27,7 @@ class Curriculum extends Model
    * @var array
    */
   protected $fillable = [
-    'student_grade_id','description','meta','type_id',
+    'student_grade_id','description','meta','type_id','tenant_id'
   ];
 
   /**
@@ -52,5 +56,15 @@ class Curriculum extends Model
   public function student_grade()
   {
     return $this->belongsTo('App\StudentGrade');
+  }
+
+  public function tenant()
+  {
+    return $this->belongsTo('App\Tenant');
+  }
+
+  public function scopeOfTenant($query, $tenant_id)
+  {
+    return $query->whereTenantId($tenant_id);
   }
 }

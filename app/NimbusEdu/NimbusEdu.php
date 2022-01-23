@@ -100,12 +100,6 @@ class NimbusEdu
     }
   }
 
-  public function getCurriculumType($new = false){
-    return $new ? 
-    CurriculumType::firstOrCreate(['country' => $this->tenant->country]) : 
-    CurriculumType::where(['country' => $this->tenant->country])->first();
-  }
-
   public function enrollCoreCourses(Student $student, $student_grade_id){
     try{
       var_dump('Attempting to enroll student: '.$student->id);

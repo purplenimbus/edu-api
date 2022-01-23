@@ -7,6 +7,11 @@ use Illuminate\Support\Arr;
 
 class CurriculumCourseLoad extends Model
 {
+  const Types = [
+    "core" => 1,
+    "elective" => 2,
+    "optional" => 3,
+  ];
   /**
    * The attributes excluded from the model's JSON form.
    *
@@ -50,20 +55,14 @@ class CurriculumCourseLoad extends Model
     $currentTerm = Arr::get($this, 'curriculum.student_grade.tenant.current_term', null);
 
     if (!is_null($currentTerm)) {
-      $query->ofSchoolTerm($currentTerm ->id);
+      $query->ofSchoolTerm($currentTerm->id);
     }
-
 
     return $query->first() ? true : false;
   }
 
-  public function scopeOfTenant($query, $tenant_id)
-  {
-    return $query->where('tenant_id', $tenant_id);
-  }
-
   public function scopeOfCore($query)
   {
-    return $query->where('type_id', 1); //need to move to constant
+    return $query->where('type_id', self::Types["core"]); //need to move to constant
   }
 }

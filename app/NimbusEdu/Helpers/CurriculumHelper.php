@@ -2,21 +2,16 @@
 
 namespace App\NimbusEdu\Helpers;
 
-use App\CurriculumCourseLoadType;
-use App\CurriculumType;
+use App\Curriculum;
+use App\CurriculumCourseLoad;
 
 trait CurriculumHelper
 {
-  public function getCurriculumType($new = false, $country = null){
-    $country = $country ?? config("edu.default.country");
-
-    return $new ?
-      CurriculumType::firstOrCreate(['country' => $country]) : 
-      CurriculumType::where(['country' => $country])->first();
+  public function getCurriculumTypeId(string $type): int {
+    return Curriculum::Types[$type];
   }
 
-  public function getCurriculumCourseLoadType($name){
-    return CurriculumCourseLoadType::where('name', $name)
-      ->first();
+  public function getCurriculumCourseLoadTypeId(string $name): int {
+    return CurriculumCourseLoad::Types[$name];
   }
 }

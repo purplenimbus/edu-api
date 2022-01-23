@@ -24,15 +24,6 @@ class OtherSeeders extends Seeder
       App\Currency::create($currency);
     }
 
-    $curricula_types = [
-      [ 'country' => 'nigeria'  ],
-    ];
-    
-    //Create Curriculla Types
-    foreach($curricula_types as $curricula_type){
-      App\CurriculumType::create($curricula_type);
-    }
-
     $invoice_status_types = [
       [ 'name' => 'pending' ],
       [ 'name' => 'past_due' ],

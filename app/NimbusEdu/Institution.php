@@ -38,19 +38,20 @@ class Institution
     }
   }
 
-  public function generateCurriculum() {
+  public function generateCurriculum(Tenant $tenant) {
     foreach($this->readJson('curricula.json') as $courseLoad) {
-      $this->processCourseLoad($courseLoad);
+      $this->processCourseLoad($courseLoad, $tenant);
     }
   }
 
-  public function processCourseLoad(array $course_load): void {
+  private function processCourseLoad(array $course_load, Tenant $tenant): void {
     $student_grade_id = $course_load['student_grade_id'];
 
     if ($student_grade_id) {
       $curriculum = Curriculum::firstOrCreate([
+        'tenant_id' => $tenant->id,
         'student_grade_id' => $student_grade_id,
-        'type_id' => $this->getCurriculumType()->id,
+        'type_id' => $this->getCurriculumTypeId(Tenant::first()->country),
       ]);
 
       if(isset($course_load['core_subjects_code'])) {
@@ -91,13 +92,13 @@ class Institution
 
     foreach ($core_subjects_codes as $code) {
       $subject = $this->getSubject($code);
-      $curriculum_course_load_type = $this->getCurriculumCourseLoadType($type);
+      $curriculum_course_load_type_id = $this->getCurriculumCourseLoadTypeId($type);
 
-      if ($subject && $curriculum_course_load_type) {
+      if ($subject && isset($curriculum_course_load_type_id)) {
         $curriculum->subjects()
           ->firstOrCreate([
             'subject_id' => $subject->id,
-            'type_id' => $curriculum_course_load_type->id
+            'type_id' => $curriculum_course_load_type_id
           ])
           ->toArray();
       }
