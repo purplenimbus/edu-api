@@ -16,7 +16,7 @@ class DemoUsersSeeder extends Seeder
       $records = factory(App\Tenant::class, 1)
       ->create([
         'country' => config('edu.default.country'),
-        'name'=> 'showers christian high school',
+        'name'=> 'nimbus grammar school',
       ])
       ->each(function($tenant)use($count){
           factory(App\User::class, 1)->create([

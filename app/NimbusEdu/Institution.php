@@ -4,6 +4,7 @@ namespace App\NimbusEdu;
 
 use App\Curriculum;
 use App\NimbusEdu\Helpers\CurriculumHelper;
+use App\NimbusEdu\Helpers\MapsStudentGradeNumber;
 use App\NimbusEdu\Helpers\SchoolTermHelper;
 use App\NimbusEdu\Helpers\SubjectHelper;
 use App\SchoolTerm;
@@ -14,7 +15,7 @@ use Exception;
 
 class Institution
 {
-  use CurriculumHelper, SubjectHelper, SchoolTermHelper;
+  use CurriculumHelper, SubjectHelper, SchoolTermHelper, MapsStudentGradeNumber;
 
   public function newSchoolTerm(Tenant $tenant, string $termName, array $options = []) {
     $typeId = SchoolTermType::whereName($termName)->first()->id;
@@ -38,25 +39,25 @@ class Institution
     }
   }
 
-  public function generateCurriculum() {
+  public function generateCurriculum(Tenant $tenant) {
     foreach($this->readJson('curricula.json') as $courseLoad) {
-      $this->processCourseLoad($courseLoad);
+      $this->processCourseLoad($courseLoad, $tenant);
     }
   }
 
-  public function processCourseLoad(array $course_load): void {
-    $student_grade_id = $course_load['student_grade_id'];
+  private function processCourseLoad(array $course_load, Tenant $tenant): void {
+    $studentGrade = $this->mapStudentGradeIndexToStudentGradeId($course_load['student_grade_id'], $tenant);
 
-    if ($student_grade_id) {
+    if (isset($studentGrade->id)) {
       $curriculum = Curriculum::firstOrCreate([
-        'student_grade_id' => $student_grade_id,
-        'type_id' => $this->getCurriculumType()->id,
+        'tenant_id' => $tenant->id,
+        'student_grade_id' => $studentGrade->id,
+        'type_id' => $this->getCurriculumTypeId(Tenant::first()->country),
       ]);
 
       if(isset($course_load['core_subjects_code'])) {
         $this->processSubjects(
           $course_load['core_subjects_code'],
-          $student_grade_id,
           'core',
           $curriculum
         );
@@ -65,7 +66,6 @@ class Institution
       if(isset($course_load['elective_subjects_code'])) {
         $this->processSubjects(
           $course_load['elective_subjects_code'],
-          $student_grade_id,
           'elective',
           $curriculum
         );
@@ -74,7 +74,6 @@ class Institution
       if(isset($course_load['optional_subjects_code'])) {
         $this->processSubjects(
           $course_load['optional_subjects_code'],
-          $student_grade_id,
           'optional',
           $curriculum
         );
@@ -84,20 +83,19 @@ class Institution
 
   private function processSubjects(
     $data,
-    $student_grade_id,
-    $type,
+    string $type,
     Curriculum $curriculum){
     $core_subjects_codes = explode(',', $data);
 
     foreach ($core_subjects_codes as $code) {
       $subject = $this->getSubject($code);
-      $curriculum_course_load_type = $this->getCurriculumCourseLoadType($type);
+      $curriculum_course_load_type_id = $this->getCurriculumCourseLoadTypeId($type);
 
-      if ($subject && $curriculum_course_load_type) {
+      if ($subject && isset($curriculum_course_load_type_id)) {
         $curriculum->subjects()
           ->firstOrCreate([
             'subject_id' => $subject->id,
-            'type_id' => $curriculum_course_load_type->id
+            'type_id' => $curriculum_course_load_type_id
           ])
           ->toArray();
       }

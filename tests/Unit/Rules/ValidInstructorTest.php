@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit\Requests;
+namespace Tests\Unit\Rules;
 
 use App\Instructor;
 use App\Rules\ValidInstructor;

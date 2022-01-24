@@ -2,12 +2,14 @@
 
 namespace Tests\Feature;
 
+use App\Curriculum;
 use App\StudentGrade;
 use App\SchoolTermType;
 use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Arr;
+use SubjectsSeeder;
 use Tests\TestCase;
 
 class TenantObserverTest extends TestCase
@@ -51,5 +53,20 @@ class TenantObserverTest extends TestCase
 
     $response->assertStatus(200);
     $this->assertEquals(Arr::pluck(config('edu.default.student_grades'), 'name'), StudentGrade::all()->pluck('name')->toArray());
+  }
+
+  public function testItGeneratesADefaultTenantCurriculum()
+  {
+    $this->seed(SubjectsSeeder::class);
+    $this->postJson('/api/v1/register', [
+      'email' => $this->faker->email,
+      'fullName' => $this->faker->name,
+      'name' => $this->faker->company,
+      'password' => '1234abcd',
+      'password_confirmation' => '1234abcd',
+    ])
+    ->assertStatus(200);
+
+    $this->assertEquals(13, Curriculum::ofTenant(Tenant::first()->id)->count());
   }
 }

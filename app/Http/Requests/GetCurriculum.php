@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\CurriculumCourseLoad;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class GetCurriculum extends FormRequest
 {
@@ -25,6 +27,8 @@ class GetCurriculum extends FormRequest
   {
     return [
       'student_grade_id' => 'required|exists:student_grades,id',
+      'filter.type_id' => ['integer', Rule::in(array_values(CurriculumCourseLoad::Types))],
+      'filter.type' => ['string', Rule::in(array_keys(CurriculumCourseLoad::Types))],
     ];
   }
 

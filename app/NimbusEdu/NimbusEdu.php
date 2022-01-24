@@ -11,11 +11,9 @@ use App\Course;
 use App\Curriculum;
 use App\StudentGrade;
 use App\Registration;
-use App\CurriculumType;
 use App\Invoice;
 use App\Guardian;
 use App\NimbusEdu\Helpers\CourseHelper;
-use App\Notifications\ActivateUser;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -98,12 +96,6 @@ class NimbusEdu
     }catch(Exception $e){
       throw new Exception($e->getMessage());
     }
-  }
-
-  public function getCurriculumType($new = false){
-    return $new ? 
-    CurriculumType::firstOrCreate(['country' => $this->tenant->country]) : 
-    CurriculumType::where(['country' => $this->tenant->country])->first();
   }
 
   public function enrollCoreCourses(Student $student, $student_grade_id){

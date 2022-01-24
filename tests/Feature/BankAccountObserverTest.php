@@ -21,20 +21,26 @@ class BankAccountObserverTest extends TestCase
    * @return void
    */
   public function testItSetsTheDefaultBankAccountWhenCreatedAndNoBankAccountExists()
-  {    
-    $response = $this->actingAs($this->user)
+  {
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
+    $this->actingAs($this->user)
       ->postJson("api/v1/tenants/{$this->user->tenant->id}/bank_accounts", [
         "account_name" => $this->user->full_name,
         "account_number" => "0038445618",
         "bank_code" => "055",
         "bank_name" => "gt bank",
         "description" => "test"
+      ])
+      ->assertStatus(200)
+      ->assertJson([
+        "default" => true,
       ]);
-
-    $response->assertStatus(200);
-    $response->assertJson([
-      "default" => true,
-    ]);
   }
 
   /**
@@ -43,7 +49,14 @@ class BankAccountObserverTest extends TestCase
    * @return void
    */
   public function testItSetsTheDefaultBankAccountWhenUpdated()
-  {    
+  {
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
     $defaultBankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "default" => true,
@@ -58,7 +71,7 @@ class BankAccountObserverTest extends TestCase
       ->putJson("api/v1/tenants/{$this->user->tenant->id}/bank_accounts/{$otherBankAccount->id}", [
         "default" => true
       ]);
-    
+
     $defaultBankAccount->refresh();
     $otherBankAccount->refresh();
 
@@ -73,7 +86,14 @@ class BankAccountObserverTest extends TestCase
    * @return void
    */
   public function testItSetsTheDefaultBankAccountParameterIfPresent()
-  {    
+  {
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
     $bankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "default" => true,
@@ -95,12 +115,13 @@ class BankAccountObserverTest extends TestCase
     $response->assertJson([
       "default" => true,
     ]);
-    $this->assertEquals($this->user
-      ->tenant
-      ->bank_accounts()
-      ->orderBy('id', 'DESC')
-      ->first()
-      ->default,
+    $this->assertEquals(
+      $this->user
+        ->tenant
+        ->bank_accounts()
+        ->orderBy('id', 'DESC')
+        ->first()
+        ->default,
       true
     );
     $this->assertEquals($bankAccount->default, false);
@@ -112,7 +133,14 @@ class BankAccountObserverTest extends TestCase
    * @return void
    */
   public function testItSetsTheDefaultBankAccountWhenABankAccountIsDeleted()
-  {    
+  {
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
     $defaultBankAccount = factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "default" => true,
@@ -125,7 +153,6 @@ class BankAccountObserverTest extends TestCase
 
     $response = $this->actingAs($this->user)
       ->delete("api/v1/tenants/{$this->user->tenant->id}/bank_accounts/{$defaultBankAccount->id}");
-
     $response->assertStatus(200);
 
     $this->assertNotContains($defaultBankAccount->toArray(), BankAccount::all()->toArray());
@@ -138,7 +165,14 @@ class BankAccountObserverTest extends TestCase
    * @return void
    */
   public function testItReturnsTheBankAccounts()
-  {    
+  {
+    Paystack::shouldReceive("createSubAccount")
+      ->andReturn([
+        "data" => [
+          "subaccount_code" => "abcdef",
+        ],
+      ]);
+
     factory(BankAccount::class)->create([
       "account_name" => $this->user->full_name,
       "default" => true,

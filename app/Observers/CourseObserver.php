@@ -42,7 +42,7 @@ class CourseObserver
     }	
 
     if (is_null($course->schema)) {	
-      $course->schema = Auth::user()->tenant()->first()->settings()->get('course_schema') ?? config('edu.default.course_schema');	
+      $course->schema = $course->tenant->settings()->get('course_schema') ?? config('edu.default.course_schema');	
     }
 
     if (is_null($course->status_id)) {	

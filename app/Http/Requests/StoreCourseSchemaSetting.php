@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use App\Rules\ValidCourseSchema;
-use App\Rules\ValidScores;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCourseSchemaSetting extends FormRequest
