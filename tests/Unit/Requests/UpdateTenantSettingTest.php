@@ -25,15 +25,15 @@ class UpdateTenantSettingTest extends TestCase
   public function testItHasDefaultValidationRulesForCourseSchema()
   {
     $request = new UpdateTenantSetting();
-    request()->merge([
+    $request->merge([
       "name" => "course_schema"
     ]);
 
-    $this->assertEquals("required|string|max:255", $request->rules()["value.*.name"]);
+    $this->assertEquals("required|string|max:255|distinct", $request->rules()["value.*.name"]);
     $this->assertEquals(["required", "integer", "max:100"], $request->rules()["value.*.score"]);
     $this->assertContains("required", $request->rules()["value"]);
     $this->assertContains("array", $request->rules()["value"]);
-    $this->assertEquals("App\Rules\ValidScores", get_class($request->rules()["value"][2]));
+    $this->assertEquals("App\Rules\ValidCourseSchema", get_class($request->rules()["value"][2]));
     $this->assertEquals("in:\"course_schema\"", $request->rules()["name"]->__toString());
   }
 }

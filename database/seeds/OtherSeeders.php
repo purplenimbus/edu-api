@@ -48,16 +48,5 @@ class OtherSeeders extends Seeder
     foreach($transaction_statuses as $transaction_status){
       App\TransactionStatus::create($transaction_status);
     }
-
-    $course_load_types = [
-      [ 'name' => 'core' ],
-      [ 'name' => 'elective'  ],
-      [ 'name' => 'optional'  ],
-    ];
-
-    //Create Curriculum Course Load Types
-    foreach($course_load_types as $type){
-      App\CurriculumCourseLoadType::create($type);
-    }
   }
 }

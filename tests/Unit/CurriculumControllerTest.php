@@ -1,13 +1,10 @@
 <?php
 
 use App\Course;
-use App\Curriculum;
 use App\CurriculumCourseLoad;
-use App\CurriculumCourseLoadType;
 use App\NimbusEdu\Institution;
 use App\StudentGrade;
 use App\Subject;
-use App\Tenant;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Helpers\SetupUser;
 use Tests\TestCase;

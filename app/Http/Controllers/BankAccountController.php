@@ -8,6 +8,7 @@ use App\Http\Requests\GetBankAccounts;
 use App\Http\Requests\StoreBankAccount;
 use App\Http\Requests\UpdateBankAccounts;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class BankAccountController extends Controller
@@ -26,7 +27,7 @@ class BankAccountController extends Controller
         'created_at',
         'updated_at'
 			)->where([
-        ['tenant_id', '=', $request->tenant_id],
+        ['tenant_id', '=', $request->id],
       ])
       ->paginate($request->paginate ?? config('edu.pagination'));
 
@@ -39,7 +40,13 @@ class BankAccountController extends Controller
    * @return void
    */
 	public function update(UpdateBankAccounts $request){
+    $tenant = Auth::user()->tenant->first();
+
 		$bank_account = BankAccount::find($request->bank_account_id);
+
+    $request->merge([
+      'tenant_id' => $tenant->id,
+    ]);
 
 		$bank_account->fill($request->all());
 		
@@ -53,10 +60,12 @@ class BankAccountController extends Controller
    *
    * @return void
    */
-  public function create(StoreBankAccount $request){    
+  public function create(StoreBankAccount $request){ 
+    $tenant = Auth::user()->tenant->first();
+    
 		$data = $request->all();
 
-		$data['tenant_id'] = $request->tenant_id;
+		$data['tenant_id'] = $tenant->id;
 
     $account = BankAccount::updateOrCreate(Arr::only($data, ['account_number', 'bank_code']), Arr::except($data, ['account_number', 'bank_code']));
     

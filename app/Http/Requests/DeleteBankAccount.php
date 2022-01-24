@@ -25,8 +25,8 @@ class DeleteBankAccount extends FormRequest
 	public function rules()
 	{
 		return [
-			'bank_account_id' => ['exists:bank_accounts,id', new ValidBankAccount($this->tenant_id)],
-			'tenant_id'  => 'integer|required|exists:tenants,id',
+			'bank_account_id' => ['exists:bank_accounts,id', new ValidBankAccount($this->id)],
+			'id'  => 'integer|required|exists:tenants,id',
 		];
 	}
 

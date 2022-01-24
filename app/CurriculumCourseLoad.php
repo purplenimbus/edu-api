@@ -32,6 +32,10 @@ class CurriculumCourseLoad extends Model
     'type_id',
   ];
 
+  protected $appends = [
+    'type',
+  ];
+
   public function curriculum()
   {
     return $this->belongsTo('App\Curriculum');
@@ -42,9 +46,9 @@ class CurriculumCourseLoad extends Model
     return $this->belongsTo('App\Subject');
   }
 
-  public function type()
+  public function getTypeAttribute()
   {
-    return $this->hasOne('App\CurriculumCourseLoadType', 'id', 'type_id');
+    return array_flip(self::Types)[$this->type_id];
   }
 
   public function getHasCourseAttribute()
