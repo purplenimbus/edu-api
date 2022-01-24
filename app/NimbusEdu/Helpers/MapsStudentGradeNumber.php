@@ -9,12 +9,12 @@ trait MapsStudentGradeNumber
 {
   public function mapStudentGradeIndexToStudentGradeId(int $number, Tenant $tenant)
   {
-    $alias = config("edu.default.student_grades.{$number}");
+    $studentGrade = config("edu.default.student_grades.{$number}");
 
-    if (!isset($alias)) {
+    if (!isset($studentGrade["alias"])) {
       return;
     }
 
-    return StudentGrade::ofTenant($tenant->id)->whereAlias($alias)->first();
+    return StudentGrade::ofTenant($tenant->id)->whereAlias($studentGrade["alias"])->first();
   }
 }
