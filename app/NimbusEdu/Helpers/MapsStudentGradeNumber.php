@@ -9,8 +9,6 @@ trait MapsStudentGradeNumber
 {
   public function mapStudentGradeIndexToStudentGradeId(int $number, Tenant $tenant)
   {
-    $number--; //index starts from 0
-
     $alias = config("edu.default.student_grades.{$number}");
 
     if (!isset($alias)) {
