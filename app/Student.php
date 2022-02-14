@@ -109,7 +109,8 @@ class Student extends User
   public function scopeOfUnregistered($query, $course_id)
   {
     $course = Course::find($course_id);
-    $registrations = Registration::where('course_id', $course_id)->pluck('user_id');
+    $registrations = Registration::whereCourseId($course_id)
+      ->pluck('user_id');
 
     return $query
       ->ofStudentGrade($course->student_grade_id)

@@ -143,7 +143,8 @@ class Course extends Model
 
   public function scopeValidCourses($query, Student $student)
   {
-    $course_ids = Registration::where("user_id", $student->id)->pluck("course_id");
+    $course_ids = Registration::whereUserId($student->id)
+      ->pluck("course_id");
 
     $query->ofStudentGrade($student->grade["id"])
       ->ofTenant($student->tenant_id)
