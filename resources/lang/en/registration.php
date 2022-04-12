@@ -16,4 +16,5 @@ return [
   'welcome' => 'Welcome to :name',
   'user_exist' => 'User dosent exist',
   'verification_success' => 'Email verified!'
+  'test_test' => 'welcome peace'
 ];
